@@ -1,0 +1,17 @@
+import 'package:flutter/material.dart';
+
+// Repeated code for TextField
+const kTextFiledInputDecoration = InputDecoration(
+  focusedBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: Colors.black),
+  ),
+  enabledBorder: UnderlineInputBorder(
+    borderSide: BorderSide(color: Colors.grey, width: 2),
+  ),
+  labelText: " Email address",
+  labelStyle:
+      TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),
+);
+
+// const URL = "http://10.0.2.2:8090";
+const URL = "http://125.63.77.8:8081";
