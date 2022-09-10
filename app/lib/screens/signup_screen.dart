@@ -41,14 +41,15 @@ class _SignUPScreenState extends State<SignUPScreen> {
   String name = "";
   String passwordCheck = "";
   String usertype = "Student";
-  String employeeType = "Staff";
-  String studentType = "Day's Scholar";
+  // String displayText = "Select the option";
+  String employeeType = "Select";
+  String studentType = "Select";
   int i = 1;
   List<Complaint> complaintPending = [];
   List<Complaint> complaintResolved = [];
   var uType = ["Student", "Employee"];
-  var eType = ["Staff", "Electrician", "carpenter"];
-  var sType = ["Day's Scholar", "hosteller"];
+  var eType = ["Select","Staff", "Electrician", "carpenter"];
+  var sType = ["Select","DayScholar", "Hosteler"];
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -218,9 +219,10 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                             email = value;
                                           });
                                         },
+                                        keyboardType: TextInputType.emailAddress,
                                       ),
                                       SizedBox(
-                                        height: 20,
+                                        height: 13,
                                       ),
                                       TextFormField(
                                         // readOnly: true, // * Just for Debug
@@ -237,7 +239,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         },
                                       ),
                                       SizedBox(
-                                        height: 20,
+                                        height: 15,
                                       ),
                                       TextFormField(
                                         // readOnly: true, // * Just for Debug
@@ -274,7 +276,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         },
                                       ),
                                       SizedBox(
-                                        height: 20,
+                                        height: 15,
                                       ),
                                       // TextFormField(
                                       //   // autovalidateMode: AutovalidateMode.always,
@@ -310,7 +312,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         //cursorColor: mainColor,
                                         decoration:
                                             kTextFiledInputDecoration.copyWith(
-                                          labelText: "Password Again",
+                                          labelText: "Re-enter Password",
                                           suffixIcon: IconButton(
                                             icon: Icon(
                                               // Based on passwordVisible state choose the icon
@@ -336,7 +338,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         },
                                       ),
                                       SizedBox(
-                                        height: 20,
+                                        height: 15,
                                       ),
                                       DropdownButtonFormField(
                                         hint: Text('Select the Usertype'),
@@ -359,26 +361,9 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         },
                                       ),
                                       SizedBox(
-                                        height: 20,
+                                        height: 15,
                                       ),
                                       Visibility(
-                                        child: DropdownButtonFormField(
-                                          hint: Text('Select the Employeetype'),
-                                          value: employeeType,
-                                          isExpanded: true,
-                                          decoration: InputDecoration(),
-                                          items: eType.map((String items) {
-                                            return DropdownMenuItem(
-                                              value: items,
-                                              child: Text(items),
-                                            );
-                                          }).toList(),
-                                          onChanged: (String? newValue) {
-                                            setState(() {
-                                              employeeType = newValue!;
-                                            });
-                                          },
-                                        ),
                                         visible: _checkemptype,
                                         replacement: DropdownButtonFormField(
                                           hint: Text('Select the Student Type'),
@@ -394,14 +379,33 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                           onChanged: (String? newValue) {
                                             setState(() {
                                               studentType = newValue!;
+                                              employeeType = eType[0];
+                                            });
+                                          },
+                                        ),
+                                        child: DropdownButtonFormField(
+                                          hint: Text('Select the Employee type'),
+                                          value: employeeType,
+                                          isExpanded: true,
+                                          decoration: InputDecoration(),
+                                          items: eType.map((String items) {
+                                            return DropdownMenuItem(
+                                              value: items,
+                                              child: Text(items),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              studentType = sType[0];
+                                              employeeType = newValue!;
                                             });
                                           },
                                         ),
                                       ),
 
-                                      SizedBox(
-                                        height: 5,
-                                      ),
+                                      // SizedBox(
+                                      //   height: 5,
+                                      // ),
 
                                       // FaceBook and Google ICon
                                       // TopAnime(
@@ -505,12 +509,13 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                     print(email);
                                                     print(name);
                                                     print(password);
-
+                                                    var selectOption = (studentType== "Select") ? employeeType : studentType;
                                                     var body = {
                                                       'email': email,
                                                       'username': name,
                                                       'password': password,
                                                       'utype': usertype,
+                                                      'subtype': selectOption,
                                                     };
                                                     Session session = Session();
                                                     var bodyJson =

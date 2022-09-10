@@ -157,12 +157,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text("Welcome Back",
+                                      RichText(
+                                        text: TextSpan(
+                                          text: "Welcome ",
                                           style: TextStyle(
+                                            color: Colors.black,
                                             fontSize: 40,
                                             fontWeight: FontWeight.w300,
-                                          )),
-                                    ],
+                                          ),
+                                          children: [
+                                            TextSpan(
+                                              text: "Back",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 40,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ]
                                   ),
                                 ),
                               ),
@@ -202,6 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 kTextFiledInputDecoration
                                                     .copyWith(
                                                         labelText: "Email"),
+                                            keyboardType: TextInputType.emailAddress,
                                           ),
                                           SizedBox(
                                             height: 25,
@@ -403,7 +419,6 @@ class _LoginScreenState extends State<LoginScreen> {
     if (r.statusCode == 200) {
       return true;
     }
-
     return false;
   }
 
