@@ -24,6 +24,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   String utype = "";
+  String subtype = "";
   @override
   void initState() {
     // TODO: implement initState
@@ -35,6 +36,7 @@ class _DetailPageState extends State<DetailPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       utype = (prefs.getString("utype"))!;
+      subtype = (prefs.getString("subtype"))!;
     });
   }
 
@@ -178,9 +180,9 @@ class _DetailPageState extends State<DetailPage> {
             style: ElevatedButton.styleFrom(primary: Colors.grey[800]),
             onPressed: widget.complaint.status == "verified" ||
                     (widget.complaint.status == "resolved" &&
-                        utype != "student") ||
+                        utype != "Student") ||
                     (widget.complaint.status == "Registered" &&
-                        utype == "student")
+                        utype == "Student")
                 ? null
                 : () async {
                     Session session = Session();
@@ -242,45 +244,10 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  // Future<void> getComplaints() async {
-  //   Session session = Session();
-  //   Map body = {};
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   var bodyJson = jsonEncode(body);
-  //   Response r = await session.post(bodyJson, "/viewcomplaint");
-  //   var responseBody = r.body;
-  //
-  //   final bodyJson1 = json.decode(responseBody);
-  //   var c = bodyJson1["complaint"];
-  //   print(c);
-  //   for(int i = 0; i < c.length; i++) {
-  //     Complaint complaint1 = Complaint(
-  //         block: c[i]["block"],
-  //         complaint: c[i]["complaint"],
-  //         complainType: c[i]["complainttype"],
-  //         floor: c[i]["floor"].toString(),
-  //         roomNo: c[i]["roomno"].toString(),
-  //         status: c[i]["status"],
-  //         complaintId: c[i]["complaintid"].toString(),
-  //         timeStamp: c[i]["ts"].toString()
-  //     );
-  //     if(complaint1.status == "Registered") {
-  //       complaintPending.add(complaint1);
-  //     }
-  //     else {
-  //       complaintResolved.add(complaint1);
-  //     }
-  //   }
-  //
-  //   print(responseBody);
-  // }
-
   Widget getText() {
-    print(widget.complaint.status);
-    print(utype);
-    if (widget.complaint.status == "Registered" && utype == "student") {
+    if (widget.complaint.status == "Registered" && utype == "Student") {
       return const Text("Registered", style: TextStyle(color: Colors.white));
-    } else if (widget.complaint.status == "resolved" && utype == "student") {
+    } else if (widget.complaint.status == "resolved" && utype == "Student") {
       return const Text("Verify", style: TextStyle(color: Colors.white));
     } else if (widget.complaint.status == "Registered") {
       return const Text("Resolve", style: TextStyle(color: Colors.white));

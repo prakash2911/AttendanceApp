@@ -53,13 +53,6 @@ class _ComplainTabListState extends State<ComplainTabList> {
 
     final bodyJson1 = json.decode(responseBody);
     var c = bodyJson1["complaint"];
-    // var c = await db.rawQuery("SELECT * FROM complaints_pending");
-    print("cccccc");
-    // print(c);
-    // print(c[0].runtimeType);
-    // List<Map> result = await db.rawQuery("SELECT * FROM complaints_pending");
-    // print(result[0].runtimeType);
-    // print(c1);
     for (int i = 0; i < c.length; i++) {
       Complaint complaint1 = Complaint(
           block: c[i]["block"].toString(),

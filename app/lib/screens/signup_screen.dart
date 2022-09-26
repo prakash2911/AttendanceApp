@@ -434,26 +434,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         left: 280,
                                         top: 10,
                                         child: GestureDetector(
-                                          onTap: () async {
-                                            // print("dei komali");
-                                            // if(!formKey.currentState!.validate()) {
-                                            //   print("not validated");
-                                            // }
-                                            // else {
-                                            //   var url = Uri.parse(URL);
-                                            //   var response = await http.post(url, body: {'email': email, 'username': name, 'password': password });
-                                            //   print('Response status: ${response.statusCode}');
-                                            //   print('Response body: ${response.body}');
-                                            //   final prefs = await SharedPreferences.getInstance();
-                                            //   await prefs.setBool('loggedIn', true);
-                                            //
-                                            //   Navigator.push(
-                                            //       context,
-                                            //       MaterialPageRoute(
-                                            //           builder: (context) =>
-                                            //               LoginScreen()));
-                                            // }
-                                          },
+                                          onTap: () async {},
                                           child: Container(
                                               decoration: BoxDecoration(
                                                   color: Color(0xffEB5757),
@@ -469,8 +450,6 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                     color: Colors.white,
                                                   ),
                                                   onPressed: () async {
-                                                    print("dei komali");
-                                                    // if(!formKey.currentState!.validate()) {
                                                     if (false) {
                                                       print("not validated");
                                                     } else {
@@ -482,10 +461,9 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                       print(name);
                                                       print(password);
                                                       var selectOption =
-                                                          (studentType ==
-                                                                  "Select")
-                                                              ? employeeType
-                                                              : studentType;
+                                                          (studentType != null)
+                                                              ? studentType
+                                                              : employeeType;
                                                       var body = {
                                                         'email': email,
                                                         'username': name,
@@ -515,12 +493,6 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                       print(responseBody);
                                                       await prefs.setBool(
                                                           'isSignedIn', true);
-
-                                                      // Navigator.push(
-                                                      //     context,
-                                                      //     MaterialPageRoute(
-                                                      //         builder: (context) =>
-                                                      //             ComplainTabList()));
                                                       Navigator.of(context)
                                                           .pushAndRemoveUntil(
                                                               MaterialPageRoute(
@@ -536,13 +508,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                                       route) =>
                                                                   false);
                                                     }
-                                                  })
-                                              // Icon(
-                                              //   Icons.arrow_forward,
-                                              //   size: 35,
-                                              //   color: Colors.white,
-                                              // ),
-                                              ),
+                                                  })),
                                         ),
                                       ),
                                     ],
@@ -576,7 +542,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
           roomNo: c[i]["roomno"].toString(),
           status: c[i]["status"],
           complaintId: c[i]["complaintid"].toString(),
-          timeStamp: c[i]["ts"].toString(),
+          timeStamp: c[i]["cts"].toString(),
           updateStamp: c[i]["uts"].toString());
       if (complaint1.status == "Registered") {
         complaintPending.add(complaint1);

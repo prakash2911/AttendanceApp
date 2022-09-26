@@ -625,7 +625,6 @@ class _ComplaintsState extends State<Complaints> {
         complaintId: c[i]["complaintid"].toString(),
         timeStamp: c[i]["cts"].toString(),
         updateStamp: c[i]["uts"].toString(),
-        // timeStamp: "timeStamp"
       );
       if (complaint1.status == "Registered") {
         complaintPending.add(complaint1);
