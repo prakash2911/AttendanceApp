@@ -99,7 +99,9 @@ class _MyHomePageState extends State<MyHomePage> {
           roomNo: c[i]["roomno"].toString(),
           status: c[i]["status"],
           complaintId: c[i]["complaintid"].toString(),
-          timeStamp: c[i]["cts"].toString());
+          timeStamp: c[i]["cts"].toString(),
+          updateStamp: c[i]["uts"].toString());
+
       if (complaint1.status == "Registered") {
         complaintPending.add(complaint1);
       } else {
@@ -206,11 +208,8 @@ void onStart(ServiceInstance service) {
 }
 
 Future<void> getComplaints() async {
-  // sqlite database
   var db = await openDatabase('mit_users.db');
   var c1 = await db.rawQuery("SELECT * FROM complaints_pending");
-  print("c1c1c1");
-  print(c1);
   await db.execute("""
     CREATE TABLE IF NOT EXISTS complaints_pending (
   complaintid int(11) NOT NULL,
@@ -249,7 +248,8 @@ Future<void> getComplaints() async {
         roomNo: c[i]["roomno"].toString(),
         status: c[i]["status"],
         complaintId: c[i]["complaintid"].toString(),
-        timeStamp: c[i]["cts"].toString());
+        timeStamp: c[i]["cts"].toString(),
+        updateStamp: c[i]["uts"].toString());
 
     if (complaint1.status == "Registered") {
       int a = await db.rawInsert(

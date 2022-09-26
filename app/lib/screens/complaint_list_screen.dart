@@ -123,7 +123,8 @@ class _ComplaintListState extends State<ComplaintList> {
                   roomNo: c[i]["roomno"].toString(),
                   status: c[i]["status"],
                   complaintId: c[i]["complaintid"].toString(),
-                  timeStamp: c[i]["cts"].toString());
+                  timeStamp: c[i]["cts"].toString(),
+                  updateStamp: c[i]["uts"].toString());
               arr.add(complaint1);
             }
             complaints = arr;

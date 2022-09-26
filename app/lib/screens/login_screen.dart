@@ -460,7 +460,8 @@ class _LoginScreenState extends State<LoginScreen> {
           roomNo: c[i]["roomno"].toString(),
           status: c[i]["status"],
           complaintId: c[i]["complaintid"].toString(),
-          timeStamp: c[i]["cts"].toString());
+          timeStamp: c[i]["cts"].toString(),
+          updateStamp: c[i]["uts"].toString());
       if (complaint1.status == "Registered") {
         complaintPending.add(complaint1);
         int a = await db.rawInsert(

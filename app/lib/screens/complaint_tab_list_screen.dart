@@ -69,7 +69,8 @@ class _ComplainTabListState extends State<ComplainTabList> {
           roomNo: c[i]["roomno"].toString(),
           status: c[i]["status"].toString(),
           complaintId: c[i]["complaintid"].toString(),
-          timeStamp: c[i]["cts"].toString());
+          timeStamp: c[i]["cts"].toString(),
+          updateStamp: c[i]["uts"].toString());
       final List<Complaint> complaintUpdated = [];
       if (complaint1.status == "Registered") {
         complaintUpdated.add(complaint1);

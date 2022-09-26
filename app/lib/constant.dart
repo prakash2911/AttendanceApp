@@ -13,6 +13,4 @@ const kTextFiledInputDecoration = InputDecoration(
       TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),
 );
 
-// const URL = "http://10.0.2.2:8090";
-const URL = "http://192.168.109.197:2002";
-// const URL = "http://127.0.0.1:8";
+const URL = "http://192.168.144.202:2002";

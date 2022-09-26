@@ -26,6 +26,7 @@ class _ComplaintsState extends State<Complaints> {
   String? selectedFloor;
   String? selectedRoomNo;
   String? selectedComplaintType;
+  String? complaint;
   List<Complaint> complaintPending = [];
   List<Complaint> complaintResolved = [];
   // List of items in our dropdown menu
@@ -49,13 +50,9 @@ class _ComplaintsState extends State<Complaints> {
   }
 
   var floors = [];
+  var complaints = [];
   var roomNos = [];
-  var complaintTypes = [
-    'electrician',
-    'civil and maintenance',
-    'education aid'
-  ];
-  var complaint = "";
+  var complaintTypes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -109,15 +106,16 @@ class _ComplaintsState extends State<Complaints> {
                         "Block": selectBlock,
                         "Floor": "None",
                         "RoomNo": "None",
-                        "Complaint": complaint,
-                        "complainttype": complaintTypes
+                        "complainttype": "None",
+                        "Complaint": "None"
                       };
                       floors = await postComplaints(body);
 
                       roomNos = [];
                       selectedFloor = null;
                       selectedRoomNo = null;
-
+                      complaint = null;
+                      selectedComplaintType = null;
                       setState(() {});
                     },
                     icon: const Icon(
@@ -180,12 +178,15 @@ class _ComplaintsState extends State<Complaints> {
                         "Block": selectBlock,
                         "Floor": selectedFloor,
                         "RoomNo": "None",
-                        "Complaint": complaint,
-                        "complainttype": complaintTypes
+                        "complainttype": "None",
+                        "Complaint": "None"
                       };
                       roomNos = await postComplaints(body);
                       selectedRoomNo = null;
-
+                      selectedComplaintType = null;
+                      complaint = null;
+                      complaints = [];
+                      complaintTypes = [];
                       setState(() {});
                     },
                     icon: const Icon(
@@ -242,10 +243,21 @@ class _ComplaintsState extends State<Complaints> {
                             ))
                         .toList(),
                     value: selectedRoomNo,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedRoomNo = value as String;
-                      });
+                    onChanged: (value) async {
+                      selectedRoomNo = value as String;
+                      Map body = {
+                        "Block": selectBlock,
+                        "Floor": selectedFloor,
+                        "RoomNo": selectedRoomNo,
+                        "complainttype": "None",
+                        "Complaint": "None",
+                      };
+                      complaintTypes = await postComplaints(body);
+                      selectedComplaintType = null;
+                      complaints = [];
+                      complaint = null;
+
+                      setState(() {});
                     },
                     icon: const Icon(
                       Icons.arrow_forward_ios_outlined,
@@ -272,83 +284,232 @@ class _ComplaintsState extends State<Complaints> {
                   ),
                 ),
                 const SizedBox(
-                  height: 40.0,
+                  height: 20.0,
                 ),
-                Container(
-                  child: TextFormField(
-                    minLines: 2,
-                    maxLines: 5,
-                    keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                      hintText: 'Complaint',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton2(
+                    isExpanded: true,
+                    hint: const Text(
+                      'Select complaintype',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    onChanged: (val) {
+                    items: complaintTypes
+                        .map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ))
+                        .toList(),
+                    value: selectedComplaintType,
+                    onChanged: (value) async {
+                      selectedComplaintType = value as String;
+                      Map body = {
+                        "Block": selectBlock,
+                        "Floor": selectedFloor,
+                        "RoomNo": selectedRoomNo,
+                        "complainttype": selectedComplaintType,
+                        "Complaint": "None",
+                      };
+                      complaints = await postComplaints(body);
+                      complaint = null;
+                      print(complaints);
+                      setState(() {});
+                    },
+                    icon: const Icon(
+                      Icons.arrow_forward_ios_outlined,
+                    ),
+                    iconSize: 14,
+                    iconEnabledColor: Colors.white,
+                    buttonPadding: const EdgeInsets.only(left: 20, right: 20),
+                    buttonDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: Colors.black26,
+                      ),
+                      color: Colors.grey[800],
+                    ),
+                    buttonElevation: 2,
+                    dropdownDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      color: Colors.grey[800],
+                    ),
+                    dropdownElevation: 8,
+                    scrollbarRadius: const Radius.circular(40),
+                    scrollbarThickness: 6,
+                    scrollbarAlwaysShow: true,
+                  ),
+                ),
+                // SizedBox(
+                //   height: 20,
+                // ),
+                // Container(
+                //   child: const Text(
+                //     "Select Category",
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                // ),
+                // Column(
+                //   children: <Widget>[
+                //     RadioListTile(
+                //       title: const Text(
+                //         'Electrician',
+                //         style: TextStyle(color: Colors.white),
+                //       ),
+                //       value: "electrician",
+                //       groupValue: selectedComplaintType,
+                //       onChanged: (value) async {
+                //         selectedComplaintType = value as String;
+                //         Map body = {
+                //           "Block": selectBlock,
+                //           "Floor": selectedFloor,
+                //           "RoomNo": selectedRoomNo,
+                //           "Complaint": "None",
+                //           "complainttype": complaintTypes
+                //         };
+                //         complaints = await postComplaints(body);
+                //         complaint = null;
+                //         setState(() {});
+                //       },
+                //       activeColor: Colors.white,
+                //     ),
+                //     RadioListTile(
+                //       title: const Text(
+                //         'Civil and maintenance',
+                //         style: TextStyle(color: Colors.white),
+                //       ),
+                //       value: "civil and maintenance",
+                //       groupValue: selectedComplaintType,
+                //       onChanged: (value) async {
+                //         selectedComplaintType = value as String;
+                //         Map body = {
+                //           "Block": selectBlock,
+                //           "Floor": selectedFloor,
+                //           "RoomNo": selectedRoomNo,
+                //           "Complaint": "None",
+                //           "complainttype": complaintTypes
+                //         };
+                //         complaints = await postComplaints(body);
+                //         complaint = null;
+                //         setState(() {});
+                //       },
+                //       activeColor: Colors.white,
+                //     ),
+                //     RadioListTile(
+                //       title: const Text(
+                //         'Education aid',
+                //         style: TextStyle(color: Colors.white),
+                //       ),
+                //       value: "education aid",
+                //       groupValue: selectedComplaintType,
+                //       onChanged: (value) async {
+                //         selectedComplaintType = value as String;
+                //         Map body = {
+                //           "Block": selectBlock,
+                //           "Floor": selectedFloor,
+                //           "RoomNo": selectedRoomNo,
+                //           "Complaint": "None",
+                //           "complainttype": complaintTypes
+                //         };
+                //         complaints = await postComplaints(body);
+                //         complaint = null;
+                //         setState(() {});
+                //       },
+                //       activeColor: Colors.white,
+                //     ),
+                //   ],
+                // ),
+                // Container(
+                //   child: TextFormField(
+                //     minLines: 2,
+                //     maxLines: 5,
+                //     keyboardType: TextInputType.multiline,
+                //     decoration: const InputDecoration(
+                //       hintText: 'Complaint',
+                //       hintStyle: TextStyle(color: Colors.grey),
+                //       border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                //       ),
+                //     ),
+                //     onChanged: (val) {
+                //       setState(() {
+                //         complaint = val;
+                //       });
+                //     },
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                // ),
+                //
+                const SizedBox(
+                  height: 20.0,
+                ),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton2(
+                    isExpanded: true,
+                    hint: const Text(
+                      'Select category',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    items: complaints
+                        .map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ))
+                        .toList(),
+                    value: complaint,
+                    onChanged: (value) {
                       setState(() {
-                        complaint = val;
+                        complaint = value as String;
                       });
                     },
-                    style: TextStyle(color: Colors.white),
+                    icon: const Icon(
+                      Icons.arrow_forward_ios_outlined,
+                    ),
+                    iconSize: 14,
+                    iconEnabledColor: Colors.white,
+                    buttonPadding: const EdgeInsets.only(left: 20, right: 20),
+                    buttonDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: Colors.black26,
+                      ),
+                      color: Colors.grey[800],
+                    ),
+                    buttonElevation: 2,
+                    dropdownDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      color: Colors.grey[800],
+                    ),
+                    dropdownElevation: 8,
+                    scrollbarRadius: const Radius.circular(40),
+                    scrollbarThickness: 6,
+                    scrollbarAlwaysShow: true,
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  child: const Text(
-                    "Select Category",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                Column(
-                  children: <Widget>[
-                    RadioListTile(
-                      title: const Text(
-                        'Electrician',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      value: "electrician",
-                      groupValue: selectedComplaintType,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedComplaintType = value as String;
-                        });
-                      },
-                      activeColor: Colors.white,
-                    ),
-                    RadioListTile(
-                      title: const Text(
-                        'Civil and maintenance',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      value: "civil and maintenance",
-                      groupValue: selectedComplaintType,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedComplaintType = value as String;
-                        });
-                      },
-                      activeColor: Colors.white,
-                    ),
-                    RadioListTile(
-                      title: const Text(
-                        'Education aid',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      value: "education aid",
-                      groupValue: selectedComplaintType,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedComplaintType = value as String;
-                        });
-                      },
-                      activeColor: Colors.white,
-                    ),
-                  ],
-                )
               ]),
               Container(
                   padding: EdgeInsets.all(40),
@@ -356,12 +517,6 @@ class _ComplaintsState extends State<Complaints> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.grey[800]),
                     onPressed: () async {
-                      print(selectedComplaintType);
-                      print(selectedRoomNo);
-                      print(selectedFloor);
-                      print(selectBlock);
-                      // print(selectedValue);
-
                       Map body = {
                         "Block": selectBlock,
                         "Floor": selectedFloor,
@@ -372,6 +527,7 @@ class _ComplaintsState extends State<Complaints> {
                       var v = await postComplaints(body);
                       await getComplaints();
                       if (v[0] == "Success") {
+                        print(v[0] + "In if");
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => ComplainTabList(
@@ -398,8 +554,12 @@ class _ComplaintsState extends State<Complaints> {
       f = 1;
     } else if (body["RoomNo"] == "None") {
       f = 2;
-    } else if (body["block"] == "None") {
+    } else if (body["Block"] == "None") {
       f = 3;
+    } else if (body["complainttype"] == "None") {
+      f = 4;
+    } else if (body["Complaint"] == "None") {
+      f = 5;
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
@@ -412,7 +572,7 @@ class _ComplaintsState extends State<Complaints> {
 
     if (f == 1) {
       for (int i = 0; i < body1["data"].length; i++) {
-        print("aaaaaaaa");
+        // print("aaaaaaaa");
         // print(body1["data"][i]["Floor"]);
         arr.add(body1["data"][i]["Floor"].toString());
       }
@@ -422,10 +582,17 @@ class _ComplaintsState extends State<Complaints> {
       }
     } else if (f == 3) {
       for (int i = 0; i < body1["data"].length; i++) {
-        arr.add(body1["data"][i]["block"].toString());
+        arr.add(body1["data"][i]["Block"].toString());
+      }
+    } else if (f == 4) {
+      for (int i = 0; i < body1["data"].length; i++) {
+        arr.add(body1["data"][i]["complainttype"].toString());
+      }
+    } else if (f == 5) {
+      for (int i = 0; i < body1["data"].length; i++) {
+        arr.add(body1["data"][i]["complaints"].toString());
       }
     }
-
     if (body1["status"] == "You have successfully registered a Complaint.") {
       List<String> ls = [];
       ls.add("Success");
@@ -435,7 +602,6 @@ class _ComplaintsState extends State<Complaints> {
     if (r.statusCode == 200) {
       return arr;
     }
-
     return [body1["status"]];
   }
 
@@ -446,29 +612,28 @@ class _ComplaintsState extends State<Complaints> {
     var bodyJson = jsonEncode(body);
     Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
-
     final bodyJson1 = json.decode(responseBody);
     var c = bodyJson1["complaint"];
-    print(c);
     for (int i = 0; i < c.length; i++) {
       Complaint complaint1 = Complaint(
-          block: c[i]["block"],
-          complaint: c[i]["complaint"],
-          complainType: c[i]["complainttype"],
-          floor: c[i]["floor"].toString(),
-          roomNo: c[i]["roomno"].toString(),
-          status: c[i]["status"],
-          complaintId: c[i]["complaintid"].toString(),
-          timeStamp: c[i]["cts"].toString()
-          // timeStamp: "timeStamp"
-          );
+        block: c[i]["block"],
+        complaint: c[i]["Complaint"],
+        complainType: c[i]["complainttype"],
+        floor: c[i]["floor"].toString(),
+        roomNo: c[i]["roomno"].toString(),
+        status: c[i]["status"],
+        complaintId: c[i]["complaintid"].toString(),
+        timeStamp: c[i]["cts"].toString(),
+        updateStamp: c[i]["uts"].toString(),
+        // timeStamp: "timeStamp"
+      );
       if (complaint1.status == "Registered") {
         complaintPending.add(complaint1);
       } else {
         complaintResolved.add(complaint1);
       }
     }
-
+    print("In getcomplaints");
     print(responseBody);
   }
 }

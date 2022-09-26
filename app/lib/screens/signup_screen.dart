@@ -42,14 +42,14 @@ class _SignUPScreenState extends State<SignUPScreen> {
   String passwordCheck = "";
   String usertype = "Student";
   // String displayText = "Select the option";
-  String employeeType = "Select";
-  String studentType = "Select";
+  String? employeeType = null;
+  String? studentType = null;
   int i = 1;
   List<Complaint> complaintPending = [];
   List<Complaint> complaintResolved = [];
   var uType = ["Student", "Employee"];
-  var eType = ["Select", "Staff", "Electrician", "carpenter"];
-  var sType = ["Select", "DayScholar", "Hosteler"];
+  var eType = ["Teacher", "RC"];
+  var sType = ["DayScholar", "Hosteler"];
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -404,36 +404,6 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                           },
                                         ),
                                       ),
-
-                                      // SizedBox(
-                                      //   height: 5,
-                                      // ),
-
-                                      // FaceBook and Google ICon
-                                      // TopAnime(
-                                      //   1,
-                                      //   11,
-                                      //   child: Row(
-                                      //     children: [
-                                      //       IconButton(
-                                      //         icon: FaIcon(
-                                      //           FontAwesomeIcons.facebookF,
-                                      //           size: 30,
-                                      //         ),
-                                      //         onPressed: () {},
-                                      //       ),
-                                      //       SizedBox(
-                                      //         width: 15,
-                                      //       ),
-                                      //       IconButton(
-                                      //         icon: FaIcon(
-                                      //             FontAwesomeIcons.googlePlusG,
-                                      //             size: 35),
-                                      //         onPressed: () {},
-                                      //       ),
-                                      //     ],
-                                      //   ),
-                                      // )
                                     ],
                                   ),
                                 ),
@@ -493,78 +463,80 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                               width: width / 4,
                                               height: height / 12,
                                               child: IconButton(
-                                                icon: Icon(
-                                                  Icons.arrow_forward,
-                                                  size: 35,
-                                                  color: Colors.white,
-                                                ),
-                                                onPressed: () async {
-                                                  print("dei komali");
-                                                  // if(!formKey.currentState!.validate()) {
-                                                  if (false) {
-                                                    print("not validated");
-                                                  } else {
-                                                    final prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    var url = Uri.parse(URL);
-                                                    print(email);
-                                                    print(name);
-                                                    print(password);
-                                                    var selectOption =
-                                                        (studentType ==
-                                                                "Select")
-                                                            ? employeeType
-                                                            : studentType;
-                                                    var body = {
-                                                      'email': email,
-                                                      'username': name,
-                                                      'password': password,
-                                                      'utype': usertype,
-                                                      'subtype': selectOption,
-                                                    };
-                                                    Session session = Session();
-                                                    var bodyJson =
-                                                        jsonEncode(body);
-                                                    prefs.setString(
-                                                        "login", bodyJson);
-                                                    Response r =
-                                                        await session.post(
-                                                            bodyJson,
-                                                            "/register");
-                                                    r = await session.post(
-                                                        bodyJson, "/login");
-                                                    var responseBody = r.body;
-                                                    final bodyJson1 = json
-                                                        .decode(responseBody);
-                                                    var c = bodyJson1["utype"];
-                                                    prefs.setString("utype", c);
-                                                    print(responseBody);
-                                                    await prefs.setBool(
-                                                        'isSignedIn', true);
+                                                  icon: Icon(
+                                                    Icons.arrow_forward,
+                                                    size: 35,
+                                                    color: Colors.white,
+                                                  ),
+                                                  onPressed: () async {
+                                                    print("dei komali");
+                                                    // if(!formKey.currentState!.validate()) {
+                                                    if (false) {
+                                                      print("not validated");
+                                                    } else {
+                                                      final prefs =
+                                                          await SharedPreferences
+                                                              .getInstance();
+                                                      var url = Uri.parse(URL);
+                                                      print(email);
+                                                      print(name);
+                                                      print(password);
+                                                      var selectOption =
+                                                          (studentType ==
+                                                                  "Select")
+                                                              ? employeeType
+                                                              : studentType;
+                                                      var body = {
+                                                        'email': email,
+                                                        'username': name,
+                                                        'password': password,
+                                                        'utype': usertype,
+                                                        'subtype': selectOption,
+                                                      };
+                                                      Session session =
+                                                          Session();
+                                                      var bodyJson =
+                                                          jsonEncode(body);
+                                                      prefs.setString(
+                                                          "login", bodyJson);
+                                                      Response r =
+                                                          await session.post(
+                                                              bodyJson,
+                                                              "/register");
+                                                      r = await session.post(
+                                                          bodyJson, "/login");
+                                                      var responseBody = r.body;
+                                                      final bodyJson1 = json
+                                                          .decode(responseBody);
+                                                      var c =
+                                                          bodyJson1["utype"];
+                                                      prefs.setString(
+                                                          "utype", c);
+                                                      print(responseBody);
+                                                      await prefs.setBool(
+                                                          'isSignedIn', true);
 
-                                                    // Navigator.push(
-                                                    //     context,
-                                                    //     MaterialPageRoute(
-                                                    //         builder: (context) =>
-                                                    //             ComplainTabList()));
-                                                    Navigator.of(context)
-                                                        .pushAndRemoveUntil(
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        ComplainTabList(
-                                                                          complaintPending:
-                                                                              complaintPending,
-                                                                          complaintResolved:
-                                                                              complaintResolved,
-                                                                        )),
-                                                            (Route<dynamic>
-                                                                    route) =>
-                                                                false);
-                                                  }
-                                                },
-                                              )
+                                                      // Navigator.push(
+                                                      //     context,
+                                                      //     MaterialPageRoute(
+                                                      //         builder: (context) =>
+                                                      //             ComplainTabList()));
+                                                      Navigator.of(context)
+                                                          .pushAndRemoveUntil(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ComplainTabList(
+                                                                            complaintPending:
+                                                                                complaintPending,
+                                                                            complaintResolved:
+                                                                                complaintResolved,
+                                                                          )),
+                                                              (Route<dynamic>
+                                                                      route) =>
+                                                                  false);
+                                                    }
+                                                  })
                                               // Icon(
                                               //   Icons.arrow_forward,
                                               //   size: 35,
@@ -606,7 +578,8 @@ class _SignUPScreenState extends State<SignUPScreen> {
           roomNo: c[i]["roomno"].toString(),
           status: c[i]["status"],
           complaintId: c[i]["complaintid"].toString(),
-          timeStamp: c[i]["ts"].toString());
+          timeStamp: c[i]["ts"].toString(),
+          updateStamp: c[i]["uts"].toString());
       if (complaint1.status == "Registered") {
         complaintPending.add(complaint1);
       } else {
