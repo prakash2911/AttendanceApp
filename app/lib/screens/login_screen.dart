@@ -410,14 +410,12 @@ class _LoginScreenState extends State<LoginScreen> {
     Response r = await session.post(bodyJson, "/login");
     var responseBody = r.body;
     final bodyJson1 = json.decode(responseBody);
-    // prefs.setString("subtype", bodyJson1["subtype"]);
+    var c = bodyJson1["utype"];
+    // var name = bodyJson1["name"];
+    prefs.setString("utype", c);
     prefs.setString("email", email);
-<<<<<<< Updated upstream
     prefs.setString("name", bodyJson1['username']);
     print(responseBody);
-=======
-    prefs.setString("name", bodyJson1["username"]);
->>>>>>> Stashed changes
     if (r.statusCode == 200) {
       return true;
     }
