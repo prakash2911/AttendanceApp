@@ -5,55 +5,103 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../complaint.dart';
 import 'complaint_tab_list_screen.dart';
 
-class NavBar extends StatelessWidget {
+// class NavBar extends StatefulWidget {
+//   const NavBar({Key? key}) : super(key: key);
+//
+//   @override
+//   State<NavBar> createState() => _NavBarState();
+// }
+//
+// class _NavBarState extends State<NavBar> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }
+
+
+class NavBar extends StatefulWidget {
+  @override
+  State<NavBar> createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
   List<Complaint> complaintPending = [];
+
   List<Complaint> complaintResolved = [];
-  // var name = getUsername();
-  // var email = getEmail();
-  var name = "Prakash";
-  var email = "Prakash29112002@gamil.com";
-  // const NavBar({Key? key}) : super(key: key);
+
+  String name = "",email = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getUType();
+  }
+
+  Future<void> getUType() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = (prefs.getString("name"))!;
+      email = (prefs.getString("email"))!;
+      print(name+email);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Colors.grey[900],
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            // accountName: Text("prakash"),
-            // accountEmail: Text("prakash"),
             accountName: Text(name),
             accountEmail: Text(email),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
-                  child: Image.network(
-                "",
+                  child: Image.asset(
+                "assests/images.png",
                 fit: BoxFit.fill,
                 width: 90,
                 height: 90,
               )),
+              backgroundColor:Colors.black12,
             ),
             decoration: const BoxDecoration(
-              color: Colors.blue,
+              color: Colors.grey,
               image: DecorationImage(
                   fit: BoxFit.fill,
-                  image: NetworkImage(
-                      'https://oflutter.com/wp-content/uploads/2021/02/profile-bg3.jpg')),
+                  image: AssetImage("assests/sp.jpg")
+              ),
             ),
           ),
           ListTile(
-            leading: Icon(Icons.calendar_month),
-            title: Text('Attendence'),
+            leading: Icon(Icons.calendar_month,
+            color: Colors.white,
+            ),
+            title: Text('Attendence',
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            ),
             onTap: () => selectedItem(context, 0),
           ),
           ListTile(
-            leading: Icon(Icons.backpack),
-            title: Text('Complaints - college'),
+            leading: Icon(Icons.backpack,
+            color: Colors.white,),
+            title: Text('Complaints - college',
+            style: const TextStyle(
+              color: Colors.white,
+            ),),
             onTap: () => selectedItem(context, 1),
           ),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Complaints - hostel'),
+            leading: Icon(Icons.home,
+            color: Colors.white,),
+            title: Text('Complaints - hostel',
+            style: const TextStyle(
+              color: Colors.white,
+            ),),
             onTap: () => selectedItem(context, 2),
           ),
         ],
@@ -99,12 +147,5 @@ class NavBar extends StatelessWidget {
   }
 }
 
-// getUsername() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   return prefs.getString("name");
-// }
-//
-// getEmail() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   return prefs.getString("email");
-// }
+
+

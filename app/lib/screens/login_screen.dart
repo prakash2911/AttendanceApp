@@ -414,7 +414,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // var name = bodyJson1["name"];
     prefs.setString("utype", c);
     prefs.setString("email", email);
-    // prefs.setString("name", name);
+    prefs.setString("name", bodyJson1['username']);
     print(responseBody);
     if (r.statusCode == 200) {
       return true;
