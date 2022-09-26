@@ -404,7 +404,7 @@ class _ComplaintsState extends State<Complaints> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
     Session session = Session();
-    Response r = await session.post(bodyJson, "/registercomplaint");
+    Response r = await session.post(bodyJson, "/college_registercomplaint");
     var responseBody = r.body;
     final body1 = json.decode(responseBody);
 
@@ -444,7 +444,7 @@ class _ComplaintsState extends State<Complaints> {
     Map body = {};
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
-    Response r = await session.post(bodyJson, "/viewcomplaint");
+    Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
 
     final bodyJson1 = json.decode(responseBody);

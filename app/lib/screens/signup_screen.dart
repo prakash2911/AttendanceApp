@@ -48,8 +48,8 @@ class _SignUPScreenState extends State<SignUPScreen> {
   List<Complaint> complaintPending = [];
   List<Complaint> complaintResolved = [];
   var uType = ["Student", "Employee"];
-  var eType = ["Select","Staff", "Electrician", "carpenter"];
-  var sType = ["Select","DayScholar", "Hosteler"];
+  var eType = ["Select", "Staff", "Electrician", "carpenter"];
+  var sType = ["Select", "DayScholar", "Hosteler"];
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -192,7 +192,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                               ),
 
                               SizedBox(
-                                height: height / 18,
+                                height: height / 20,
                               ),
 
                               // TextFiled
@@ -219,10 +219,11 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                             email = value;
                                           });
                                         },
-                                        keyboardType: TextInputType.emailAddress,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                       ),
                                       SizedBox(
-                                        height: 13,
+                                        height: 10,
                                       ),
                                       TextFormField(
                                         // readOnly: true, // * Just for Debug
@@ -303,42 +304,42 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                       //   },
                                       // ),
 
-                                      TextFormField(
-                                        // readOnly: true, // * Just for Debug
-                                        cursorColor: Colors.black,
-                                        obscureText: !_passwordVisible1,
-                                        style: TextStyle(color: Colors.black),
-                                        showCursor: true,
-                                        //cursorColor: mainColor,
-                                        decoration:
-                                            kTextFiledInputDecoration.copyWith(
-                                          labelText: "Re-enter Password",
-                                          suffixIcon: IconButton(
-                                            icon: Icon(
-                                              // Based on passwordVisible state choose the icon
-                                              _passwordVisible1
-                                                  ? Icons.visibility
-                                                  : Icons.visibility_off,
-                                              color: Theme.of(context)
-                                                  .primaryColorDark,
-                                            ),
-                                            onPressed: () {
-                                              // Update the state i.e. toogle the state of passwordVisible variable
-                                              setState(() {
-                                                _passwordVisible1 =
-                                                    !_passwordVisible1;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            passwordCheck = value;
-                                          });
-                                        },
-                                      ),
+                                      // TextFormField(
+                                      //   // readOnly: true, // * Just for Debug
+                                      //   cursorColor: Colors.black,
+                                      //   obscureText: !_passwordVisible1,
+                                      //   style: TextStyle(color: Colors.black),
+                                      //   showCursor: true,
+                                      //   //cursorColor: mainColor,
+                                      //   decoration:
+                                      //       kTextFiledInputDecoration.copyWith(
+                                      //     labelText: "Re-enter Password",
+                                      //     suffixIcon: IconButton(
+                                      //       icon: Icon(
+                                      //         // Based on passwordVisible state choose the icon
+                                      //         _passwordVisible1
+                                      //             ? Icons.visibility
+                                      //             : Icons.visibility_off,
+                                      //         color: Theme.of(context)
+                                      //             .primaryColorDark,
+                                      //       ),
+                                      //       onPressed: () {
+                                      //         // Update the state i.e. toogle the state of passwordVisible variable
+                                      //         setState(() {
+                                      //           _passwordVisible1 =
+                                      //               !_passwordVisible1;
+                                      //         });
+                                      //       },
+                                      //     ),
+                                      //   ),
+                                      //   onChanged: (value) {
+                                      //     setState(() {
+                                      //       passwordCheck = value;
+                                      //     });
+                                      //   },
+                                      // ),
                                       SizedBox(
-                                        height: 15,
+                                        height: 10,
                                       ),
                                       DropdownButtonFormField(
                                         hint: Text('Select the Usertype'),
@@ -361,7 +362,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         },
                                       ),
                                       SizedBox(
-                                        height: 15,
+                                        height: 10,
                                       ),
                                       Visibility(
                                         visible: _checkemptype,
@@ -384,7 +385,8 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                           },
                                         ),
                                         child: DropdownButtonFormField(
-                                          hint: Text('Select the Employee type'),
+                                          hint:
+                                              Text('Select the Employee type'),
                                           value: employeeType,
                                           isExpanded: true,
                                           decoration: InputDecoration(),
@@ -509,7 +511,11 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                     print(email);
                                                     print(name);
                                                     print(password);
-                                                    var selectOption = (studentType== "Select") ? employeeType : studentType;
+                                                    var selectOption =
+                                                        (studentType ==
+                                                                "Select")
+                                                            ? employeeType
+                                                            : studentType;
                                                     var body = {
                                                       'email': email,
                                                       'username': name,
@@ -585,7 +591,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
     Map body = {};
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
-    Response r = await session.post(bodyJson, "/viewcomplaint");
+    Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
 
     final bodyJson1 = json.decode(responseBody);

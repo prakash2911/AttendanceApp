@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Map body = {};
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
-    Response r = await session.post(bodyJson, "/viewcomplaint");
+    Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
 
     final bodyJson1 = json.decode(responseBody);
@@ -232,7 +232,7 @@ Future<void> getComplaints() async {
   Map body = {};
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var bodyJson = jsonEncode(body);
-  Response r = await session.post(bodyJson, "/viewcomplaint");
+  Response r = await session.post(bodyJson, "/college_viewcomplaint");
   var responseBody = r.body;
   String? email = prefs.getString("email");
   String? utype = prefs.getString("utype");
@@ -253,7 +253,7 @@ Future<void> getComplaints() async {
 
     if (complaint1.status == "Registered") {
       int a = await db.rawInsert(
-          "INSERT OR IGNORE INTO complaints_pending(complaintid, email, block, floor, roomno, complaint, complainttype, status, ts) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          "INSERT OR IGNORE INTO complaints_pending(complaintid, email, block, floor, roomno, complaint, complainttype, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?,)",
           [
             c[i]["complaintid"],
             email,

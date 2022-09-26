@@ -48,7 +48,7 @@ class _ComplainTabListState extends State<ComplainTabList> {
     var bodyJson = jsonEncode(body);
     var db = await openDatabase('mit_users.db');
 
-    Response r = await session.post(bodyJson, "/viewcomplaint");
+    Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
 
     final bodyJson1 = json.decode(responseBody);
@@ -183,7 +183,7 @@ class _ComplainTabListState extends State<ComplainTabList> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
     Session session = Session();
-    Response r = await session.post(bodyJson, "/registercomplaint");
+    Response r = await session.post(bodyJson, "/college_registercomplaint");
     var responseBody = r.body;
     final body1 = json.decode(responseBody);
 

@@ -11,21 +11,24 @@ class DetailPage extends StatefulWidget {
   final String topic;
   final String description;
   final Complaint complaint;
-  const DetailPage({Key? key, required this.topic, required this.description, required this.complaint}) : super(key: key);
+  const DetailPage(
+      {Key? key,
+      required this.topic,
+      required this.description,
+      required this.complaint})
+      : super(key: key);
 
   @override
   State<DetailPage> createState() => _DetailPageState();
 }
 
 class _DetailPageState extends State<DetailPage> {
-
   String utype = "";
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getUType();
-
   }
 
   Future<void> getUType() async {
@@ -62,9 +65,8 @@ class _DetailPageState extends State<DetailPage> {
 
     final topContentText = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children:  <Widget>[
+      children: <Widget>[
         SizedBox(height: height * 0.06),
-
         Text(
           widget.topic,
           style: TextStyle(color: Colors.white, fontSize: 45.0),
@@ -73,57 +75,71 @@ class _DetailPageState extends State<DetailPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(flex: 1, child: Text(
-               "Floor: ",
-              style: TextStyle(color: Colors.white, fontSize: 15.0),
-            ),),
-            Expanded(flex: 6, child: Padding(
-              padding: const EdgeInsets.only(left: 10.0),
+            Expanded(
+              flex: 1,
               child: Text(
-                widget.complaint.floor,
+                "Floor: ",
                 style: TextStyle(color: Colors.white, fontSize: 15.0),
               ),
             ),
-            )
-          ],
-        ),
-
-        SizedBox(height: height * 0.01),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(flex: 1, child: Text(
-              "Room: ",
-              style: TextStyle(color: Colors.white, fontSize: 15.0),
-            ),),
-            Expanded(flex: 6, child: Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: Text(
-                widget.complaint.roomNo,
-                style: TextStyle(color: Colors.white, fontSize: 15.0),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(
+                  widget.complaint.floor,
+                  style: TextStyle(color: Colors.white, fontSize: 15.0),
+                ),
               ),
-            ),)
+            )
           ],
         ),
         SizedBox(height: height * 0.01),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(flex: 1, child: Text(
-              "Time: ",
-              style: TextStyle(color: Colors.white, fontSize: 15.0),
-            ),),
-            Expanded(flex: 6, child: Padding(
-              padding: const EdgeInsets.only(left: 10.0),
+            Expanded(
+              flex: 1,
               child: Text(
-                widget.complaint.timeStamp,
+                "Room: ",
                 style: TextStyle(color: Colors.white, fontSize: 15.0),
               ),
             ),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(
+                  widget.complaint.roomNo,
+                  style: TextStyle(color: Colors.white, fontSize: 15.0),
+                ),
+              ),
             )
           ],
         ),
-
+        SizedBox(height: height * 0.01),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Text(
+                "Time: ",
+                style: TextStyle(color: Colors.white, fontSize: 15.0),
+              ),
+            ),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(
+                  widget.complaint.timeStamp,
+                  style: TextStyle(color: Colors.white, fontSize: 15.0),
+                ),
+              ),
+            )
+          ],
+        ),
       ],
     );
 
@@ -156,48 +172,55 @@ class _DetailPageState extends State<DetailPage> {
       style: const TextStyle(fontSize: 18.0, color: Colors.white),
     );
     final readButton = Container(
-
         padding: EdgeInsets.all(40),
         width: MediaQuery.of(context).size.width,
         child: ElevatedButton(
-          style: ElevatedButton.styleFrom(primary: Colors.grey[800]),
-          onPressed:widget.complaint.status == "verified" || (widget.complaint.status == "resolved" && utype != "student") || (widget.complaint.status == "Registered" && utype == "student") ? null : () async {
-            Session session = Session();
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            String? email = prefs.getString("email");
+            style: ElevatedButton.styleFrom(primary: Colors.grey[800]),
+            onPressed: widget.complaint.status == "verified" ||
+                    (widget.complaint.status == "resolved" &&
+                        utype != "student") ||
+                    (widget.complaint.status == "Registered" &&
+                        utype == "student")
+                ? null
+                : () async {
+                    Session session = Session();
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    String? email = prefs.getString("email");
 
-            if(widget.complaint.status == "Registered") {
-              Map body = { "complaintid":widget.complaint.complaintId, "Status":"resolved", "email":email };
-              var bodyJson = jsonEncode(body);
-              Response r = await session.post(bodyJson, "/change_complaint_status");
-              var responseBody = r.body;
-              final bodyJson1 = json.decode(responseBody);
-              print(bodyJson1);
-              setState(() {
-                widget.complaint.status = "resolved";
-              });
-
-            }
-
-            else if(widget.complaint.status == "resolved") {
-              Map body = { "complaintid":widget.complaint.complaintId, "Status":"verified", "email":email };
-              var bodyJson = jsonEncode(body);
-              Response r = await session.post(bodyJson, "/change_complaint_status");
-              var responseBody = r.body;
-              final bodyJson1 = json.decode(responseBody);
-              print(bodyJson1);
-              setState(() {
-                widget.complaint.status = "verified";
-              });
-
-            }
-
-
-
-
-          },
-          child: getText()
-        ));
+                    if (widget.complaint.status == "Registered") {
+                      Map body = {
+                        "complaintid": widget.complaint.complaintId,
+                        "Status": "resolved",
+                        "email": email
+                      };
+                      var bodyJson = jsonEncode(body);
+                      Response r = await session.post(
+                          bodyJson, "/college_change_complaint_status");
+                      var responseBody = r.body;
+                      final bodyJson1 = json.decode(responseBody);
+                      print(bodyJson1);
+                      setState(() {
+                        widget.complaint.status = "resolved";
+                      });
+                    } else if (widget.complaint.status == "resolved") {
+                      Map body = {
+                        "complaintid": widget.complaint.complaintId,
+                        "Status": "verified",
+                        "email": email
+                      };
+                      var bodyJson = jsonEncode(body);
+                      Response r = await session.post(
+                          bodyJson, "/college_change_complaint_status");
+                      var responseBody = r.body;
+                      final bodyJson1 = json.decode(responseBody);
+                      print(bodyJson1);
+                      setState(() {
+                        widget.complaint.status = "verified";
+                      });
+                    }
+                  },
+            child: getText()));
     final bottomContent = Container(
       // height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -205,7 +228,7 @@ class _DetailPageState extends State<DetailPage> {
       padding: EdgeInsets.all(40.0),
       child: Center(
         child: Column(
-          children:  <Widget>[bottomContentText],
+          children: <Widget>[bottomContentText],
         ),
       ),
     );
@@ -255,30 +278,18 @@ class _DetailPageState extends State<DetailPage> {
   Widget getText() {
     print(widget.complaint.status);
     print(utype);
-    if(widget.complaint.status == "Registered" && utype == "student") {
+    if (widget.complaint.status == "Registered" && utype == "student") {
       return const Text("Registered", style: TextStyle(color: Colors.white));
-    }
-
-    else if(widget.complaint.status == "resolved" && utype == "student") {
+    } else if (widget.complaint.status == "resolved" && utype == "student") {
       return const Text("Verify", style: TextStyle(color: Colors.white));
-    }
-
-    else if(widget.complaint.status == "Registered") {
+    } else if (widget.complaint.status == "Registered") {
       return const Text("Resolve", style: TextStyle(color: Colors.white));
-    }
-
-    else if(widget.complaint.status == "resolved") {
+    } else if (widget.complaint.status == "resolved") {
       return const Text("Resolved", style: TextStyle(color: Colors.white));
-    }
-
-    else if(widget.complaint.status == "verified") {
+    } else if (widget.complaint.status == "verified") {
       return const Text("Verified", style: TextStyle(color: Colors.white));
-    }
-
-    else {
+    } else {
       return Container();
     }
   }
-
-
 }

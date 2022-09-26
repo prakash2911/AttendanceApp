@@ -154,31 +154,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                   20,
                                   curve: Curves.fastOutSlowIn,
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          text: "Welcome ",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 40,
-                                            fontWeight: FontWeight.w300,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            text: "Welcome ",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 40,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: "Back",
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 40,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          children: [
-                                            TextSpan(
-                                              text: "Back",
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 40,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            )
-                                          ],
                                         ),
-                                      ),
-                                    ]
-                                  ),
+                                      ]),
                                 ),
                               ),
 
@@ -217,7 +216,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 kTextFiledInputDecoration
                                                     .copyWith(
                                                         labelText: "Email"),
-                                            keyboardType: TextInputType.emailAddress,
+                                            keyboardType:
+                                                TextInputType.emailAddress,
                                           ),
                                           SizedBox(
                                             height: 25,
@@ -411,10 +411,10 @@ class _LoginScreenState extends State<LoginScreen> {
     var responseBody = r.body;
     final bodyJson1 = json.decode(responseBody);
     var c = bodyJson1["utype"];
-    var name = bodyJson1["name"];
+    // var name = bodyJson1["name"];
     prefs.setString("utype", c);
     prefs.setString("email", email);
-    prefs.setString("name", name);
+    // prefs.setString("name", name);
     print(responseBody);
     if (r.statusCode == 200) {
       return true;
@@ -446,9 +446,8 @@ class _LoginScreenState extends State<LoginScreen> {
     Map body = {};
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
-    Response r = await session.post(bodyJson, "/viewcomplaint");
+    Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
-
     final bodyJson1 = json.decode(responseBody);
     var c = bodyJson1["complaint"];
     print(c);
