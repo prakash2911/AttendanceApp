@@ -380,7 +380,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                           onChanged: (String? newValue) {
                                             setState(() {
                                               studentType = newValue!;
-                                              employeeType = eType[0];
+                                              employeeType = null;
                                             });
                                           },
                                         ),
@@ -398,7 +398,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                           }).toList(),
                                           onChanged: (String? newValue) {
                                             setState(() {
-                                              studentType = sType[0];
+                                              studentType = null;
                                               employeeType = newValue!;
                                             });
                                           },
@@ -565,10 +565,8 @@ class _SignUPScreenState extends State<SignUPScreen> {
     var bodyJson = jsonEncode(body);
     Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
-
     final bodyJson1 = json.decode(responseBody);
     var c = bodyJson1["complaint"];
-    print(c);
     for (int i = 0; i < c.length; i++) {
       Complaint complaint1 = Complaint(
           block: c[i]["block"],
