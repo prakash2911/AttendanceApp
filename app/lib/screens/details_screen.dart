@@ -22,6 +22,7 @@ class DetailPage extends StatefulWidget {
   State<DetailPage> createState() => _DetailPageState();
 }
 
+
 class _DetailPageState extends State<DetailPage> {
   String utype = "";
   String subtype = "";
@@ -71,7 +72,7 @@ class _DetailPageState extends State<DetailPage> {
         SizedBox(height: height * 0.06),
         Text(
           widget.topic,
-          style: TextStyle(color: Colors.white, fontSize: 45.0),
+          style: TextStyle(color: Colors.white, fontSize: 30.0),
         ),
         SizedBox(height: height * 0.01),
         Row(
@@ -108,7 +109,7 @@ class _DetailPageState extends State<DetailPage> {
               ),
             ),
             Expanded(
-              flex: 6,
+              flex: 5,
               child: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
                 child: Text(
@@ -221,6 +222,16 @@ class _DetailPageState extends State<DetailPage> {
                         widget.complaint.status = "verified";
                       });
                     }
+                    final snackBar = SnackBar(
+                      content: const Text('Resolved!'),
+                      action: SnackBarAction(
+                        label: 'Undo',
+                        onPressed: () {
+                          // Some code to undo the change.
+                        },
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   },
             child: getText()));
     final bottomContent = Container(

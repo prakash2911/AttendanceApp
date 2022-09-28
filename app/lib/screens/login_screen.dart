@@ -35,8 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final feature = ["Login", "Sign Up"];
   int i = 0;
-  String email = "";
-  String password = "";
+  String? email = "";
+  String? password = "";
   bool validation = true;
   List<Complaint> complaintPending = [];
   List<Complaint> complaintResolved = [];
@@ -347,7 +347,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 print(email);
                                                 print(password);
                                                 if (await postSignIn(
-                                                    email, password)) {
+                                                    email!, password!)) {
                                                   setState(() {
                                                     validation = true;
                                                   });
@@ -384,7 +384,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 //     MaterialPageRoute(
                                                 //         builder: (context) =>
                                                 //             ComplainTabList()));
+                                                final snackBar = SnackBar(
+                                                  content: const Text('Login Successful!'),
+                                                  action: SnackBarAction(
+                                                    label: 'Undo',
+                                                    onPressed: () {
+                                                      // Some code to undo the change.
+                                                    },
+                                                  ),
+                                                );
+                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                               },
+
                                             )),
                                       ),
                                     ],

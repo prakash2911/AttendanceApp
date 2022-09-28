@@ -536,6 +536,16 @@ class _ComplaintsState extends State<Complaints> {
                                     )),
                             (Route<dynamic> route) => false);
                       }
+                      final snackBar = SnackBar(
+                        content: const Text('Complaint Registered!'),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          onPressed: () {
+                            // Some code to undo the change.
+                          },
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                     child:
                         Text("Submit", style: TextStyle(color: Colors.white)),

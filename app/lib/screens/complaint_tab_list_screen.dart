@@ -123,12 +123,33 @@ class _ComplainTabListState extends State<ComplainTabList> {
                                 builder: (context) => LoginScreen()),
                             (Route<dynamic> route) => false);
                       }
+                      final snackBar = SnackBar(
+                        content: const Text('Logged out'),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          onPressed: () {
+                            // Some code to undo the change.
+                          },
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                     icon: const Icon(Icons.logout)),
                 IconButton(
                     onPressed: () async {
                       await getComplaints();
                       setState(() {});
+
+                      final snackBar = SnackBar(
+                        content: const Text('Super Prakash!'),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          onPressed: () {
+                            // Some code to undo the change.
+                          },
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                     icon: const Icon(Icons.refresh))
               ],
