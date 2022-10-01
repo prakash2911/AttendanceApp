@@ -524,7 +524,7 @@ class _ComplaintsState extends State<Complaints> {
                         "Complaint": complaint,
                         "complainttype": selectedComplaintType
                       };
-                      var v = await postComplaints(body);
+                      List<String> v = await postComplaints(body);
                       await getComplaints();
                       if (v[0] == "Success") {
                         print(v[0] + "In if");
@@ -582,8 +582,6 @@ class _ComplaintsState extends State<Complaints> {
 
     if (f == 1) {
       for (int i = 0; i < body1["data"].length; i++) {
-        // print("aaaaaaaa");
-        // print(body1["data"][i]["Floor"]);
         arr.add(body1["data"][i]["Floor"].toString());
       }
     } else if (f == 2) {
@@ -627,7 +625,7 @@ class _ComplaintsState extends State<Complaints> {
     for (int i = 0; i < c.length; i++) {
       Complaint complaint1 = Complaint(
         block: c[i]["block"],
-        complaint: c[i]["Complaint"],
+        complaint: c[i]["complaint"],
         complainType: c[i]["complainttype"],
         floor: c[i]["floor"].toString(),
         roomNo: c[i]["roomno"].toString(),
@@ -638,11 +636,10 @@ class _ComplaintsState extends State<Complaints> {
       );
       if (complaint1.status == "Registered") {
         complaintPending.add(complaint1);
-      } else {
+      } else if (complaint1.status == "Resolved" ||
+          complaint1.status == "verify") {
         complaintResolved.add(complaint1);
       }
     }
-    print("In getcomplaints");
-    print(responseBody);
   }
 }

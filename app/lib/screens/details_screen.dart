@@ -22,7 +22,6 @@ class DetailPage extends StatefulWidget {
   State<DetailPage> createState() => _DetailPageState();
 }
 
-
 class _DetailPageState extends State<DetailPage> {
   String utype = "";
   String subtype = "";
@@ -180,10 +179,10 @@ class _DetailPageState extends State<DetailPage> {
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(primary: Colors.grey[800]),
             onPressed: widget.complaint.status == "verified" ||
-                    (widget.complaint.status == "resolved" &&
+                    (widget.complaint.status == "Resolved" &&
                         utype != "Student") ||
                     (widget.complaint.status == "Registered" &&
-                        utype == "Student")
+                        subtype != widget.complaint.complainType)
                 ? null
                 : () async {
                     Session session = Session();
@@ -191,22 +190,24 @@ class _DetailPageState extends State<DetailPage> {
                         await SharedPreferences.getInstance();
                     String? email = prefs.getString("email");
 
-                    if (widget.complaint.status == "Registered") {
+                    if (widget.complaint.status == "Registered" &&
+                        subtype == widget.complaint.complainType) {
                       Map body = {
                         "complaintid": widget.complaint.complaintId,
-                        "Status": "resolved",
+                        "Status": "Resolved",
                         "email": email
                       };
                       var bodyJson = jsonEncode(body);
+                      print(bodyJson);
                       Response r = await session.post(
                           bodyJson, "/college_change_complaint_status");
                       var responseBody = r.body;
                       final bodyJson1 = json.decode(responseBody);
-                      print(bodyJson1);
                       setState(() {
-                        widget.complaint.status = "resolved";
+                        widget.complaint.status = "Resolved";
                       });
-                    } else if (widget.complaint.status == "resolved") {
+                    } else if (widget.complaint.status == "Resolved" &&
+                        utype == "Student") {
                       Map body = {
                         "complaintid": widget.complaint.complaintId,
                         "Status": "verified",
@@ -215,6 +216,7 @@ class _DetailPageState extends State<DetailPage> {
                       var bodyJson = jsonEncode(body);
                       Response r = await session.post(
                           bodyJson, "/college_change_complaint_status");
+                      print(bodyJson + "\n\n");
                       var responseBody = r.body;
                       final bodyJson1 = json.decode(responseBody);
                       print(bodyJson1);
@@ -258,11 +260,12 @@ class _DetailPageState extends State<DetailPage> {
   Widget getText() {
     if (widget.complaint.status == "Registered" && utype == "Student") {
       return const Text("Registered", style: TextStyle(color: Colors.white));
-    } else if (widget.complaint.status == "resolved" && utype == "Student") {
+    } else if (widget.complaint.status == "Resolved" && utype == "Student") {
       return const Text("Verify", style: TextStyle(color: Colors.white));
-    } else if (widget.complaint.status == "Registered") {
+    } else if (widget.complaint.status == "Registered" &&
+        subtype == widget.complaint.complainType) {
       return const Text("Resolve", style: TextStyle(color: Colors.white));
-    } else if (widget.complaint.status == "resolved") {
+    } else if (widget.complaint.status == "Resolved") {
       return const Text("Resolved", style: TextStyle(color: Colors.white));
     } else if (widget.complaint.status == "verified") {
       return const Text("Verified", style: TextStyle(color: Colors.white));

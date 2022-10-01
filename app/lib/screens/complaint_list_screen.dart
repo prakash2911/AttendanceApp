@@ -11,8 +11,9 @@ import '../person.dart';
 import '../services.dart';
 
 class ComplaintList extends StatefulWidget {
-  final List<Complaint> complaint;
-  const ComplaintList({Key? key, required this.complaint}) : super(key: key);
+  // final List<Complaint> complaint;
+  final String Status;
+  const ComplaintList({Key? key, required this.Status}) : super(key: key);
 
   @override
   _ComplaintListState createState() => _ComplaintListState();
@@ -92,7 +93,40 @@ class _ComplaintListState extends State<ComplaintList> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    complaints = widget.complaint;
+    getComplaints();
+  }
+
+  Future<void> getComplaints() async {
+    Session session = Session();
+    Map body = {};
+    complaints.removeRange(0, complaints.length);
+    print(complaints.length);
+    print("hi");
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    var bodyJson = jsonEncode(body);
+    Response r = await session.post(bodyJson, "/college_viewcomplaint");
+    var responseBody = r.body;
+    final bodyJson1 = json.decode(responseBody);
+    var c = bodyJson1["complaint"];
+    print(c.length);
+    for (int i = 0; i < c.length; i++) {
+      Complaint complaint1 = Complaint(
+          block: c[i]["block"],
+          complaint: c[i]["complaint"],
+          complainType: c[i]["complainttype"],
+          floor: c[i]["floor"].toString(),
+          roomNo: c[i]["roomno"].toString(),
+          status: c[i]["status"],
+          complaintId: c[i]["complaintid"].toString(),
+          timeStamp: c[i]["cts"].toString(),
+          updateStamp: c[i]["uts"].toString());
+      if (complaint1.status == widget.Status) {
+        print("in status");
+        complaints.add(complaint1);
+      }
+      print(complaints.length);
+      setState(() {});
+    }
   }
 
   @override
@@ -102,33 +136,7 @@ class _ComplaintListState extends State<ComplaintList> {
       body: RefreshIndicator(
         onRefresh: () {
           return Future.delayed(Duration(seconds: 1), () async {
-            Session session = Session();
-            Map body = {};
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            var bodyJson = jsonEncode(body);
-            Response r = await session.post(bodyJson, "/college_viewcomplaint");
-            var responseBody = r.body;
-            String? email = prefs.getString("email");
-            String? utype = prefs.getString("utype");
-
-            final bodyJson1 = json.decode(responseBody);
-            var c = bodyJson1["complaint"];
-            List<Complaint> arr = [];
-            for (int i = 0; i < c.length; i++) {
-              Complaint complaint1 = Complaint(
-                  block: c[i]["block"],
-                  complaint: c[i]["complaint"],
-                  complainType: c[i]["complainttype"],
-                  floor: c[i]["floor"].toString(),
-                  roomNo: c[i]["roomno"].toString(),
-                  status: c[i]["status"],
-                  complaintId: c[i]["complaintid"].toString(),
-                  timeStamp: c[i]["cts"].toString(),
-                  updateStamp: c[i]["uts"].toString());
-              arr.add(complaint1);
-            }
-            complaints = arr;
-            setState(() {});
+            await getComplaints();
           });
         },
         child: ListView.builder(

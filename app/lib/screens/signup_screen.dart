@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:complaint_app/screens/complaint_tab_list_screen.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:complaint_app/animation/animations.dart';
@@ -25,14 +26,14 @@ class SignUPScreen extends StatefulWidget {
 
 class _SignUPScreenState extends State<SignUPScreen> {
   bool _passwordVisible = false;
-  bool _passwordVisible1 = false;
+  // bool _passwordVisible1 = false;
   bool _checkemptype = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _passwordVisible = false;
-    _passwordVisible1 = false;
+    // _passwordVisible1 = false;
   }
 
   final feature = ["Login", "Sign Up"];
@@ -40,7 +41,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
   String password = "";
   String name = "";
   String passwordCheck = "";
-  String usertype = "Student";
+  String? usertype = null;
   // String displayText = "Select the option";
   String? employeeType = null;
   String? studentType = null;
@@ -100,7 +101,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                     color: i == index
                                                         ? Colors.black
                                                         : Colors.grey,
-                                                    fontSize: 20,
+                                                    fontSize: 18,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
@@ -123,31 +124,6 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                   ),
                                 ),
                                 Expanded(child: Container()),
-
-                                // Profile
-                                // RightAnime(
-                                //   1,
-                                //   15,
-                                //   curve: Curves.easeInOutQuad,
-                                //   child: ClipRRect(
-                                //     borderRadius: BorderRadius.circular(20),
-                                //     child: Container(
-                                //       width: 60,
-                                //       height: 60,
-                                //       color: Colors.red[400],
-                                //       child: i == 0
-                                //           ? Image(
-                                //               image: NetworkImage(
-                                //                   "https://i.pinimg.com/564x/5d/a3/d2/5da3d22d08e353184ca357db7800e9f5.jpg"),
-                                //             )
-                                //           : Icon(
-                                //               Icons.account_circle_outlined,
-                                //               color: Colors.white,
-                                //               size: 40,
-                                //             ),
-                                //     ),
-                                //   ),
-                                // ),
                               ]),
 
                               SizedBox(
@@ -341,16 +317,26 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                       SizedBox(
                                         height: 10,
                                       ),
-                                      DropdownButtonFormField(
-                                        hint: Text('Select the Usertype'),
-                                        value: usertype,
+                                      DropdownButtonHideUnderline(
+                                          child: DropdownButton2(
                                         isExpanded: true,
+                                        hint: const Text(
+                                          "User Type",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w100),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                         items: uType.map((String items) {
                                           return DropdownMenuItem(
                                             value: items,
-                                            child: Text(items),
+                                            child: Text(
+                                              items,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                           );
                                         }).toList(),
+                                        value: usertype,
                                         onChanged: (String? newValue) {
                                           setState(() {
                                             usertype = newValue!;
@@ -360,48 +346,79 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                     : false;
                                           });
                                         },
-                                      ),
+                                      )),
+                                      // DropdownButtonFormField(
+                                      //   hint: Text('Select the Usertype'),
+                                      //   value: usertype,
+                                      //   isExpanded: true,
+                                      //   items: uType.map((String items) {
+                                      //     return DropdownMenuItem(
+                                      //       value: items,
+                                      //       child: Text(items),
+                                      //     );
+                                      //   }).toList(),
+                                      //   onChanged: (String? newValue) {
+                                      //     setState(() {
+                                      //       usertype = newValue!;
+                                      //       _checkemptype =
+                                      //           (usertype == "Employee")
+                                      //               ? true
+                                      //               : false;
+                                      //     });
+                                      //   },
+                                      // ),
                                       SizedBox(
                                         height: 10,
                                       ),
                                       Visibility(
                                         visible: _checkemptype,
-                                        replacement: DropdownButtonFormField(
-                                          hint: Text('Select the Student Type'),
-                                          value: studentType,
-                                          isExpanded: true,
-                                          decoration: InputDecoration(),
-                                          items: sType.map((String items) {
-                                            return DropdownMenuItem(
-                                              value: items,
-                                              child: Text(items),
-                                            );
-                                          }).toList(),
-                                          onChanged: (String? newValue) {
-                                            setState(() {
-                                              studentType = newValue!;
-                                              employeeType = null;
-                                            });
-                                          },
+                                        replacement:
+                                            DropdownButtonHideUnderline(
+                                          child: DropdownButton2(
+                                            isExpanded: true,
+                                            hint: Text(
+                                              'Student Type',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w100),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            items: sType.map((String items) {
+                                              return DropdownMenuItem(
+                                                value: items,
+                                                child: Text(items),
+                                              );
+                                            }).toList(),
+                                            value: studentType,
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                studentType = newValue!;
+                                                employeeType = null;
+                                              });
+                                            },
+                                          ),
                                         ),
-                                        child: DropdownButtonFormField(
-                                          hint:
-                                              Text('Select the Employee type'),
-                                          value: employeeType,
-                                          isExpanded: true,
-                                          decoration: InputDecoration(),
-                                          items: eType.map((String items) {
-                                            return DropdownMenuItem(
-                                              value: items,
-                                              child: Text(items),
-                                            );
-                                          }).toList(),
-                                          onChanged: (String? newValue) {
-                                            setState(() {
-                                              studentType = null;
-                                              employeeType = newValue!;
-                                            });
-                                          },
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton2(
+                                            isExpanded: true,
+                                            hint: Text(
+                                              'Student Type',
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            items: eType.map((String items) {
+                                              return DropdownMenuItem(
+                                                value: items,
+                                                child: Text(items),
+                                              );
+                                            }).toList(),
+                                            value: employeeType,
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                studentType = null;
+                                                employeeType = newValue!;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -456,10 +473,6 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                       final prefs =
                                                           await SharedPreferences
                                                               .getInstance();
-                                                      var url = Uri.parse(URL);
-                                                      print(email);
-                                                      print(name);
-                                                      print(password);
                                                       var selectOption =
                                                           (studentType != null)
                                                               ? studentType
@@ -546,11 +559,10 @@ class _SignUPScreenState extends State<SignUPScreen> {
           updateStamp: c[i]["uts"].toString());
       if (complaint1.status == "Registered") {
         complaintPending.add(complaint1);
-      } else {
+      } else if (complaint1.status == "Resolved") {
         complaintResolved.add(complaint1);
       }
+      setState(() {});
     }
-
-    print(responseBody);
   }
 }

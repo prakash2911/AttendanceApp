@@ -29,28 +29,34 @@ class ComplainTabList extends StatefulWidget {
 class _ComplainTabListState extends State<ComplainTabList> {
   List<Complaint> complaintPending1 = [];
   List<Complaint> complaintResolved1 = [];
-
+  String? utype;
+  String? subtype;
   @override
-  void initState() {
+  initState() {
     // TODO: implement initState
     super.initState();
+    getUType();
+    setState(() {});
     getComplaints();
   }
 
-  Future<void> getComplaints() async {
+  Future<void> getUType() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      complaintPending1 = widget.complaintPending;
-      complaintResolved1 = widget.complaintResolved;
+      utype = (prefs.getString("utype"))!;
+      subtype = (prefs.getString("subtype"))!;
     });
+  }
+
+  Future<void> getComplaints() async {
     Session session = Session();
     Map body = {};
+    complaintResolved1.removeRange(0, complaintResolved1.length);
+    complaintPending1.removeRange(0, complaintResolved1.length);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
-    var db = await openDatabase('mit_users.db');
-
     Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
-
     final bodyJson1 = json.decode(responseBody);
     var c = bodyJson1["complaint"];
     for (int i = 0; i < c.length; i++) {
@@ -64,24 +70,14 @@ class _ComplainTabListState extends State<ComplainTabList> {
           complaintId: c[i]["complaintid"].toString(),
           timeStamp: c[i]["cts"].toString(),
           updateStamp: c[i]["uts"].toString());
-      final List<Complaint> complaintUpdated = [];
       if (complaint1.status == "Registered") {
-        complaintUpdated.add(complaint1);
-      } else {
-        complaintUpdated.add(complaint1);
+        complaintPending1.add(complaint1);
+      } else if (complaint1.status == "Resolved" ||
+          complaint1.status == "verify") {
+        complaintResolved1.add(complaint1);
       }
-      if (complaint1.status == "Registered") {
-        setState(() {
-          complaintPending1 = complaintUpdated;
-        });
-      } else {
-        setState(() {
-          complaintResolved1 = complaintUpdated;
-        });
-      }
+      setState(() {});
     }
-
-    print(responseBody);
   }
 
   @override
@@ -92,7 +88,7 @@ class _ComplainTabListState extends State<ComplainTabList> {
             drawer: NavBar(),
             appBar: AppBar(
               backgroundColor: Colors.grey[900],
-              bottom: const TabBar(
+              bottom: TabBar(
                 tabs: [
                   Tab(
                     text: "Pending",
@@ -105,7 +101,6 @@ class _ComplainTabListState extends State<ComplainTabList> {
               actions: [
                 IconButton(
                     onPressed: () async {
-                      print("dei logout");
                       Map body = {};
                       var bodyJson = jsonEncode(body);
                       Session session = Session();
@@ -138,18 +133,6 @@ class _ComplainTabListState extends State<ComplainTabList> {
                 IconButton(
                     onPressed: () async {
                       await getComplaints();
-                      setState(() {});
-
-                      final snackBar = SnackBar(
-                        content: const Text('Super Prakash!'),
-                        action: SnackBarAction(
-                          label: 'Undo',
-                          onPressed: () {
-                            // Some code to undo the change.
-                          },
-                        ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                     icon: const Icon(Icons.refresh))
               ],
@@ -157,9 +140,11 @@ class _ComplainTabListState extends State<ComplainTabList> {
             body: TabBarView(
               children: [
                 ComplaintList(
-                  complaint: widget.complaintPending,
+                  Status: "Registered",
                 ),
-                ComplaintList(complaint: widget.complaintResolved)
+                ComplaintList(
+                  Status: "Resolved",
+                )
               ],
             ),
             floatingActionButton: FloatingActionButton(
@@ -195,7 +180,7 @@ class _ComplainTabListState extends State<ComplainTabList> {
       f = 2;
     }
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
     Session session = Session();
     Response r = await session.post(bodyJson, "/college_registercomplaint");
@@ -206,8 +191,6 @@ class _ComplainTabListState extends State<ComplainTabList> {
 
     if (f == 1) {
       for (int i = 0; i < body1["data"].length; i++) {
-        print("aaaaaaaa");
-        // print(body1["data"][i]["Floor"]);
         arr.add(body1["data"][i]["Floor"].toString());
       }
     } else if (f == 2) {

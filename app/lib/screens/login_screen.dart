@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         color: i == index
                                                             ? Colors.black
                                                             : Colors.grey,
-                                                        fontSize: 20,
+                                                        fontSize: 19,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -114,31 +114,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     Expanded(child: Container()),
-
-                                    // Profile
-                                    // RightAnime(
-                                    //   1,
-                                    //   15,
-                                    //   curve: Curves.easeInOutQuad,
-                                    //   child: ClipRRect(
-                                    //     borderRadius: BorderRadius.circular(20),
-                                    //     child: Container(
-                                    //       width: 60,
-                                    //       height: 60,
-                                    //       color: Colors.red[400],
-                                    //       child: i == 0
-                                    //           ? Image(
-                                    //               image: NetworkImage(
-                                    //                   "https://i.pinimg.com/564x/5d/a3/d2/5da3d22d08e353184ca357db7800e9f5.jpg"),
-                                    //             )
-                                    //           : Icon(
-                                    //               Icons.account_circle_outlined,
-                                    //               color: Colors.white,
-                                    //               size: 40,
-                                    //             ),
-                                    //     ),
-                                    //   ),
-                                    // ),
                                   ]),
 
                               SizedBox(
@@ -258,37 +233,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                               });
                                             },
                                           ),
-
                                           SizedBox(
                                             height: 5,
                                           ),
-
-                                          // FaceBook and Google ICon
-                                          // TopAnime(
-                                          //   1,
-                                          //   10,
-                                          //   child: Row(
-                                          //     children: [
-                                          //       IconButton(
-                                          //         icon: FaIcon(
-                                          //           FontAwesomeIcons.facebookF,
-                                          //           size: 30,
-                                          //         ),
-                                          //         onPressed: () {},
-                                          //       ),
-                                          //       SizedBox(
-                                          //         width: 15,
-                                          //       ),
-                                          //       IconButton(
-                                          //         icon: FaIcon(
-                                          //             FontAwesomeIcons
-                                          //                 .googlePlusG,
-                                          //             size: 35),
-                                          //         onPressed: () {},
-                                          //       ),
-                                          //     ],
-                                          //   ),
-                                          // )
                                         ],
                                       ),
                                     ),
@@ -357,7 +304,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   prefs.setBool(
                                                       "isSignedIn", true);
                                                   await getComplaints();
-
                                                   // Navigator.of(context).pushAndRemoveUntil(
                                                   //     MaterialPageRoute(
                                                   //         builder: (context) =>
@@ -385,7 +331,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 //         builder: (context) =>
                                                 //             ComplainTabList()));
                                                 final snackBar = SnackBar(
-                                                  content: const Text('Login Successful!'),
+                                                  content: const Text(
+                                                      'Login Successful!'),
                                                   action: SnackBarAction(
                                                     label: 'Undo',
                                                     onPressed: () {
@@ -393,9 +340,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     },
                                                   ),
                                                 );
-                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snackBar);
                                               },
-
                                             )),
                                       ),
                                     ],
@@ -421,11 +368,11 @@ class _LoginScreenState extends State<LoginScreen> {
     Response r = await session.post(bodyJson, "/login");
     var responseBody = r.body;
     final bodyJson1 = json.decode(responseBody);
-    var c = bodyJson1["utype"];
-    // var name = bodyJson1["name"];
-    prefs.setString("utype", c);
+
+    prefs.setString("utype", bodyJson1['utype']!);
+    prefs.setString("subtype", bodyJson1['subtype']!);
     prefs.setString("email", email);
-    prefs.setString("name", bodyJson1['username']);
+    prefs.setString("name", bodyJson1['username']!);
     print(responseBody);
     if (r.statusCode == 200) {
       return true;
@@ -434,34 +381,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> getComplaints() async {
-    // sqlite database
-    var db = await openDatabase('mit_users.db');
-    await db.execute("""
-    CREATE TABLE IF NOT EXISTS complaints_pending (
-  complaintid int(11) NOT NULL,
-  email varchar(50) NOT NULL,
-  block varchar(45) NOT NULL,
-  floor int(11) NOT NULL,
-  roomno varchar(25) NOT NULL,
-  complaint varchar(300) NOT NULL,
-  complainttype varchar(25) NOT NULL,
-  status varchar(20) NOT NULL,
-  ts timestamp NOT NULL,
-  PRIMARY KEY (complaintid)
-);
-    """);
-
-    List<String> temp = [];
-
     Session session = Session();
     Map body = {};
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
     Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
     final bodyJson1 = json.decode(responseBody);
     var c = bodyJson1["complaint"];
-    print(c);
     for (int i = 0; i < c.length; i++) {
       Complaint complaint1 = Complaint(
           block: c[i]["block"],
@@ -475,25 +401,10 @@ class _LoginScreenState extends State<LoginScreen> {
           updateStamp: c[i]["uts"].toString());
       if (complaint1.status == "Registered") {
         complaintPending.add(complaint1);
-        int a = await db.rawInsert(
-            "INSERT OR IGNORE INTO complaints_pending(complaintid, email, block, floor, roomno, complaint, complainttype, status, ts) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-              c[i]["complaintid"],
-              email,
-              c[i]["block"],
-              c[i]["floor"],
-              c[i]["roomno"],
-              c[i]["complaint"],
-              c[i]["complainttype"],
-              c[i]["status"],
-              c[i]["ts"]
-            ]);
-        print(a);
-      } else {
+      } else if (complaint1.status == "Resolved") {
         complaintResolved.add(complaint1);
       }
+      setState(() {});
     }
-
-    print(responseBody);
   }
 }
