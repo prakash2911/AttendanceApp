@@ -50,7 +50,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
   List<Complaint> complaintResolved = [];
   var uType = ["Student", "Employee"];
   var eType = ["Teacher", "RC"];
-  var sType = ["DayScholar", "Hosteler"];
+  var sType = ["DayScholar", "Hosteller"];
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;

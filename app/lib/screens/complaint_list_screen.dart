@@ -1,12 +1,8 @@
 import 'dart:convert';
-
 import 'package:complaint_app/complaint.dart';
-import 'package:complaint_app/main.dart';
 import 'package:complaint_app/screens/details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../person.dart';
 import '../services.dart';
 
@@ -14,7 +10,6 @@ class ComplaintList extends StatefulWidget {
   // final List<Complaint> complaint;
   final String Status;
   const ComplaintList({Key? key, required this.Status}) : super(key: key);
-
   @override
   _ComplaintListState createState() => _ComplaintListState();
 }
@@ -30,7 +25,6 @@ class _ComplaintListState extends State<ComplaintList> {
   ];
 
   List<Complaint> complaints = [];
-
   Widget personDetailCard(Person) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -101,8 +95,6 @@ class _ComplaintListState extends State<ComplaintList> {
     Map body = {};
     complaints.removeRange(0, complaints.length);
     print(complaints.length);
-    print("hi");
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
     Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
@@ -165,10 +157,13 @@ class _ComplaintListState extends State<ComplaintList> {
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: 50.0,
-                            height: 50.0,
+                          // padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.fromLTRB(8, 8, 10, 8),
+                          child: Image.asset(
+                            "assests/" + widget.Status + ".gif",
+                            height: 50,
+                            fit: BoxFit.contain,
+                            width: 50,
                           ),
                         ),
                         Expanded(

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:complaint_app/screens/complaint_tab_list_screen.dart';
-import 'package:complaint_app/screens/sidebar.dart';
 import 'package:complaint_app/services.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -601,6 +600,7 @@ class _ComplaintsState extends State<Complaints> {
         arr.add(body1["data"][i]["complaints"].toString());
       }
     }
+    print(body1["status"] + "kjbkjbl");
     if (body1["status"] == "You have successfully registered a Complaint.") {
       List<String> ls = [];
       ls.add("Success");

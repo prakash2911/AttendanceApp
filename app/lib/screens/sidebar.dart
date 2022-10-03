@@ -1,10 +1,7 @@
 import 'dart:convert';
-
-import 'package:complaint_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../complaint.dart';
 import '../services.dart';
 import 'complaint_tab_list_screen.dart';
@@ -19,19 +16,18 @@ class _NavBarState extends State<NavBar> {
 
   List<Complaint> complaintResolved = [];
 
-  String name = "", email = "";
-
+  String? name, email, utype, subtype;
+  bool? hostelVisibility, collegeVisibility, attendanceVisibility;
   @override
   void initState() {
-    // TODO: implement initState
-    getUType();
+    // TODO: implement initStates
+    getDetails();
     getComplaints();
   }
 
   Future<void> getComplaints() async {
     Session session = Session();
     Map body = {};
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
     Response r = await session.post(bodyJson, "/college_viewcomplaint");
     var responseBody = r.body;
@@ -57,12 +53,19 @@ class _NavBarState extends State<NavBar> {
     }
   }
 
-  Future<void> getUType() async {
+  Future<void> getDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       name = (prefs.getString("name"))!;
       email = (prefs.getString("email"))!;
-      print(name + email);
+      utype = (prefs.getString("utype"))!;
+      subtype = (prefs.getString("subtype"))!;
+      hostelVisibility =
+          (subtype == 'Hosteller' || subtype == "RC") ? true : false;
+      collegeVisibility =
+          (utype == "Student" || utype == "Employee") ? true : false;
+      attendanceVisibility =
+          (utype == "Student" || subtype == "Teacher") ? true : false;
     });
   }
 
@@ -74,12 +77,12 @@ class _NavBarState extends State<NavBar> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(name),
-            accountEmail: Text(email),
+            accountName: Text(name!),
+            accountEmail: Text(email!),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                   child: Image.asset(
-                "assests/img2.gif",
+                "assests/profile.gif",
                 fit: BoxFit.fill,
                 width: 90,
                 height: 90,
@@ -92,44 +95,53 @@ class _NavBarState extends State<NavBar> {
                   fit: BoxFit.fill, image: AssetImage("assests/sp.jpg")),
             ),
           ),
-          ListTile(
-            leading: Icon(
-              Icons.calendar_month,
-              color: Colors.white,
-            ),
-            title: Text(
-              'Attendance',
-              style: const TextStyle(
+          Visibility(
+            visible: attendanceVisibility!,
+            child: ListTile(
+              leading: Icon(
+                Icons.calendar_month,
                 color: Colors.white,
               ),
+              title: Text(
+                'Attendance',
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onTap: () => selectedItem(context, 0),
             ),
-            onTap: () => selectedItem(context, 0),
           ),
-          ListTile(
-            leading: Icon(
-              Icons.backpack,
-              color: Colors.white,
-            ),
-            title: Text(
-              'Complaints - college',
-              style: const TextStyle(
+          Visibility(
+            visible: collegeVisibility!,
+            child: ListTile(
+              leading: Icon(
+                Icons.backpack,
                 color: Colors.white,
               ),
+              title: Text(
+                'Complaints - college',
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onTap: () => selectedItem(context, 1),
             ),
-            onTap: () => selectedItem(context, 1),
           ),
-          ListTile(
-            leading: Icon(
-              Icons.home,
-              color: Colors.white,
-            ),
-            title: Text(
-              'Complaints - hostel',
-              style: const TextStyle(
+          Visibility(
+            visible: hostelVisibility!,
+            child: ListTile(
+              leading: Icon(
+                Icons.home,
                 color: Colors.white,
               ),
+              title: Text(
+                'Complaints - hostel',
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onTap: () => selectedItem(context, 2),
             ),
-            onTap: () => selectedItem(context, 2),
           ),
         ],
       ),

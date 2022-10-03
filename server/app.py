@@ -5,11 +5,8 @@ import re
 import hashlib
 from datetime import datetime
 import json
-
 from matplotlib.font_manager import json_dump
-
 app = Flask(__name__)
-
 
 app.secret_key = 'Tahve bqltuyej tbrjereq qobfd MvIaTq cmanmvpcuxsz iesh tihkel CnTu dretpyauritompeanstd '
 
@@ -246,7 +243,7 @@ def change_complaint_status():
                 return returner
         elif (session['subtype']=='electrician'):
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, complaints.block, floor, roomno, complaint, complainttype, status, uts from complaints, users where complainttype= %s and complaintid=%s ",(session['subtype'], num,))
+            cursor.execute("select complaintid, complaints.block, floor, roomno, complaint, complainttype, status, uts from complaints where complainttype= %s and complaintid=%s ",(session['subtype'], num,))
             data = cursor.fetchone()
             if data:
                     timenow = datetime.now()
@@ -261,7 +258,7 @@ def change_complaint_status():
                 return returner
         elif (session['subtype']=='education aid'):
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, complaints.block, floor, roomno, complaint, complainttype, status, uts from complaints, users where complainttype= %s and complaintid=%s ",(session['subtype'], num,))
+            cursor.execute("select complaintid, complaints.block, floor, roomno, complaint, complainttype, status, uts from complaints where complainttype= %s and complaintid=%s ",(session['subtype'], num,))
             data = cursor.fetchone()
             if data:
                 timenow = datetime.now()
@@ -275,7 +272,7 @@ def change_complaint_status():
                 return returner
         elif (session['subtype']=='civil and maintenance'):
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, complaints.block, floor, roomno, complaint, complainttype, status, uts from complaints, users where complainttype= %s and complaintid=%s ",(session['subtype'], num,))
+            cursor.execute("select complaintid,block, floor, roomno, complaint, complainttype, status, uts from complaints where complainttype= %s and complaintid=%s ",(session['subtype'], num,))
             data = cursor.fetchone()
             if data:
                 timenow = datetime.now()
@@ -289,7 +286,7 @@ def change_complaint_status():
                 return returner
         elif(True):
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, complaints.block, floor, roomno, complaint, complainttype, status, uts, utype from complaints, users where complaintid=%s and complaints.block = users.block and users.utype=%s ",(num,session['utype'],))
+            cursor.execute("select complaintid, complaints.block, floor, roomno, complaint, complainttype, status, uts, utype from complaints where complaintid=%s and complaints.block = users.block and users.utype=%s ",(num,session['utype'],))
             data = cursor.fetchone()
             if data:
                 if (Status =="Resolved"):

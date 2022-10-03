@@ -16,11 +16,13 @@ import '../services.dart';
 class ComplainTabList extends StatefulWidget {
   final List<Complaint> complaintPending;
   final List<Complaint> complaintResolved;
-  const ComplainTabList(
-      {Key? key,
-      required this.complaintPending,
-      required this.complaintResolved})
-      : super(key: key);
+  // final bool addButtonVisibility;
+  const ComplainTabList({
+    Key? key,
+    required this.complaintPending,
+    required this.complaintResolved,
+    // required this.addButtonVisibility,
+  }) : super(key: key);
 
   @override
   _ComplainTabListState createState() => _ComplainTabListState();
@@ -31,6 +33,7 @@ class _ComplainTabListState extends State<ComplainTabList> {
   List<Complaint> complaintResolved1 = [];
   String? utype;
   String? subtype;
+  bool _addButtonVisibility = true;
   @override
   initState() {
     // TODO: implement initState
@@ -45,6 +48,10 @@ class _ComplainTabListState extends State<ComplainTabList> {
     setState(() {
       utype = (prefs.getString("utype"))!;
       subtype = (prefs.getString("subtype"))!;
+      _addButtonVisibility =
+          (utype == "Student" || subtype == "Teacher" || subtype == "RC")
+              ? true
+              : false;
     });
   }
 
@@ -147,25 +154,28 @@ class _ComplainTabListState extends State<ComplainTabList> {
                 )
               ],
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                Map body = {
-                  "Block": "None",
-                  "Floor": "None",
-                  "RoomNo": "None",
-                  "Complaint": "None",
-                  "complainttype": "None"
-                };
-                List<String> s = await postComplaints(body);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Complaints(
-                              blocks: s,
-                            )));
-              },
-              backgroundColor: Colors.grey[800],
-              child: const Icon(Icons.add),
+            floatingActionButton: Visibility(
+              visible: _addButtonVisibility,
+              child: FloatingActionButton(
+                onPressed: () async {
+                  Map body = {
+                    "Block": "None",
+                    "Floor": "None",
+                    "RoomNo": "None",
+                    "Complaint": "None",
+                    "complainttype": "None"
+                  };
+                  List<String> s = await postComplaints(body);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Complaints(
+                                blocks: s,
+                              )));
+                },
+                backgroundColor: Colors.grey[800],
+                child: Icon(Icons.add),
+              ),
             )));
   }
 
