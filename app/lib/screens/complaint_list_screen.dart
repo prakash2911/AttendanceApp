@@ -7,9 +7,11 @@ import '../person.dart';
 import '../services.dart';
 
 class ComplaintList extends StatefulWidget {
-  // final List<Complaint> complaint;
   final String Status;
-  const ComplaintList({Key? key, required this.Status}) : super(key: key);
+  final String DomainType;
+  const ComplaintList(
+      {Key? key, required this.Status, required this.DomainType})
+      : super(key: key);
   @override
   _ComplaintListState createState() => _ComplaintListState();
 }
@@ -36,10 +38,10 @@ class _ComplaintListState extends State<ComplaintList> {
               context,
               MaterialPageRoute(
                   builder: (context) => DetailPage(
-                        topic: topic,
-                        description: description,
-                        complaint: Person,
-                      )));
+                      topic: topic,
+                      description: description,
+                      complaint: Person,
+                      DomainType: widget.DomainType)));
         },
         child: Card(
           color: Colors.grey[800],
@@ -96,7 +98,8 @@ class _ComplaintListState extends State<ComplaintList> {
     complaints.removeRange(0, complaints.length);
     print(complaints.length);
     var bodyJson = jsonEncode(body);
-    Response r = await session.post(bodyJson, "/college_viewcomplaint");
+    Response r = await session.post(
+        bodyJson, "/" + widget.DomainType + "_viewcomplaint");
     var responseBody = r.body;
     final bodyJson1 = json.decode(responseBody);
     var c = bodyJson1["complaint"];
@@ -112,11 +115,7 @@ class _ComplaintListState extends State<ComplaintList> {
           complaintId: c[i]["complaintid"].toString(),
           timeStamp: c[i]["cts"].toString(),
           updateStamp: c[i]["uts"].toString());
-      if (complaint1.status == widget.Status) {
-        print("in status");
-        complaints.add(complaint1);
-      }
-      print(complaints.length);
+      if (complaint1.status == widget.Status) complaints.add(complaint1);
       setState(() {});
     }
   }
@@ -137,8 +136,8 @@ class _ComplaintListState extends State<ComplaintList> {
               padding: const EdgeInsets.all(10.0),
               child: GestureDetector(
                 onTap: () {
-                  String topic = complaints[index].block ?? "";
-                  String description = complaints[index].complaint ?? "";
+                  String topic = complaints[index].block ?? "error";
+                  String description = complaints[index].complaint ?? "error";
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -146,6 +145,7 @@ class _ComplaintListState extends State<ComplaintList> {
                                 topic: topic,
                                 description: description,
                                 complaint: complaints[index],
+                                DomainType: widget.DomainType,
                               )));
                 },
                 child: Card(

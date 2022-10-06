@@ -4,15 +4,17 @@ import 'package:complaint_app/screens/complaint_tab_list_screen.dart';
 import 'package:complaint_app/services.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:complaint_app/constant.dart' as constants;
+// import 'package:complaint_app/constant.dart' as constants;
 import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 import '../complaint.dart';
 
 class Complaints extends StatefulWidget {
   final List<String> blocks;
-  const Complaints({Key? key, required this.blocks}) : super(key: key);
+  final String DomainType;
+  const Complaints({Key? key, required this.blocks, required this.DomainType})
+      : super(key: key);
 
   @override
   _ComplaintsState createState() => _ComplaintsState();
@@ -108,7 +110,7 @@ class _ComplaintsState extends State<Complaints> {
                         "complainttype": "None",
                         "Complaint": "None"
                       };
-                      floors = await postComplaints(body);
+                      floors = await postComplaints(body, widget.DomainType);
 
                       roomNos = [];
                       selectedFloor = null;
@@ -180,7 +182,7 @@ class _ComplaintsState extends State<Complaints> {
                         "complainttype": "None",
                         "Complaint": "None"
                       };
-                      roomNos = await postComplaints(body);
+                      roomNos = await postComplaints(body, widget.DomainType);
                       selectedRoomNo = null;
                       selectedComplaintType = null;
                       complaint = null;
@@ -251,7 +253,8 @@ class _ComplaintsState extends State<Complaints> {
                         "complainttype": "None",
                         "Complaint": "None",
                       };
-                      complaintTypes = await postComplaints(body);
+                      complaintTypes =
+                          await postComplaints(body, widget.DomainType);
                       selectedComplaintType = null;
                       complaints = [];
                       complaint = null;
@@ -321,7 +324,8 @@ class _ComplaintsState extends State<Complaints> {
                         "complainttype": selectedComplaintType,
                         "Complaint": "None",
                       };
-                      complaints = await postComplaints(body);
+                      complaints =
+                          await postComplaints(body, widget.DomainType);
                       complaint = null;
                       print(complaints);
                       setState(() {});
@@ -514,7 +518,8 @@ class _ComplaintsState extends State<Complaints> {
                   padding: EdgeInsets.all(40),
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.grey[800]),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[800]),
                     onPressed: () async {
                       Map body = {
                         "Block": selectBlock,
@@ -523,15 +528,17 @@ class _ComplaintsState extends State<Complaints> {
                         "Complaint": complaint,
                         "complainttype": selectedComplaintType
                       };
-                      List<String> v = await postComplaints(body);
+                      List<String> v =
+                          await postComplaints(body, widget.DomainType);
                       await getComplaints();
                       if (v[0] == "Success") {
-                        print(v[0] + "In if");
+                        print(v[0]);
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => ComplainTabList(
                                       complaintPending: complaintPending,
                                       complaintResolved: complaintResolved,
+                                      DomainType: widget.DomainType,
                                     )),
                             (Route<dynamic> route) => false);
                       }
@@ -556,8 +563,9 @@ class _ComplaintsState extends State<Complaints> {
     );
   }
 
-  static Future<List<String>> postComplaints(Map body) async {
-    var url = Uri.parse(constants.URL);
+  static Future<List<String>> postComplaints(
+      Map body, String DomainType) async {
+    // var url = Uri.parse(constants.URL);
     int f = 0;
     if (body["Floor"] == "None") {
       f = 1;
@@ -570,10 +578,11 @@ class _ComplaintsState extends State<Complaints> {
     } else if (body["Complaint"] == "None") {
       f = 5;
     }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
     Session session = Session();
-    Response r = await session.post(bodyJson, "/college_registercomplaint");
+    Response r =
+        await session.post(bodyJson, "/" + DomainType + "_registercomplaint");
     var responseBody = r.body;
     final body1 = json.decode(responseBody);
 
@@ -600,7 +609,6 @@ class _ComplaintsState extends State<Complaints> {
         arr.add(body1["data"][i]["complaints"].toString());
       }
     }
-    print(body1["status"] + "kjbkjbl");
     if (body1["status"] == "You have successfully registered a Complaint.") {
       List<String> ls = [];
       ls.add("Success");
@@ -616,9 +624,10 @@ class _ComplaintsState extends State<Complaints> {
   Future<void> getComplaints() async {
     Session session = Session();
     Map body = {};
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
-    Response r = await session.post(bodyJson, "/college_viewcomplaint");
+    Response r = await session.post(
+        bodyJson, "/" + widget.DomainType + "_viewcomplaint");
     var responseBody = r.body;
     final bodyJson1 = json.decode(responseBody);
     var c = bodyJson1["complaint"];

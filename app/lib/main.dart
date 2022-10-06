@@ -115,7 +115,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return widget.isLoggedIn
         ? ComplainTabList(
             complaintPending: complaintPending,
-            complaintResolved: complaintResolved)
+            complaintResolved: complaintResolved,
+            DomainType: "college",
+          )
         : LoginScreen();
   }
 

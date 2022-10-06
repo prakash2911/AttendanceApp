@@ -8,20 +8,18 @@ import 'package:complaint_app/screens/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
-
 import '../person.dart';
 import '../services.dart';
 
 class ComplainTabList extends StatefulWidget {
   final List<Complaint> complaintPending;
   final List<Complaint> complaintResolved;
-  // final bool addButtonVisibility;
+  final String DomainType;
   const ComplainTabList({
     Key? key,
     required this.complaintPending,
     required this.complaintResolved,
-    // required this.addButtonVisibility,
+    required this.DomainType,
   }) : super(key: key);
 
   @override
@@ -40,7 +38,7 @@ class _ComplainTabListState extends State<ComplainTabList> {
     super.initState();
     getUType();
     setState(() {});
-    getComplaints();
+    getComplaints(widget.DomainType);
   }
 
   Future<void> getUType() async {
@@ -55,17 +53,19 @@ class _ComplainTabListState extends State<ComplainTabList> {
     });
   }
 
-  Future<void> getComplaints() async {
+  Future<void> getComplaints(String DomainType) async {
     Session session = Session();
     Map body = {};
     complaintResolved1.removeRange(0, complaintResolved1.length);
     complaintPending1.removeRange(0, complaintResolved1.length);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
-    Response r = await session.post(bodyJson, "/college_viewcomplaint");
+    Response r =
+        await session.post(bodyJson, "/" + DomainType + "_viewcomplaint");
     var responseBody = r.body;
     final bodyJson1 = json.decode(responseBody);
     var c = bodyJson1["complaint"];
+    print(c);
     for (int i = 0; i < c.length; i++) {
       Complaint complaint1 = Complaint(
           block: c[i]["block"].toString(),
@@ -139,7 +139,7 @@ class _ComplainTabListState extends State<ComplainTabList> {
                     icon: const Icon(Icons.logout)),
                 IconButton(
                     onPressed: () async {
-                      await getComplaints();
+                      await getComplaints(widget.DomainType);
                     },
                     icon: const Icon(Icons.refresh))
               ],
@@ -148,9 +148,11 @@ class _ComplainTabListState extends State<ComplainTabList> {
               children: [
                 ComplaintList(
                   Status: "Registered",
+                  DomainType: widget.DomainType,
                 ),
                 ComplaintList(
                   Status: "Resolved",
+                  DomainType: widget.DomainType,
                 )
               ],
             ),
@@ -165,12 +167,14 @@ class _ComplainTabListState extends State<ComplainTabList> {
                     "Complaint": "None",
                     "complainttype": "None"
                   };
-                  List<String> s = await postComplaints(body);
+                  List<String> s =
+                      await postComplaints(body, widget.DomainType);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => Complaints(
                                 blocks: s,
+                                DomainType: widget.DomainType,
                               )));
                 },
                 backgroundColor: Colors.grey[800],
@@ -179,7 +183,8 @@ class _ComplainTabListState extends State<ComplainTabList> {
             )));
   }
 
-  static Future<List<String>> postComplaints(Map body) async {
+  static Future<List<String>> postComplaints(
+      Map body, String DomainType) async {
     int f = 0;
 
     if (body["Block"] == "None") {
@@ -193,7 +198,8 @@ class _ComplainTabListState extends State<ComplainTabList> {
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
     Session session = Session();
-    Response r = await session.post(bodyJson, "/college_registercomplaint");
+    Response r =
+        await session.post(bodyJson, "/" + DomainType + "_registercomplaint");
     var responseBody = r.body;
     final body1 = json.decode(responseBody);
 

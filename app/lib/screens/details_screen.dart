@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,11 +10,13 @@ class DetailPage extends StatefulWidget {
   final String topic;
   final String description;
   final Complaint complaint;
+  final String DomainType;
   const DetailPage(
       {Key? key,
       required this.topic,
       required this.description,
-      required this.complaint})
+      required this.complaint,
+      required this.DomainType})
       : super(key: key);
 
   @override
@@ -24,7 +25,9 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   String utype = "";
+  bool reportVisibility = false;
   String subtype = "";
+  List<String> errors = ["unable solve", "Require time", "others"];
   @override
   void initState() {
     // TODO: implement initState
@@ -37,6 +40,10 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {
       utype = (prefs.getString("utype"))!;
       subtype = (prefs.getString("subtype"))!;
+      if ((widget.complaint.status == "Registered" &&
+              subtype == widget.complaint.complainType) ||
+          (utype == "Student" && widget.complaint.status == "Resolved"))
+        reportVisibility = true;
     });
   }
 
@@ -148,7 +155,7 @@ class _DetailPageState extends State<DetailPage> {
     final topContent = Stack(
       children: <Widget>[
         Container(
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.3,
           padding: EdgeInsets.all(40.0),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(color: Colors.grey[800]),
@@ -168,11 +175,87 @@ class _DetailPageState extends State<DetailPage> {
         )
       ],
     );
-
     final bottomContentText = Text(
       widget.description,
       style: const TextStyle(fontSize: 18.0, color: Colors.white),
     );
+    final reportButton = Visibility(
+      visible: reportVisibility,
+      child: Container(
+          padding: EdgeInsets.all(100),
+          width: MediaQuery.of(context).size.width,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: widget.complaint.status == "verified" ||
+                    (widget.complaint.status == "Resolved" &&
+                        utype != "Student") ||
+                    (widget.complaint.status == "Registered" &&
+                        subtype != widget.complaint.complainType)
+                ? null
+                : () async {
+                    Session session = Session();
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    String? email = prefs.getString("email");
+
+                    if (widget.complaint.status == "Registered" &&
+                        subtype == widget.complaint.complainType) {
+                      Map body = {
+                        "complaintid": widget.complaint.complaintId,
+                        "Status": "Unable To Resolve",
+                        "email": email,
+                      };
+
+                      var bodyJson = jsonEncode(body);
+                      print(bodyJson);
+                      Response r = await session.post(bodyJson,
+                          "/" + widget.DomainType + "_change_complaint_status");
+                      var responseBody = r.body;
+                      final bodyJson1 = json.decode(responseBody);
+                      setState(() {
+                        widget.complaint.status = "Not Resolved";
+                      });
+                    } else if (widget.complaint.status == "Resolved" &&
+                        utype == "Student") {
+                      Map body = {
+                        "complaintid": widget.complaint.complaintId,
+                        "Status": "Not Resolved",
+                        "email": email
+                      };
+                      var bodyJson = jsonEncode(body);
+                      Response r = await session.post(bodyJson,
+                          "/" + widget.DomainType + "_change_complaint_status");
+                      print(bodyJson + "\n\n");
+                      var responseBody = r.body;
+                      final bodyJson1 = json.decode(responseBody);
+                      print(bodyJson1);
+                      setState(() {
+                        widget.complaint.status = "Not Resolved";
+                      });
+                    }
+                    // final snackBar = SnackBar(
+                    //   content: const Text('Resolved!'),
+                    //   action: SnackBarAction(
+                    //     label: 'Undo',
+                    //     onPressed: () {
+                    //       // Some code to undo the change.
+                    //     },
+                    //   ),
+                    // );
+                    // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Navigator.pop(context);
+                  },
+            child: Text(
+              "REPORT",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          )),
+    );
+
     final readButton = Container(
         padding: EdgeInsets.all(40),
         width: MediaQuery.of(context).size.width,
@@ -195,12 +278,13 @@ class _DetailPageState extends State<DetailPage> {
                       Map body = {
                         "complaintid": widget.complaint.complaintId,
                         "Status": "Resolved",
-                        "email": email
+                        "email": email,
                       };
+
                       var bodyJson = jsonEncode(body);
                       print(bodyJson);
-                      Response r = await session.post(
-                          bodyJson, "/college_change_complaint_status");
+                      Response r = await session.post(bodyJson,
+                          "/" + widget.DomainType + "_change_complaint_status");
                       var responseBody = r.body;
                       final bodyJson1 = json.decode(responseBody);
                       setState(() {
@@ -214,8 +298,8 @@ class _DetailPageState extends State<DetailPage> {
                         "email": email
                       };
                       var bodyJson = jsonEncode(body);
-                      Response r = await session.post(
-                          bodyJson, "/college_change_complaint_status");
+                      Response r = await session.post(bodyJson,
+                          "/" + widget.DomainType + "_change_complaint_status");
                       print(bodyJson + "\n\n");
                       var responseBody = r.body;
                       final bodyJson1 = json.decode(responseBody);
@@ -223,6 +307,7 @@ class _DetailPageState extends State<DetailPage> {
                       setState(() {
                         widget.complaint.status = "verified";
                       });
+                      Navigator.pop(context);
                     }
                     final snackBar = SnackBar(
                       content: const Text('Resolved!'),
@@ -252,7 +337,7 @@ class _DetailPageState extends State<DetailPage> {
       backgroundColor: Colors.grey[900],
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[topContent, bottomContent, readButton],
+        children: <Widget>[topContent, bottomContent, reportButton, readButton],
       ),
     );
   }

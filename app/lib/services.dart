@@ -19,8 +19,8 @@ class Session {
     String? cookie = prefs.getString("cookie");
     if (cookie != null && cookie != "") {
       headers['Cookie'] = cookie;
-      print(cookie);
-      print("session session");
+      // print(cookie);
+      // print("session session");
     }
     http.Response response = await http.post(url, body: data, headers: headers);
     if (endPoint == "/logout") {
@@ -43,19 +43,19 @@ class Session {
     String session = "";
     if (cookie != null && cookie != "") {
       headers['Cookie'] = cookie;
-      print(cookie);
-      print("session session");
+      // print(cookie);
+      // print("session session");
     } else if (rawCookie != null) {
       // if(session == ""){
       List<String> cookies = rawCookie.split(';');
-      print(cookies);
+      // print(cookies);
       // remember = cookies[0];
       session = cookies[0];
       // String temp = remember + "; " + cookies[cookies.length - 3].split(',')[1];
       prefs.setString("cookie", session);
       headers['Cookie'] = session;
     }
-    print("headers     .....");
-    print(headers);
+    // print("headers     .....");
+    // print(headers);
   }
 }

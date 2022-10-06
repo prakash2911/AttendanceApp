@@ -514,6 +514,8 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                                           ComplainTabList(
                                                                             complaintPending:
                                                                                 complaintPending,
+                                                                            DomainType:
+                                                                                "college",
                                                                             complaintResolved:
                                                                                 complaintResolved,
                                                                           )),
