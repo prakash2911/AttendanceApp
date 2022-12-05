@@ -43,6 +43,7 @@ dependencies:
   sqflite: ^2.0.2+1
   flutter_launcher_icons: ^0.10.0
   animated_splash_screen:
+  socket_io_client: ^2.0.0
 
 
 dev_dependencies:

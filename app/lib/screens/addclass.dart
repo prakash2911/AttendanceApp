@@ -1,59 +1,39 @@
 import 'dart:convert';
 
-import 'package:complaint_app/screens/complaint_tab_list_screen.dart';
-import 'package:complaint_app/services.dart';
-import 'package:flutter/material.dart';
+import 'package:complaint_app/attendanceDetail.dart';
+import 'package:complaint_app/screens/attendance.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-// import 'package:complaint_app/constant.dart' as constants;
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../complaint.dart';
+import '../services.dart';
 
-class Complaints extends StatefulWidget {
-  final List<String> blocks;
-  final String DomainType;
-  const Complaints({Key? key, required this.blocks, required this.DomainType})
-      : super(key: key);
-
+class addclass extends StatefulWidget {
+  final List<String> department;
+  const addclass({Key? key, required this.department}) : super(key: key);
   @override
-  _ComplaintsState createState() => _ComplaintsState();
+  State<addclass> createState() => _addclassState();
 }
 
-class _ComplaintsState extends State<Complaints> {
-  String dropdownvalue = 'Item 1';
-  String? selectedValue;
-  String? selectBlock;
-  String? selectedFloor;
-  String? selectedRoomNo;
-  String? selectedComplaintType;
-  String? complaint;
-  List<Complaint> complaintPending = [];
-  List<Complaint> complaintResolved = [];
-  // List of items in our dropdown menu
-  var items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-  ];
-
-  var blocks = [];
-
+class _addclassState extends State<addclass> {
+  String? selecteddepartment,
+      selectedyear,
+      selectedbatch,
+      selectedsubcode,
+      selectedsubtype;
+  var department = [];
+  var year = [];
+  var batch = [];
+  var subtype = [];
+  var subcode = [];
+  List<Attendance> classList = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
-      blocks = widget.blocks;
-    });
+    department = widget.department;
   }
-
-  var floors = [];
-  var complaints = [];
-  var roomNos = [];
-  var complaintTypes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +41,7 @@ class _ComplaintsState extends State<Complaints> {
       backgroundColor: Colors.grey[850],
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
-        title: const Text("Complaints"),
+        title: const Text("Add class"),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -78,7 +58,7 @@ class _ComplaintsState extends State<Complaints> {
                   child: DropdownButton2(
                     isExpanded: true,
                     hint: const Text(
-                      'Select block',
+                      'Select department',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -86,7 +66,7 @@ class _ComplaintsState extends State<Complaints> {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    items: blocks
+                    items: department
                         .map((item) => DropdownMenuItem<String>(
                               value: item,
                               child: Text(
@@ -100,23 +80,17 @@ class _ComplaintsState extends State<Complaints> {
                               ),
                             ))
                         .toList(),
-                    value: selectBlock,
+                    value: selecteddepartment,
                     onChanged: (value) async {
-                      selectBlock = value as String;
+                      selecteddepartment = value as String;
                       Map body = {
-                        "Block": selectBlock,
-                        "Floor": "None",
-                        "RoomNo": "None",
-                        "complainttype": "None",
-                        "Complaint": "None"
+                        "department": selecteddepartment,
+                        "year": "None",
+                        "batch": "None",
+                        "subcode": "None",
+                        "subtype": "None"
                       };
-                      floors = await postComplaints(body, widget.DomainType);
-
-                      roomNos = [];
-                      selectedFloor = null;
-                      selectedRoomNo = null;
-                      complaint = null;
-                      selectedComplaintType = null;
+                      year = await postDetails(body);
                       setState(() {});
                     },
                     icon: const Icon(
@@ -150,7 +124,7 @@ class _ComplaintsState extends State<Complaints> {
                   child: DropdownButton2(
                     isExpanded: true,
                     hint: const Text(
-                      'Select Floor',
+                      'Select year',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -158,7 +132,7 @@ class _ComplaintsState extends State<Complaints> {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    items: floors
+                    items: year
                         .map((item) => DropdownMenuItem<String>(
                               value: item,
                               child: Text(
@@ -172,22 +146,17 @@ class _ComplaintsState extends State<Complaints> {
                               ),
                             ))
                         .toList(),
-                    value: selectedFloor,
+                    value: selectedyear,
                     onChanged: (value) async {
-                      selectedFloor = value as String;
+                      selectedyear = value as String;
                       Map body = {
-                        "Block": selectBlock,
-                        "Floor": selectedFloor,
-                        "RoomNo": "None",
-                        "complainttype": "None",
-                        "Complaint": "None"
+                        "department": selecteddepartment,
+                        "year": selectedyear,
+                        "batch": "None",
+                        "subcode": "None",
+                        "subtype": "None"
                       };
-                      roomNos = await postComplaints(body, widget.DomainType);
-                      selectedRoomNo = null;
-                      selectedComplaintType = null;
-                      complaint = null;
-                      complaints = [];
-                      complaintTypes = [];
+                      batch = await postDetails(body);
                       setState(() {});
                     },
                     icon: const Icon(
@@ -229,7 +198,7 @@ class _ComplaintsState extends State<Complaints> {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    items: roomNos
+                    items: batch
                         .map((item) => DropdownMenuItem<String>(
                               value: item,
                               child: Text(
@@ -243,22 +212,17 @@ class _ComplaintsState extends State<Complaints> {
                               ),
                             ))
                         .toList(),
-                    value: selectedRoomNo,
+                    value: selectedbatch,
                     onChanged: (value) async {
-                      selectedRoomNo = value as String;
+                      selectedbatch = value as String;
                       Map body = {
-                        "Block": selectBlock,
-                        "Floor": selectedFloor,
-                        "RoomNo": selectedRoomNo,
-                        "complainttype": "None",
-                        "Complaint": "None",
+                        "department": selecteddepartment,
+                        "year": selectedyear,
+                        "batch": selectedbatch,
+                        "subcode": "None",
+                        "subtype": "None"
                       };
-                      complaintTypes =
-                          await postComplaints(body, widget.DomainType);
-                      selectedComplaintType = null;
-                      complaints = [];
-                      complaint = null;
-
+                      subcode = await postDetails(body);
                       setState(() {});
                     },
                     icon: const Icon(
@@ -292,7 +256,7 @@ class _ComplaintsState extends State<Complaints> {
                   child: DropdownButton2(
                     isExpanded: true,
                     hint: const Text(
-                      'Select complaintype',
+                      'Select subject code',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -300,7 +264,7 @@ class _ComplaintsState extends State<Complaints> {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    items: complaintTypes
+                    items: subcode
                         .map((item) => DropdownMenuItem<String>(
                               value: item,
                               child: Text(
@@ -314,20 +278,17 @@ class _ComplaintsState extends State<Complaints> {
                               ),
                             ))
                         .toList(),
-                    value: selectedComplaintType,
+                    value: selectedsubcode,
                     onChanged: (value) async {
-                      selectedComplaintType = value as String;
+                      selectedsubcode = value as String;
                       Map body = {
-                        "Block": selectBlock,
-                        "Floor": selectedFloor,
-                        "RoomNo": selectedRoomNo,
-                        "complainttype": selectedComplaintType,
-                        "Complaint": "None",
+                        "department": selecteddepartment,
+                        "year": selectedyear,
+                        "batch": selectedbatch,
+                        "subcode": selectedsubcode,
+                        "subtype": "None"
                       };
-                      complaints =
-                          await postComplaints(body, widget.DomainType);
-                      complaint = null;
-                      print(complaints);
+                      subtype = await postDetails(body);
                       setState(() {});
                     },
                     icon: const Icon(
@@ -354,106 +315,6 @@ class _ComplaintsState extends State<Complaints> {
                     scrollbarAlwaysShow: true,
                   ),
                 ),
-                // SizedBox(
-                //   height: 20,
-                // ),
-                // Container(
-                //   child: const Text(
-                //     "Select Category",
-                //     style: TextStyle(color: Colors.white),
-                //   ),
-                // ),
-                // Column(
-                //   children: <Widget>[
-                //     RadioListTile(
-                //       title: const Text(
-                //         'Electrician',
-                //         style: TextStyle(color: Colors.white),
-                //       ),
-                //       value: "electrician",
-                //       groupValue: selectedComplaintType,
-                //       onChanged: (value) async {
-                //         selectedComplaintType = value as String;
-                //         Map body = {
-                //           "Block": selectBlock,
-                //           "Floor": selectedFloor,
-                //           "RoomNo": selectedRoomNo,
-                //           "Complaint": "None",
-                //           "complainttype": complaintTypes
-                //         };
-                //         complaints = await postComplaints(body);
-                //         complaint = null;
-                //         setState(() {});
-                //       },
-                //       activeColor: Colors.white,
-                //     ),
-                //     RadioListTile(
-                //       title: const Text(
-                //         'Civil and maintenance',
-                //         style: TextStyle(color: Colors.white),
-                //       ),
-                //       value: "civil and maintenance",
-                //       groupValue: selectedComplaintType,
-                //       onChanged: (value) async {
-                //         selectedComplaintType = value as String;
-                //         Map body = {
-                //           "Block": selectBlock,
-                //           "Floor": selectedFloor,
-                //           "RoomNo": selectedRoomNo,
-                //           "Complaint": "None",
-                //           "complainttype": complaintTypes
-                //         };
-                //         complaints = await postComplaints(body);
-                //         complaint = null;
-                //         setState(() {});
-                //       },
-                //       activeColor: Colors.white,
-                //     ),
-                //     RadioListTile(
-                //       title: const Text(
-                //         'Education aid',
-                //         style: TextStyle(color: Colors.white),
-                //       ),
-                //       value: "education aid",
-                //       groupValue: selectedComplaintType,
-                //       onChanged: (value) async {
-                //         selectedComplaintType = value as String;
-                //         Map body = {
-                //           "Block": selectBlock,
-                //           "Floor": selectedFloor,
-                //           "RoomNo": selectedRoomNo,
-                //           "Complaint": "None",
-                //           "complainttype": complaintTypes
-                //         };
-                //         complaints = await postComplaints(body);
-                //         complaint = null;
-                //         setState(() {});
-                //       },
-                //       activeColor: Colors.white,
-                //     ),
-                //   ],
-                // ),
-                // Container(
-                //   child: TextFormField(
-                //     minLines: 2,
-                //     maxLines: 5,
-                //     keyboardType: TextInputType.multiline,
-                //     decoration: const InputDecoration(
-                //       hintText: 'Complaint',
-                //       hintStyle: TextStyle(color: Colors.grey),
-                //       border: OutlineInputBorder(
-                //         borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                //       ),
-                //     ),
-                //     onChanged: (val) {
-                //       setState(() {
-                //         complaint = val;
-                //       });
-                //     },
-                //     style: TextStyle(color: Colors.white),
-                //   ),
-                // ),
-                //
                 const SizedBox(
                   height: 20.0,
                 ),
@@ -461,7 +322,7 @@ class _ComplaintsState extends State<Complaints> {
                   child: DropdownButton2(
                     isExpanded: true,
                     hint: const Text(
-                      'Select category',
+                      'Select subject type',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -469,7 +330,7 @@ class _ComplaintsState extends State<Complaints> {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    items: complaints
+                    items: subtype
                         .map((item) => DropdownMenuItem<String>(
                               value: item,
                               child: Text(
@@ -483,10 +344,10 @@ class _ComplaintsState extends State<Complaints> {
                               ),
                             ))
                         .toList(),
-                    value: complaint,
+                    value: selectedsubtype,
                     onChanged: (value) {
                       setState(() {
-                        complaint = value as String;
+                        selectedsubtype = value as String;
                       });
                     },
                     icon: const Icon(
@@ -522,36 +383,21 @@ class _ComplaintsState extends State<Complaints> {
                         backgroundColor: Colors.grey[800]),
                     onPressed: () async {
                       Map body = {
-                        "Block": selectBlock,
-                        "Floor": selectedFloor,
-                        "RoomNo": selectedRoomNo,
-                        "Complaint": complaint,
-                        "complainttype": selectedComplaintType
+                        "department": selecteddepartment,
+                        "year": selectedyear,
+                        "batch": selectedbatch,
+                        "subcode": selectedsubcode,
+                        "subtype": selectedsubtype
                       };
-                      List<String> v =
-                          await postComplaints(body, widget.DomainType);
-                      await getComplaints();
-                      if (v[0] == "Success") {
-                        print(v[0]);
+                      List<String> v = await postDetails(body);
+                      // await getClassList();
+                      if (v[0] == "Success" && selectedsubtype == "core") {
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
-                                builder: (context) => ComplainTabList(
-                                      complaintPending: complaintPending,
-                                      complaintResolved: complaintResolved,
-                                      DomainType: widget.DomainType,
-                                    )),
+                                builder: (context) =>
+                                    attendace(classList: classList)),
                             (Route<dynamic> route) => false);
                       }
-                      final snackBar = SnackBar(
-                        content: const Text('Complaint Registered!'),
-                        action: SnackBarAction(
-                          label: 'Undo',
-                          onPressed: () {
-                            // Some code to undo the change.
-                          },
-                        ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                     child:
                         Text("Submit", style: TextStyle(color: Colors.white)),
@@ -563,26 +409,23 @@ class _ComplaintsState extends State<Complaints> {
     );
   }
 
-  static Future<List<String>> postComplaints(
-      Map body, String DomainType) async {
-    // var url = Uri.parse(constants.URL);
+  static Future<List<String>> postDetails(Map body) async {
     int f = 0;
-    if (body["Floor"] == "None") {
+    if (body["year"] == "None") {
       f = 1;
-    } else if (body["RoomNo"] == "None") {
+    } else if (body["batch"] == "None") {
       f = 2;
-    } else if (body["Block"] == "None") {
+    } else if (body["department"] == "None") {
       f = 3;
-    } else if (body["complainttype"] == "None") {
+    } else if (body["subtype"] == "None") {
       f = 4;
-    } else if (body["Complaint"] == "None") {
+    } else if (body["subcode"] == "None") {
       f = 5;
     }
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
     Session session = Session();
-    Response r =
-        await session.post(bodyJson, "/" + DomainType + "_registercomplaint");
+    Response r = await session.post(bodyJson, "/addclass");
     var responseBody = r.body;
     final body1 = json.decode(responseBody);
 
@@ -590,23 +433,23 @@ class _ComplaintsState extends State<Complaints> {
 
     if (f == 1) {
       for (int i = 0; i < body1["data"].length; i++) {
-        arr.add(body1["data"][i]["Floor"].toString());
+        arr.add(body1["data"][i]["year"].toString());
       }
     } else if (f == 2) {
       for (int i = 0; i < body1["data"].length; i++) {
-        arr.add(body1["data"][i]["RoomNo"].toString());
+        arr.add(body1["data"][i]["batch"].toString());
       }
     } else if (f == 3) {
       for (int i = 0; i < body1["data"].length; i++) {
-        arr.add(body1["data"][i]["Block"].toString());
+        arr.add(body1["data"][i]["department"].toString());
       }
     } else if (f == 4) {
       for (int i = 0; i < body1["data"].length; i++) {
-        arr.add(body1["data"][i]["complainttype"].toString());
+        arr.add(body1["data"][i]["subtype"].toString());
       }
     } else if (f == 5) {
       for (int i = 0; i < body1["data"].length; i++) {
-        arr.add(body1["data"][i]["complaints"].toString());
+        arr.add(body1["data"][i]["subcode"].toString());
       }
     }
     if (body1["status"] == "You have successfully registered a Complaint.") {
@@ -621,34 +464,19 @@ class _ComplaintsState extends State<Complaints> {
     return [body1["status"]];
   }
 
-  Future<void> getComplaints() async {
-    Session session = Session();
+  //
+  // static Future<List<String>> getClassList(Map body){
+  //
+  //
+  //
+  // }
+  Future<void> getClassDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     Map body = {};
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
-    Response r = await session.post(
-        bodyJson, "/" + widget.DomainType + "_viewcomplaint");
-    var responseBody = r.body;
-    final bodyJson1 = json.decode(responseBody);
-    var c = bodyJson1["complaint"];
-    for (int i = 0; i < c.length; i++) {
-      Complaint complaint1 = Complaint(
-        block: c[i]["block"],
-        complaint: c[i]["complaint"],
-        complainType: c[i]["complainttype"],
-        floor: c[i]["floor"].toString(),
-        roomNo: c[i]["roomno"].toString(),
-        status: c[i]["status"],
-        complaintId: c[i]["complaintid"].toString(),
-        timeStamp: c[i]["cts"].toString(),
-        updateStamp: c[i]["uts"].toString(),
-      );
-      if (complaint1.status == "Registered") {
-        complaintPending.add(complaint1);
-      } else if (complaint1.status == "Resolved" ||
-          complaint1.status == "verify") {
-        complaintResolved.add(complaint1);
-      }
-    }
+    Session session = Session();
+    Response r = await session.post(bodyJson, "/getclass");
+    final bodyJson1 = json.decode(r.body);
+    for (int i = 0; i < bodyJson1["data"].length; i++) {}
   }
 }

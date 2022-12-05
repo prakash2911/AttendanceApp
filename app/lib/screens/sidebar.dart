@@ -60,8 +60,10 @@ class _NavBarState extends State<NavBar> {
       email = (prefs.getString("email"))!;
       utype = (prefs.getString("utype"))!;
       subtype = (prefs.getString("subtype"))!;
-      hostelVisibility =
-          (subtype == 'Hosteller' || subtype == "RC") ? true : false;
+      hostelVisibility = (subtype == 'Hosteler' ||
+              (utype == "Employee" && subtype != "Teacher"))
+          ? true
+          : false;
       collegeVisibility =
           (utype == "Student" || utype == "Employee") ? true : false;
       attendanceVisibility =
@@ -157,6 +159,7 @@ class _NavBarState extends State<NavBar> {
                 builder: (context) => ComplainTabList(
                       complaintPending: complaintPending,
                       complaintResolved: complaintResolved,
+                      DomainType: "college",
                     )),
             (Route<dynamic> route) => false);
         break;
@@ -166,6 +169,7 @@ class _NavBarState extends State<NavBar> {
                 builder: (context) => ComplainTabList(
                       complaintPending: complaintPending,
                       complaintResolved: complaintResolved,
+                      DomainType: "college",
                     )),
             (Route<dynamic> route) => false);
         break;
@@ -174,6 +178,7 @@ class _NavBarState extends State<NavBar> {
             MaterialPageRoute(
                 builder: (context) => ComplainTabList(
                       complaintPending: complaintPending,
+                      DomainType: "hostel",
                       complaintResolved: complaintResolved,
                     )),
             (Route<dynamic> route) => false);

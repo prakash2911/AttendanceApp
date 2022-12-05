@@ -5,9 +5,10 @@ import re
 import hashlib
 from datetime import datetime
 import json
+# from flask_ngrok import run_with_ngrok
 from matplotlib.font_manager import json_dump
 app = Flask(__name__)
-
+# run_with_ngrok(app)
 app.secret_key = 'Tahve bqltuyej tbrjereq qobfd MvIaTq cmanmvpcuxsz iesh tihkel CnTu dretpyauritompeanstd '
 
 
@@ -32,7 +33,6 @@ def login():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM accounts WHERE email = %s AND hash = %s', (email, hash_password,))
     account = cursor.fetchone()
-
     if account:
         session['loggedin'] = True
         session['id'] = account['id']
@@ -44,7 +44,6 @@ def login():
         returner['username'] = account['username']
         returner['utype']=account['utype']
         returner['subtype'] = account['subtype']
-        print(returner['utype']+returner['subtype'])
     else:
         returner['status']="login failure"
         returner['utype']="None"
@@ -67,15 +66,10 @@ def logout():
 def register():
     returner = {}
     username = request.json.get('username')
-    print(username)
     password = request.json.get('password')
-    print (password)
     email = request.json.get('email')
-    print (email)
     utype = request.json.get('utype')
-    print (utype)
     subtype = request.json.get('subtype')
-    print(subtype)
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM accounts WHERE email = %s', (email,))
     account = cursor.fetchone()
@@ -93,6 +87,18 @@ def register():
             cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s, %s, %s)', (username, hash_password, email,utype,subtype))
             mysql.connection.commit()
             returner['status']=  'You have successfully registered!'
+    return returner
+
+
+#errorFetch
+@app.route('/errorFetch',methods=['POST'])
+def errorfetch():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("Select error from reporterror")
+    returner = {}
+    data1 = cursor.fetchall()
+    data1 = list(data1)
+    returner['data'] = data1
     return returner
 
 @app.route('/college_registercomplaint', methods=['POST'])
@@ -116,24 +122,28 @@ def regcomplaint():
           cursor.execute('SELECT Block FROM roomdata group by Block',) 
           data1 = cursor.fetchall()
           data1 = list(data1)
+          returner['status']= "get Block"
           returner['data'] = data1
           return returner
          elif (Floor == "None"):
              cursor.execute(f'SELECT Floor FROM roomdata WHERE Block = "{Block}" group by floor')
              data1 = cursor.fetchall()
              data1 = list(data1)
+             returner['status']= "get Floor"
              returner['data'] = data1
              return returner
          elif (RoomNo == "None"):
              cursor.execute('SELECT RoomNo FROM roomdata WHERE Block = %s and Floor = %s', (Block,Floor,))
              data1 = cursor.fetchall()
              data1 = list(data1)
+             returner['status']= "get RoomNo"
              returner['data'] = data1
              return returner
          elif (complainttype == "None"):
              cursor.execute('SELECT complainttype FROM complaintslist group by complainttype')
              data1 = cursor.fetchall()
              data1 = list(data1)
+             returner['status']= "get complainttype"
              returner['data'] = data1
              return returner
          elif (Complaint == "None"):
@@ -141,6 +151,7 @@ def regcomplaint():
              data1 = cursor.fetchall()
              data1 = list(data1)
              returner['data'] = data1
+             returner['status']= "get complaint"
              return returner
          cursor.execute('SELECT status FROM complaints where block = %s and roomno = %s and floor = %s and complaint = %s', (Block, RoomNo, Floor, Complaint,))
          sts = cursor.fetchall()
@@ -303,16 +314,16 @@ def change_complaint_status():
         return returner
 
 @app.route('/hostel_registercomplaint', methods=['POST'])
-def hregcomplaint():
+def hostel_regcomplaint():
     returner = {}
     data1 = {}
     if ( session['loggedin'] == False ):
          returner['status']= 'Only Logged in candidates can issue a Complaint.'
-    elif ( session['subtype'] == 'electrician' or session['utype'] == 'civil and maintenance' or session['utype']=='warden'):
+    elif ( session['subtype'] == 'electrician' or session['utype'] == 'civil and maintenance' or session['utype']=='RC'):
         returner['status']= 'Only Student and RCs can issue a Complaint.'
-    elif (session['subtype'=='DayScholar']):
+    elif (session['subtype']=='DayScholar'):
             returner['status']=='Only Hostellers can file Complaint'
-    elif (session['subtype'=='Teacher']):
+    elif (session['subtype']=='Teacher'):
             returner['status']=='Only RCs can file Complaint'
     else:
          Block = request.json.get('Block')
@@ -374,36 +385,35 @@ def hviewcomplaint():
     else:
         if (session['subtype'] == 'admin'):
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, utype from hcomplaints")
+            cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status,cts,uts utype from hcomplaints")
             cmpl = cursor.fetchall()
             cmpl = list(cmpl)
             returner['complaint'] = cmpl
             return returner
-        elif (session['subtype'] == 'Hosteller' or session['utype']=='rc'):
-            if (session['subtype'] == 'Hosteller'):
+        elif (session['subtype'] == 'Hosteler' or session['subtype']=='RC'):
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, uts from hcomplaints where email=%s", (session['email'],))
+                cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, cts,uts from hcomplaints where email=%s and status = 'Registered' or status = 'Resolved'", (session['email'],))
                 cmpl = cursor.fetchall()
                 cmpl = list(cmpl)
                 returner['complaint'] = cmpl
                 return returner
         elif (session['subtype'] == 'electrician'):
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, hcomplaints.block, floor, roomno, complaint, complainttype, status, uts from hcomplaints where hcomplaints.complainttype = %s ",(session['utype'],))
+            cursor.execute("select complaintid, hcomplaints.block, floor, roomno, complaint, complainttype, status, cts,uts from hcomplaints where hcomplaints.complainttype = %s ",(session['subtype'],))
             cmpl = cursor.fetchall()
             cmpl = list(cmpl)
             returner['complaint'] = cmpl
             return returner
         elif (session['subtype'] == 'civil and maintenance'):
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, hcomplaints.block, floor, roomno, complaint, complainttype, status, uts from hcomplaints, where hcomplaints.complainttype = %s ",(session['utype'],))
+            cursor.execute("select complaintid, hcomplaints.block, floor, roomno, complaint, complainttype, status,cts, uts from hcomplaints, where hcomplaints.complainttype = %s ",(session['subtype'],))
             cmpl = cursor.fetchall()
             cmpl = list(cmpl)
             returner['complaint'] = cmpl
             return returner
         else:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, hcomplaints.block, floor, roomno, complaint, complainttype, status, uts from hcomplaints, where utype= %s; ",("Warden",))
+            cursor.execute("select complaintid, hcomplaints.block, floor, roomno, complaint, complainttype, status,cts, uts from hcomplaints, where utype= %s ",("Warden",))
             cmpl = cursor.fetchall()
             cmpl = list(cmpl)
             returner['complaint'] = cmpl
@@ -419,7 +429,7 @@ def hchange_complaint_status():
         num = request.json.get('complaintid')
         Status = request.json.get('Status')
         print(session['subtype'])
-        if (session['subtype']=='Hosteller' or session['utype']=='rc'): 
+        if (session['subtype']=='Hosteler' or session['subtype']=='RC'): 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, uts from hcomplaints where complaintid=%s and email=%s",(int(num),session['email'],))
             data1 = cursor.fetchone()
@@ -435,7 +445,7 @@ def hchange_complaint_status():
                 return returner
         elif (session['subtype']=='electrician'):
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, complaints.block, floor, roomno, complaint, complainttype, status, uts from hcomplaints, where complainttype= %s and complaintid=%s ",(session['utype'], num,))
+            cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, uts from hcomplaints where complainttype= %s and complaintid=%s ",(session['subtype'], num,))
             data = cursor.fetchone()
             if data:
                     timenow = datetime.now()
@@ -449,7 +459,7 @@ def hchange_complaint_status():
                 return returner
         elif (session['subtype']=='civil and maintenance'):
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, complaints.block, floor, roomno, complaint, complainttype, status, uts from complaints, where complainttype= %s and complaintid=%s ",(session['utype'], num,))
+            cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, uts from complaints where complainttype= %s and complaintid=%s ",(session['subtype'], num,))
             data = cursor.fetchone()
             if data:
                 timenow = datetime.now()
@@ -479,7 +489,8 @@ def hchange_complaint_status():
         returner['status']=  'The complainttype doesnt exist.'
         return returner
         
-
-app.run(host="0.0.0.0",port=(2002),debug=True)
+if __name__ == "__main__":
+    #   app.run()
+    app.run(host="0.0.0.0",port=(2002),debug=True)
 
     
