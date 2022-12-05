@@ -429,7 +429,7 @@ def hchange_complaint_status():
         num = request.json.get('complaintid')
         Status = request.json.get('Status')
         print(session['subtype'])
-        if (session['subtype']=='Hosteller' or session['utype']=='rc'): 
+        if (session['subtype']=='Hosteler' or session['subtype']=='RC'): 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, uts from hcomplaints where complaintid=%s and email=%s",(int(num),session['email'],))
             data1 = cursor.fetchone()

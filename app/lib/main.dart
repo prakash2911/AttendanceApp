@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:complaint_app/screens/complaint_tab_list_screen.dart';
 import 'package:complaint_app/screens/login_screen.dart';
-
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:complaint_app/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -23,6 +23,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final service = FlutterBackgroundService();
   service.startService();
+  IO.Socket socket = IO.io('http://localhost:3000');
+  socket.onConnect((_) {
+    print('connect');
+    socket.emit('msg', 'test');
+  });
+  socket.on('event', (data) => print(data));
   await initializeService();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
