@@ -22,6 +22,63 @@ app.config['MYSQL_PORT'] = 3306
 mysql = MySQL(app)
 
 print(mysql)
+#for getting notifictaion
+@app.route('/getnotification',methods=['POST'])
+def getnotification():
+    email = session['email']
+    usertype=session['utype']
+    returner={"status":"false"}
+    if(usertype=='student'):
+        query = 'SELECT * FROM complaints WHERE email=%s AND check_flag=0 AND (status="resolved" OR status="unresolved") '
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(query,usertype)
+        complaints=cursor.fetchall()
+        if(complaints):
+            blocks=[]
+            floors=[]
+            rooms=[]
+            complaint=[]
+            status=[]
+            for com in complaints:
+                    blocks.append(com[2])
+                    floors.append(com[3])
+                    rooms.append(com[4])
+                    complaint.append(com[5])
+                    status.append(com[7])
+            returner["satus"]=True
+            returner["complaint"]={
+            "block":blocks,
+            "floor":floors,
+            "room":rooms,
+            "complaint":complaint,
+            "status":status
+        }
+    if(usertype in ['electrician','civil and maintenance','educational aid']):
+        query = 'SELECT * FROM complaints WHERE complainttype=%s  AND status="Registered" AND check_flag=0 '
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(query,usertype)
+        complaints=cursor.fetchall()
+        if(complaints):
+            blocks=[]
+            floors=[]
+            rooms=[]
+            complaint=[]
+            for com in complaints:
+                blocks.append(com[2])
+                floors.append(com[3])
+                rooms.append(com[4])
+                complaint.append(com[5])
+        returner["status"]="true"
+        returner["complaint"]={
+            "block":blocks,
+            "floor":floors,
+            "room":rooms,
+            "complaint":complaint
+        }
+    return returner
+    
+            
+    
 
 @app.route('/login', methods=['POST'])
 def login():
