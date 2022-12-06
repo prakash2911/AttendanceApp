@@ -56,7 +56,7 @@ class _NavBarState extends State<NavBar> {
   Future<void> getDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      name = (prefs.getString("name"))!;
+      name = (prefs.getString("name") !=null ) ? prefs.getString("name") : "tsf";
       email = (prefs.getString("email"))!;
       utype = (prefs.getString("utype"))!;
       subtype = (prefs.getString("subtype"))!;
@@ -74,7 +74,7 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Color(0xff181D31),
       child: ListView(
         padding: EdgeInsets.zero,
         children: [

@@ -94,7 +94,8 @@ class _ComplainTabListState extends State<ComplainTabList> {
         child: Scaffold(
             drawer: NavBar(),
             appBar: AppBar(
-              backgroundColor: Colors.grey[900],
+              // backgroundColor: Colors.grey[900],
+              backgroundColor: Color(0xff30475E),
               bottom: TabBar(
                 tabs: [
                   Tab(

@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
-            backgroundColor: Color(0xfffdfdfdf),
+            backgroundColor: Color(0xff7895B2),
             body: i == 0
                 ? SingleChildScrollView(
                     child: Column(
@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       style: TextStyle(
                                                         color: i == index
                                                             ? Colors.black
-                                                            : Colors.grey,
+                                                            : Color(0xff30475E),
                                                         fontSize: 19,
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -179,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             // readOnly: true, // * Just for Debug
                                             cursorColor: Colors.black,
                                             style:
-                                                TextStyle(color: Colors.black),
+                                                TextStyle(color: Color(0xff3A3845)),
                                             showCursor: true,
                                             //cursorColor: mainColor,
                                             onChanged: (value) {
@@ -188,9 +188,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                               });
                                             },
                                             decoration:
-                                                kTextFiledInputDecoration
-                                                    .copyWith(
-                                                        labelText: "Email"),
+                                                kTextFiledInputDecoration.copyWith(labelText: "Email",labelStyle:TextStyle(color: Color(0xff3A3845))),
+
+
                                             keyboardType:
                                                 TextInputType.emailAddress,
                                           ),
@@ -208,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             decoration:
                                                 kTextFiledInputDecoration
                                                     .copyWith(
-                                              labelText: "Password",
+                                              labelText: "Password",labelStyle: TextStyle(color: Color(0xff3A3845)),
                                               suffixIcon: IconButton(
                                                 icon: Icon(
                                                   // Based on passwordVisible state choose the icon
@@ -272,22 +272,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: Container(
                                             height: height / 9,
                                             color:
-                                                Colors.grey.withOpacity(0.4)),
+                                                Color(0xff30475E)),
                                       ),
                                       Positioned(
                                         left: 280,
                                         top: 10,
                                         child: Container(
                                             decoration: BoxDecoration(
-                                                color: Color(0xffF2C94C),
+                                                color: Color(0xff0078AA),
                                                 borderRadius:
-                                                    BorderRadius.circular(20)),
+                                                    BorderRadius.circular(50)),
                                             width: width / 4,
                                             height: height / 12,
                                             child: IconButton(
                                               icon: Icon(
                                                 Icons.arrow_forward,
-                                                size: 35,
+                                                size: 40,
                                                 color: Colors.white,
                                               ),
                                               onPressed: () async {
@@ -361,7 +361,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   static Future<bool> postSignIn(String email, String password) async {
-    var url = Uri.parse(constants.URL);
     Map body = {"email": email, "password": password};
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);

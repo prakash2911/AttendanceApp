@@ -21,8 +21,6 @@ app.config['MYSQL_PORT'] = 3306
 
 mysql = MySQL(app)
 
-print(mysql)
-
 @app.route('/login', methods=['POST'])
 def login():
     email = request.json.get('email')

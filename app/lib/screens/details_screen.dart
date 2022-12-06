@@ -55,6 +55,7 @@ class _DetailPageState extends State<DetailPage> {
       child: Container(
         child: const LinearProgressIndicator(
             backgroundColor: Color.fromRGBO(209, 224, 224, 0.2),
+            // backgroundColor: Color(),
             value: 2,
             valueColor: AlwaysStoppedAnimation(Colors.green)),
       ),
@@ -158,7 +159,7 @@ class _DetailPageState extends State<DetailPage> {
           height: MediaQuery.of(context).size.height * 0.3,
           padding: EdgeInsets.all(40.0),
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(color: Colors.grey[800]),
+          decoration: BoxDecoration(color: Color(0xff30475E)),
           child: Center(
             child: topContentText,
           ),
@@ -260,7 +261,7 @@ class _DetailPageState extends State<DetailPage> {
         padding: EdgeInsets.all(40),
         width: MediaQuery.of(context).size.width,
         child: ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: Colors.grey[800]),
+            style: ElevatedButton.styleFrom(primary: Color(0xff30475E)),
             onPressed: widget.complaint.status == "verified" ||
                     (widget.complaint.status == "Resolved" &&
                         utype != "Student") ||
@@ -334,7 +335,7 @@ class _DetailPageState extends State<DetailPage> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor:Colors.grey[850],
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[topContent, bottomContent, reportButton, readButton],

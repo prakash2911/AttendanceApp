@@ -123,7 +123,7 @@ class _ComplaintListState extends State<ComplaintList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Color(0xff181D31),
       body: RefreshIndicator(
         onRefresh: () {
           return Future.delayed(Duration(seconds: 1), () async {
@@ -149,7 +149,7 @@ class _ComplaintListState extends State<ComplaintList> {
                               )));
                 },
                 child: Card(
-                  color: Colors.grey[800],
+                  color: Color(0xff30475E),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(

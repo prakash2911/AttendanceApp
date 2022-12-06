@@ -61,7 +61,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
-            backgroundColor: Color(0xfffdfdfdf),
+            backgroundColor: Color(0xff7895B2),
             body: i == 1
                 ? SingleChildScrollView(
                     child: Column(
@@ -100,7 +100,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                                   style: TextStyle(
                                                     color: i == index
                                                         ? Colors.black
-                                                        : Colors.grey,
+                                                        : Color(0xff30475E),
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
                                                   ),
@@ -189,7 +189,8 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         style: TextStyle(color: Colors.black),
                                         showCursor: true,
                                         //cursorColor: mainColor,
-                                        decoration: kTextFiledInputDecoration,
+                                        decoration: kTextFiledInputDecoration
+                                        .copyWith(labelText: "Email Address",labelStyle:TextStyle(color: Color(0xff3A3845))),
                                         onChanged: (value) {
                                           setState(() {
                                             email = value;
@@ -208,7 +209,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         showCursor: true,
                                         //cursorColor: mainColor,
                                         decoration: kTextFiledInputDecoration
-                                            .copyWith(labelText: "Name"),
+                                            .copyWith(labelText: "Name",labelStyle:TextStyle(color: Color(0xff3A3845))),
                                         onChanged: (value) {
                                           setState(() {
                                             name = value;
@@ -227,7 +228,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         //cursorColor: mainColor,
                                         decoration:
                                             kTextFiledInputDecoration.copyWith(
-                                          labelText: "Password",
+                                          labelText: "Password",labelStyle:TextStyle(color: Color(0xff3A3845)),
                                           suffixIcon: IconButton(
                                             icon: Icon(
                                               // Based on passwordVisible state choose the icon
@@ -318,19 +319,27 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         height: 10,
                                       ),
                                       DropdownButtonHideUnderline(
+
                                           child: DropdownButton2(
+                                            dropdownDecoration: BoxDecoration(
+                                              color: Color(0xffDBE2EF),
+                                              borderRadius: BorderRadius.circular(20),
+                                              border: Border.all(width: 1,color: Color(0xff0078AA))
+                                            ),
                                         isExpanded: true,
                                         hint: const Text(
                                           "User Type",
-                                          style: TextStyle(
+                                          style: TextStyle(color: Color(0xff3A3845),
                                               fontSize: 14,
-                                              fontWeight: FontWeight.w100),
+                                              fontWeight: FontWeight.w500),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         items: uType.map((String items) {
                                           return DropdownMenuItem(
+
                                             value: items,
                                             child: Text(
+
                                               items,
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -375,12 +384,18 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         replacement:
                                             DropdownButtonHideUnderline(
                                           child: DropdownButton2(
+                                            dropdownDecoration: BoxDecoration(
+                                                color: Color(0xffDBE2EF),
+                                                borderRadius: BorderRadius.circular(20),
+                                                border: Border.all(width: 1,color: Color(0xff0078AA))
+                                            ),
                                             isExpanded: true,
                                             hint: Text(
                                               'Student Type',
                                               style: TextStyle(
                                                   fontSize: 14,
-                                                  fontWeight: FontWeight.w100),
+                                                  fontWeight: FontWeight.w500,
+                                              ),
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             items: sType.map((String items) {
@@ -398,6 +413,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                             },
                                           ),
                                         ),
+
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton2(
                                             isExpanded: true,
@@ -445,7 +461,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                         child: Container(
                                             height: height / 9,
                                             color:
-                                                Colors.grey.withOpacity(0.4)),
+                                                Color(0xff30475E),)
                                       ),
                                       Positioned(
                                         left: 280,
@@ -454,16 +470,16 @@ class _SignUPScreenState extends State<SignUPScreen> {
                                           onTap: () async {},
                                           child: Container(
                                               decoration: BoxDecoration(
-                                                  color: Color(0xffEB5757),
+                                                  color: Color(0xff0078AA),
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          20)),
+                                                          50)),
                                               width: width / 4,
                                               height: height / 12,
                                               child: IconButton(
                                                   icon: Icon(
                                                     Icons.arrow_forward,
-                                                    size: 35,
+                                                    size: 40,
                                                     color: Colors.white,
                                                   ),
                                                   onPressed: () async {
