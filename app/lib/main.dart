@@ -71,9 +71,14 @@ void callbackDispatcher() {
     flp.initialize(initSettings);
     Session session = new Session();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map body = {"email":prefs.getString("email")};
+    String utype = (prefs.getString("utype")=="Student") ? "Student" : prefs.getString("subtype")! ;
+
+
+    Map body = {"email":prefs.getString("email"),"utype":utype};
     var sendData = jsonEncode(body);
     Response post = await session.post(sendData,"/getNotification");
+    print(post.body);
+  
     showNotification("hi", flp);
     print(post);
     return Future.value(true);

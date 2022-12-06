@@ -21,8 +21,6 @@ app.config['MYSQL_PORT'] = 3306
 
 mysql = MySQL(app)
 
-<<<<<<< HEAD
-=======
 print(mysql)
 #for getting notifictaion
 @app.route('/getnotification',methods=['POST'])
@@ -82,7 +80,6 @@ def getnotification():
             
     
 
->>>>>>> dd73e3a276a126cf2cde38a310179bfa4318889e
 @app.route('/login', methods=['POST'])
 def login():
     email = request.json.get('email')
