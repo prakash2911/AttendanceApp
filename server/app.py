@@ -30,10 +30,10 @@ def getnotification():
     email = session['email']
     usertype=session['utype']
     returner={"status":"false"}
-    if(usertype=='student'):
-        query = 'SELECT * FROM complaints WHERE email=%s AND check_flag=0 AND (status="resolved" OR status="unresolved") '
+    if(usertype in ['student','RC','Teacher']):
+        query = f'SELECT * FROM complaints WHERE email={email} AND check_flag=0 AND (status="Resolved" OR status="unable to resolved") '
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(query,usertype)
+        cursor.execute(query)
         complaints=cursor.fetchall()
         if(complaints):
             blocks=[]
@@ -55,7 +55,7 @@ def getnotification():
             "complaint":complaint,
             "status":status
         }
-    if(usertype in ['electrician','civil and maintenance','educational aid']):
+    elif(usertype in ['electrician','civil and maintenance','educational aid']):
         query = 'SELECT * FROM complaints WHERE complainttype=%s  AND status="Registered" AND check_flag=0 '
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(query,usertype)
@@ -70,7 +70,7 @@ def getnotification():
                 floors.append(com[3])
                 rooms.append(com[4])
                 complaint.append(com[5])
-        returner["status"]="true"
+        returner["status"]=True
         returner["complaint"]={
             "block":blocks,
             "floor":floors,
@@ -222,7 +222,7 @@ def regcomplaint():
                 return returner
          timenow = datetime.now()
          cts = timenow.strftime("%d/%m/%y %H:%M:%S")
-         cursor.execute('INSERT INTO complaints VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (session['email'], Block, int(Floor), RoomNo, Complaint, complainttype, "Registered", cts, cts, session['utype'],))
+         cursor.execute('INSERT INTO complaints VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)', (session['email'], Block, int(Floor), RoomNo, Complaint, complainttype, "Registered", cts, cts, session['utype'],0))
          mysql.connection.commit()
          returner['status']=  'You have successfully registered a Complaint.'
          return returner
@@ -302,10 +302,9 @@ def change_complaint_status():
             cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, uts from complaints where complaintid=%s and email=%s",(int(num),session['email'],))
             data1 = cursor.fetchone()
             if data1:
-                print("hi")
                 timenow = datetime.now()
                 uts = timenow.strftime("%d/%m/%y %H:%M:%S")
-                cursor.execute("update complaints set status=%s, uts=%s WHERE complaintid=%s ",(Status, uts, num,))
+                cursor.execute("update complaints set status=%s, uts=%s ,check_flag=0 WHERE complaintid=%s ",(Status, uts, num,))
                 mysql.connection.commit()
                 returner['status']=  'You have successfully changed the status.'
                 return returner
@@ -319,7 +318,7 @@ def change_complaint_status():
             if data:
                     timenow = datetime.now()
                     uts = timenow.strftime("%d/%m/%y %H:%M:%S")
-                    cursor.execute("update complaints set status=%s, uts=%s WHERE complaintid=%s ",(Status, uts, num,))
+                    cursor.execute("update complaints set status=%s, uts=%s,check_flag=0 WHERE complaintid=%s ",(Status, uts, num,))
                     mysql.connection.commit()
                     returner['status']=  'You have successfully changed the status.'
                     print("hi")
@@ -329,12 +328,12 @@ def change_complaint_status():
                 return returner
         elif (session['subtype']=='education aid'):
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, complaints.block, floor, roomno, complaint, complainttype, status, uts from complaints where complainttype= %s and complaintid=%s ",(session['subtype'], num,))
+            cursor.execute("select complaintid,complaints.block, floor, roomno, complaint, complainttype, status, uts from complaints where complainttype= %s and complaintid=%s ",(session['subtype'], num,))
             data = cursor.fetchone()
             if data:
                 timenow = datetime.now()
                 uts = timenow.strftime("%d/%m/%y %H:%M:%S")
-                cursor.execute("update complaints set status=%s, uts=%s WHERE complaintid=%s ",(Status, uts, num,))
+                cursor.execute("update complaints set status=%s, uts=%s,check_flag=0 WHERE complaintid=%s ",(Status, uts, num,))
                 mysql.connection.commit()
                 returner['status']=  'You have successfully changed the status.'
                 return returner
@@ -348,7 +347,7 @@ def change_complaint_status():
             if data:
                 timenow = datetime.now()
                 uts = timenow.strftime("%d/%m/%y %H:%M:%S")
-                cursor.execute("update complaints set status=%s, uts=%s WHERE complaintid=%s ",(Status, uts, num,))
+                cursor.execute("update complaints set status=%s, uts=%s,check_flag=0 WHERE complaintid=%s ",(Status, uts, num,))
                 mysql.connection.commit()
                 returner['status']=  'You have successfully changed the status.'
                 return returner
@@ -363,7 +362,7 @@ def change_complaint_status():
                 if (Status =="Resolved"):
                     timenow = datetime.now()
                     uts = timenow.strftime("%d/%m/%y %H:%M:%S")
-                    cursor.execute("update complaints set status=%s, uts=%s WHERE complaintid=%s ",(Status, uts, num,))
+                    cursor.execute("update complaints set status=%s, uts=%s,check_flag=0 WHERE complaintid=%s ",(Status, uts, num,))
                     mysql.connection.commit()
                     returner['status']=  'You have successfully changed the status.'
                     return returner
