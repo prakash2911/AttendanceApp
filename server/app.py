@@ -95,6 +95,11 @@ def viewComp():
     complaintType = request.json["complaintType"]
     Time = request.json["Time"]
     Block = request.json["Block"]
+    queryComplaint = (complaintType=="All") if " " else f"AND complainttype={complaintType} "
+    queryTime = (Time=="All") if " " else  f" AND cts={Time}"
+    queryBlock = (Block == 'All') if " " else f" AND block={Block}"
+    query ="SELECT * FROM complaints WHERE complaintid is not null"
+    query = query + queryComplaint + queryTime + queryBlock 
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     if():
         
