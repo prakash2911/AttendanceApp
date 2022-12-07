@@ -45,6 +45,8 @@ dependencies:
   animated_splash_screen:
 #  socket_io_client: ^2.0.0
   workmanager: ^0.5.1
+  dropdownfield: ^1.0.3
+  dropdownfield2: ^1.0.7
 
 
 dev_dependencies:

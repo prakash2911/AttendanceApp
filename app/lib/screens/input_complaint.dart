@@ -7,8 +7,9 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 // import 'package:complaint_app/constant.dart' as constants;
 import 'package:http/http.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-
+// import 'package:dropdownfield/dropdownfield.dart';
 import '../complaint.dart';
+import 'package:dropdownfield2/dropdownfield2.dart';
 
 class Complaints extends StatefulWidget {
   final List<String> blocks;
@@ -458,17 +459,11 @@ class _ComplaintsState extends State<Complaints> {
                   height: 20.0,
                 ),
                 DropdownButtonHideUnderline(
-                  child: DropdownButton2(
-                    isExpanded: true,
-                    hint: const Text(
-                      'Select category',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  child: DropDownField(
+                    hintText: "Select category",
+                    enabled: true,
+                    itemsVisibleInDropdown: 5,
+
                     items: complaints
                         .map((item) => DropdownMenuItem<String>(
                               value: item,
@@ -484,7 +479,7 @@ class _ComplaintsState extends State<Complaints> {
                             ))
                         .toList(),
                     value: complaint,
-                    onChanged: (value) {
+                    onValueChanged: (value) {
                       setState(() {
                         complaint = value as String;
                       });
@@ -492,25 +487,26 @@ class _ComplaintsState extends State<Complaints> {
                     icon: const Icon(
                       Icons.arrow_forward_ios_outlined,
                     ),
-                    iconSize: 14,
-                    iconEnabledColor: Colors.white,
-                    buttonPadding: const EdgeInsets.only(left: 20, right: 20),
-                    buttonDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: Colors.black26,
-                      ),
-                      color: Colors.grey[800],
-                    ),
-                    buttonElevation: 2,
-                    dropdownDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: Colors.grey[800],
-                    ),
-                    dropdownElevation: 8,
-                    scrollbarRadius: const Radius.circular(40),
-                    scrollbarThickness: 6,
-                    scrollbarAlwaysShow: true,
+
+                    // iconSize: 14,
+                    // iconEnabledColor: Colors.white,
+                    // buttonPadding: const EdgeInsets.only(left: 20, right: 20),
+                    // buttonDecoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(14),
+                    //   border: Border.all(
+                    //     color: Colors.black26,
+                    //   ),
+                    //   color: Colors.grey[800],
+                    // ),
+                    // buttonElevation: 2,
+                    // dropdownDecoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(14),
+                    //   color: Colors.grey[800],
+                    // ),
+                    // dropdownElevation: 8,
+                    // scrollbarRadius: const Radius.circular(40),
+                    // scrollbarThickness: 6,
+                    // scrollbarAlwaysShow: true,
                   ),
                 ),
               ]),
@@ -518,44 +514,44 @@ class _ComplaintsState extends State<Complaints> {
                   padding: EdgeInsets.all(40),
                   width: MediaQuery.of(context).size.width,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[800]),
-                    onPressed: () async {
-                      Map body = {
-                        "Block": selectBlock,
-                        "Floor": selectedFloor,
-                        "RoomNo": selectedRoomNo,
-                        "Complaint": complaint,
-                        "complainttype": selectedComplaintType
-                      };
-                      List<String> v =
-                          await postComplaints(body, widget.DomainType);
-                      await getComplaints();
-                      if (v[0] == "Success") {
-                        print(v[0]);
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => ComplainTabList(
-                                      complaintPending: complaintPending,
-                                      complaintResolved: complaintResolved,
-                                      DomainType: widget.DomainType,
-                                    )),
-                            (Route<dynamic> route) => false);
-                      }
-                      final snackBar = SnackBar(
-                        content: const Text('Complaint Registered!'),
-                        action: SnackBarAction(
-                          label: 'Undo',
-                          onPressed: () {
-                            // Some code to undo the change.
-                          },
-                        ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    },
-                    child:
-                        Text("Submit", style: TextStyle(color: Colors.white)),
-                  )),
+              style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.grey[800]),
+          onPressed: () async {
+            Map body = {
+              "Block": selectBlock,
+              "Floor": selectedFloor,
+              "RoomNo": selectedRoomNo,
+              "Complaint": complaint,
+              "complainttype": selectedComplaintType
+            };
+            List<String> v =
+            await postComplaints(body, widget.DomainType);
+            await getComplaints();
+            if (v[0] == "Success") {
+              print(v[0]);
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => ComplainTabList(
+                        complaintPending: complaintPending,
+                        complaintResolved: complaintResolved,
+                        DomainType: widget.DomainType,
+                      )),
+                      (Route<dynamic> route) => false);
+            }
+            final snackBar = SnackBar(
+              content: const Text('Complaint Registered!'),
+              action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {
+                  // Some code to undo the change.
+                },
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          },
+          child:
+          Text("Submit", style: TextStyle(color: Colors.white)),
+        )),
             ],
           ),
         ),

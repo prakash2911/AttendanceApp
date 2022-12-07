@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:complaint_app/screens/admin_tab_list.dart';
 import 'package:complaint_app/screens/complaint_list_screen.dart';
 import 'package:complaint_app/screens/complaint_tab_list_screen.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String? email = "";
   String? password = "";
   bool validation = true;
+  String utype = "";
   List<Complaint> complaintPending = [];
   List<Complaint> complaintResolved = [];
 
@@ -294,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 print(email);
                                                 print(password);
                                                 if (await postSignIn(
-                                                    email!, password!)) {
+                                                    email!, password!,utype!)) {
                                                   setState(() {
                                                     validation = true;
                                                   });
@@ -309,6 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   //         builder: (context) =>
                                                   //         const ComplainTabList()),
                                                   //         (Route<dynamic> route) => false);
+                                                  if(utype!="admin")
                                                   Navigator.of(context)
                                                       .pushAndRemoveUntil(
                                                           MaterialPageRoute(
@@ -324,6 +327,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                           (Route<dynamic>
                                                                   route) =>
                                                               false);
+                                                  else
+                                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>adminTablist()), (route) => false);
                                                 } else {
                                                   validation = false;
                                                 }
@@ -360,7 +365,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  static Future<bool> postSignIn(String email, String password) async {
+  static Future<bool> postSignIn(String email, String password,String utype) async {
     Map body = {"email": email, "password": password};
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
@@ -369,7 +374,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Response r = await session.post(bodyJson, "/login");
     var responseBody = r.body;
     final bodyJson1 = json.decode(responseBody);
-
+    utype = bodyJson1["utype"]!;
     prefs.setString("utype", bodyJson1['utype']!);
     prefs.setString("subtype", bodyJson1['subtype']!);
     prefs.setString("email", email);

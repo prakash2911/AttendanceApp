@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:complaint_app/screens/admin_tab_list.dart';
 import 'package:complaint_app/screens/complaint_tab_list_screen.dart';
 import 'package:complaint_app/screens/login_screen.dart';
 // import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -32,20 +33,7 @@ void showNotification( v, flp) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // final service = FlutterBackgroundService();
-  // service.startService();
-  // IO.Socket socket = IO.io('http://localhost:3000');
-  // socket.onConnect((_) {
-  //   print('connect');
-  //   socket.emit('msg', 'test');
-  // });
-  // socket.on('event', (data) => print(data));
-  // await initializeService();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  // const InitializationSettings initializationSettings = InitializationSettings(
-  //   android: AndroidInitializationSettings('@mipmap/ic_launcher'));
-
   bool isLoggedIn = ((prefs.getBool('isSignedIn') == null)
       ? false
       : prefs.getBool('isSignedIn'))!;
@@ -79,8 +67,13 @@ void callbackDispatcher() {
     return Future.value(true);
   });
 }
-
-
+Future<String> getutype(bool log) async{
+if(log){
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString("utype")!;
+}
+return "";
+}
 
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
@@ -140,6 +133,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Complaint> complaintPending = [];
   List<Complaint> complaintResolved = [];
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -149,13 +144,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.isLoggedIn
-        ? ComplainTabList(
+    String utype = getutype(widget.isLoggedIn) as String;
+    if(widget.isLoggedIn){
+        if(utype!="admin") return ComplainTabList(
             complaintPending: complaintPending,
             complaintResolved: complaintResolved,
             DomainType: "college",
-          )
-        : LoginScreen();
+          );
+        else
+          return adminTablist();
+    }
+    else return LoginScreen();
   }
 
   Future<void> getComplaints() async {

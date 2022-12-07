@@ -21,8 +21,6 @@ app.config['MYSQL_PORT'] = 3306
 
 mysql = MySQL(app)
 
-<<<<<<< HEAD
-=======
 print(mysql)
 #for getting notifictaion
 @app.route('/getnotification',methods=['POST'])
@@ -80,9 +78,29 @@ def getnotification():
     return returner
     
             
-    
+@app.route("/getcomplaintype",methods=['Post'])
+def getcomplaint():
+    returner = {}
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("Select Distinct complaintype from complainttype")
+    complainttype = cursor.fetchall()
+    returner["complainttype"] = complainttype
+    cursor.execute("Select Distinct block from roomdata")
+    complainttype = cursor.fetchall()
+    returner["block"] = complainttype
+    return returner
+@app.route("/admin_viewcomplaint",methods = ['POST'])
+def viewComp():
+    returner = {}
+    complaintType = request.json["complaintType"]
+    Time = request.json["Time"]
+    Block = request.json["Block"]
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    if():
+        
+    complaint = cursor.fetchall()
 
->>>>>>> dd73e3a276a126cf2cde38a310179bfa4318889e
+
 @app.route('/login', methods=['POST'])
 def login():
     email = request.json.get('email')
