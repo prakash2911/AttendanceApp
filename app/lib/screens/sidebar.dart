@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:complaint_app/screens/admin_tab_list.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,12 +61,12 @@ class _NavBarState extends State<NavBar> {
       email = (prefs.getString("email"))!;
       utype = (prefs.getString("utype"))!;
       subtype = (prefs.getString("subtype"))!;
-      hostelVisibility = (subtype == 'Hosteler' ||
-              (utype == "Employee" && subtype != "Teacher"))
+      hostelVisibility = (subtype == 'Hosteller' ||
+              ((utype == "Employee" && subtype != "Teacher") || utype=="admin"))
           ? true
           : false;
       collegeVisibility =
-          (utype == "Student" || utype == "Employee") ? true : false;
+          (utype == "Student" || utype == "Employee" || utype=="admin") ? true : false;
       attendanceVisibility =
           (utype == "Student" || subtype == "Teacher") ? true : false;
     });
@@ -121,7 +122,7 @@ class _NavBarState extends State<NavBar> {
                 color: Colors.white,
               ),
               title: Text(
-                'Complaints - college',
+                'Complaints - Institution',
                 style: const TextStyle(
                   color: Colors.white,
                 ),
@@ -137,7 +138,7 @@ class _NavBarState extends State<NavBar> {
                 color: Colors.white,
               ),
               title: Text(
-                'Complaints - hostel',
+                'Complaints - Hostels',
                 style: const TextStyle(
                   color: Colors.white,
                 ),
@@ -154,6 +155,12 @@ class _NavBarState extends State<NavBar> {
     Navigator.of(context).pop();
     switch (index) {
       case 0:
+        if(utype=="admin")
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => adminTablist(DomainType: "college")),
+                  (Route<dynamic> route) => false);
+        else
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
                 builder: (context) => ComplainTabList(
@@ -164,16 +171,28 @@ class _NavBarState extends State<NavBar> {
             (Route<dynamic> route) => false);
         break;
       case 1:
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-                builder: (context) => ComplainTabList(
-                      complaintPending: complaintPending,
-                      complaintResolved: complaintResolved,
-                      DomainType: "college",
-                    )),
-            (Route<dynamic> route) => false);
+        if(utype=="admin")
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => adminTablist(DomainType: "college")),
+                  (Route<dynamic> route) => false);
+        else
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => ComplainTabList(
+                    complaintPending: complaintPending,
+                    complaintResolved: complaintResolved,
+                    DomainType: "college",
+                  )),
+                  (Route<dynamic> route) => false);
         break;
       case 2:
+        if(utype=="admin")
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => adminTablist(DomainType: "hostel",)),
+                  (Route<dynamic> route) => false);
+        else
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
                 builder: (context) => ComplainTabList(

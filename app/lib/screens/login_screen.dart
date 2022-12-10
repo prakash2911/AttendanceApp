@@ -39,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
   String? email = "";
   String? password = "";
   bool validation = true;
-  String utype = "";
   List<Complaint> complaintPending = [];
   List<Complaint> complaintResolved = [];
 
@@ -51,321 +50,332 @@ class _LoginScreenState extends State<LoginScreen> {
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
-            backgroundColor: Color(0xff7895B2),
-            body: i == 0
-                ? SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(25),
-                          child: Column(
-                            children: [
-                              Row(
-                                  // TabBar Code
-                                  children: [
-                                    Container(
-                                      height: height / 19,
-                                      width: width / 2,
-                                      child: TopAnime(
-                                        2,
-                                        5,
-                                        child: ListView.builder(
-                                          itemCount: feature.length,
-                                          scrollDirection: Axis.horizontal,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  i = index;
-                                                });
-                                              },
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 20),
-                                                    child: Text(
-                                                      feature[index],
-                                                      style: TextStyle(
-                                                        color: i == index
-                                                            ? Colors.black
-                                                            : Color(0xff30475E),
-                                                        fontSize: 19,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+
+            // backgroundColor: Color(0xff7895B2),
+            body: Container(
+              height: double.infinity,
+              decoration: BoxDecoration(
+
+                image: DecorationImage(
+                    image: AssetImage("assests/bg-1.jpg"),
+                  fit: BoxFit.cover
+                )
+              ),
+              child: i == 0
+                  ? SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.all(25),
+                            child: Column(
+                              children: [
+                                Row(
+                                    // TabBar Code
+                                    children: [
+                                      Container(
+                                        height: height / 19,
+                                        width: width / 2,
+                                        child: TopAnime(
+                                          2,
+                                          5,
+                                          child: ListView.builder(
+                                            itemCount: feature.length,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    i = index;
+                                                  });
+                                                },
+                                                child: Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 20),
+                                                      child: Text(
+                                                        feature[index],
+                                                        style: TextStyle(
+                                                          color: i == index
+                                                              ? Colors.black
+                                                              : Color(0xff30475E),
+                                                          fontSize: 19,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  i == index
-                                                      ? Container(
-                                                          height: 3,
-                                                          width: width / 9,
-                                                          color: Colors.black,
-                                                        )
-                                                      : Container(),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(child: Container()),
-                                  ]),
-
-                              SizedBox(
-                                height: 50,
-                              ),
-
-                              // Top Text
-                              Container(
-                                padding: EdgeInsets.only(left: 15),
-                                width: width,
-                                child: TopAnime(
-                                  1,
-                                  20,
-                                  curve: Curves.fastOutSlowIn,
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            text: "Welcome ",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 40,
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: "Back",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 40,
-                                                  fontWeight: FontWeight.bold,
+                                                    SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    i == index
+                                                        ? Container(
+                                                            height: 3,
+                                                            width: width / 9,
+                                                            color: Colors.black,
+                                                          )
+                                                        : Container(),
+                                                  ],
                                                 ),
-                                              )
-                                            ],
+                                              );
+                                            },
                                           ),
                                         ),
-                                      ]),
+                                      ),
+                                      Expanded(child: Container()),
+                                    ]),
+
+                                SizedBox(
+                                  height: 50,
                                 ),
-                              ),
 
-                              SizedBox(
-                                height: height / 14,
-                              ),
-
-                              // TextFiled
-                              Column(
-                                children: [
-                                  Container(
-                                    width: width / 1.2,
-                                    height: height / 3.10,
-                                    //  color: Colors.red,
-                                    child: TopAnime(
-                                      1,
-                                      15,
-                                      curve: Curves.easeInExpo,
-                                      child: Column(
+                                // Top Text
+                                Container(
+                                  padding: EdgeInsets.only(left: 15),
+                                  width: width,
+                                  child: TopAnime(
+                                    1,
+                                    20,
+                                    curve: Curves.fastOutSlowIn,
+                                    child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          TextField(
-                                            // readOnly: true, // * Just for Debug
-                                            cursorColor: Colors.black,
-                                            style:
-                                                TextStyle(color: Color(0xff3A3845)),
-                                            showCursor: true,
-                                            //cursorColor: mainColor,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                email = value;
-                                              });
-                                            },
-                                            decoration:
-                                                kTextFiledInputDecoration.copyWith(labelText: "Email",labelStyle:TextStyle(color: Color(0xff3A3845))),
-
-
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                          ),
-                                          SizedBox(
-                                            height: 25,
-                                          ),
-                                          TextFormField(
-                                            // readOnly: true, // * Just for Debug
-                                            cursorColor: Colors.black,
-                                            obscureText: !_passwordVisible,
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                            showCursor: true,
-                                            //cursorColor: mainColor,
-                                            decoration:
-                                                kTextFiledInputDecoration
-                                                    .copyWith(
-                                              labelText: "Password",labelStyle: TextStyle(color: Color(0xff3A3845)),
-                                              suffixIcon: IconButton(
-                                                icon: Icon(
-                                                  // Based on passwordVisible state choose the icon
-                                                  _passwordVisible
-                                                      ? Icons.visibility
-                                                      : Icons.visibility_off,
-                                                  color: Theme.of(context)
-                                                      .primaryColorDark,
-                                                ),
-                                                onPressed: () {
-                                                  // Update the state i.e. toogle the state of passwordVisible variable
-                                                  setState(() {
-                                                    _passwordVisible =
-                                                        !_passwordVisible;
-                                                  });
-                                                },
+                                          RichText(
+                                            text: TextSpan(
+                                              text: "Welcome ",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 40,
+                                                fontWeight: FontWeight.w300,
                                               ),
-                                            ),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                password = value;
-                                              });
-                                            },
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-
-                        // Bottom
-                        i == 0
-                            ? TopAnime(
-                                2,
-                                42,
-                                curve: Curves.fastOutSlowIn,
-                                child: Container(
-                                  height: height / 6,
-                                  // color: Colors.red,
-                                  child: Stack(
-                                    children: [
-                                      // Positioned(
-                                      //   left: 30,
-                                      //   top: 15,
-                                      //   child: Text(
-                                      //     "Fogot Password?",
-                                      //     style: TextStyle(
-                                      //         fontSize: 16,
-                                      //         fontWeight: FontWeight.w700),
-                                      //   ),
-                                      // ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 43),
-                                        child: Container(
-                                            height: height / 9,
-                                            color:
-                                                Color(0xff30475E)),
-                                      ),
-                                      Positioned(
-                                        left: 280,
-                                        top: 10,
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Color(0xff0078AA),
-                                                borderRadius:
-                                                    BorderRadius.circular(50)),
-                                            width: width / 4,
-                                            height: height / 12,
-                                            child: IconButton(
-                                              icon: Icon(
-                                                Icons.arrow_forward,
-                                                size: 40,
-                                                color: Colors.white,
-                                              ),
-                                              onPressed: () async {
-                                                print(email);
-                                                print(password);
-                                                if (await postSignIn(
-                                                    email!, password!,utype!)) {
-                                                  setState(() {
-                                                    validation = true;
-                                                  });
-                                                  SharedPreferences prefs =
-                                                      await SharedPreferences
-                                                          .getInstance();
-                                                  prefs.setBool(
-                                                      "isSignedIn", true);
-                                                  await getComplaints();
-                                                  // Navigator.of(context).pushAndRemoveUntil(
-                                                  //     MaterialPageRoute(
-                                                  //         builder: (context) =>
-                                                  //         const ComplainTabList()),
-                                                  //         (Route<dynamic> route) => false);
-                                                  if(utype!="admin")
-                                                  Navigator.of(context)
-                                                      .pushAndRemoveUntil(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  ComplainTabList(
-                                                                    complaintPending:
-                                                                        complaintPending,
-                                                                    DomainType:
-                                                                        "college",
-                                                                    complaintResolved:
-                                                                        complaintResolved,
-                                                                  )),
-                                                          (Route<dynamic>
-                                                                  route) =>
-                                                              false);
-                                                  else
-                                                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>adminTablist()), (route) => false);
-                                                } else {
-                                                  validation = false;
-                                                }
-                                                // Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //         builder: (context) =>
-                                                //             ComplainTabList()));
-                                                final snackBar = SnackBar(
-                                                  content: const Text(
-                                                      'Login Successful!'),
-                                                  action: SnackBarAction(
-                                                    label: 'Undo',
-                                                    onPressed: () {
-                                                      // Some code to undo the change.
-                                                    },
+                                              children: [
+                                                TextSpan(
+                                                  text: "Back",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 40,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                );
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(snackBar);
-                                              },
-                                            )),
-                                      ),
-                                    ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ]),
                                   ),
                                 ),
-                              )
-                            : SignUPScreen()
-                      ],
-                    ),
-                  )
-                : SignUPScreen()),
+
+                                SizedBox(
+                                  height: height / 14,
+                                ),
+
+                                // TextFiled
+                                Column(
+                                  children: [
+                                    Container(
+                                      width: width / 1.2,
+                                      height: height / 3.10,
+                                      //  color: Colors.red,
+                                      child: TopAnime(
+                                        1,
+                                        15,
+                                        curve: Curves.easeInExpo,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            TextField(
+                                              // readOnly: true, // * Just for Debug
+                                              cursorColor: Colors.black,
+                                              style:
+                                                  TextStyle(color: Color(0xff3A3845)),
+                                              showCursor: true,
+                                              //cursorColor: mainColor,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  email = value;
+                                                });
+                                              },
+                                              decoration:
+                                                  kTextFiledInputDecoration.copyWith(labelText: "Email",labelStyle:TextStyle(color: Color(0xff3A3845))),
+
+
+                                              keyboardType:
+                                                  TextInputType.emailAddress,
+                                            ),
+                                            SizedBox(
+                                              height: 25,
+                                            ),
+                                            TextFormField(
+                                              // readOnly: true, // * Just for Debug
+                                              cursorColor: Colors.black,
+                                              obscureText: !_passwordVisible,
+                                              style:
+                                                  TextStyle(color: Colors.black),
+                                              showCursor: true,
+                                              //cursorColor: mainColor,
+                                              decoration:
+                                                  kTextFiledInputDecoration
+                                                      .copyWith(
+                                                labelText: "Password",labelStyle: TextStyle(color: Color(0xff3A3845)),
+                                                suffixIcon: IconButton(
+                                                  icon: Icon(
+                                                    // Based on passwordVisible state choose the icon
+                                                    _passwordVisible
+                                                        ? Icons.visibility
+                                                        : Icons.visibility_off,
+                                                    color: Theme.of(context)
+                                                        .primaryColorDark,
+                                                  ),
+                                                  onPressed: () {
+                                                    // Update the state i.e. toogle the state of passwordVisible variable
+                                                    setState(() {
+                                                      _passwordVisible =
+                                                          !_passwordVisible;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  password = value;
+                                                });
+                                              },
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+
+                          // Bottom
+                          i == 0
+                              ? TopAnime(
+                                  2,
+                                  42,
+                                  curve: Curves.fastOutSlowIn,
+                                  child: Container(
+                                    height: height / 6,
+                                    // color: Colors.red,
+                                    child: Stack(
+                                      children: [
+                                        // Positioned(
+                                        //   left: 30,
+                                        //   top: 15,
+                                        //   child: Text(
+                                        //     "Fogot Password?",
+                                        //     style: TextStyle(
+                                        //         fontSize: 16,
+                                        //         fontWeight: FontWeight.w700),
+                                        //   ),
+                                        // ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 43),
+                                          child: Container(
+                                              height: height / 9,
+                                              color:
+                                                  Color(0xff30475E)),
+                                        ),
+                                        Positioned(
+                                          left: 280,
+                                          top: 10,
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Color(0xff0078AA),
+                                                  borderRadius:
+                                                      BorderRadius.circular(50)),
+                                              width: width / 4,
+                                              height: height / 12,
+                                              child: IconButton(
+                                                icon: Icon(
+                                                  Icons.arrow_forward,
+                                                  size: 40,
+                                                  color: Colors.white,
+                                                ),
+                                                onPressed: () async {
+                                                  print(email);
+                                                  print(password);
+                                                  if (await postSignIn(
+                                                      email!, password!)) {
+                                                    setState(() {
+                                                      validation = true;
+                                                    });
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    prefs.setBool(
+                                                        "isSignedIn", true);
+                                                    await getComplaints();
+                                                    // Navigator.of(context).pushAndRemoveUntil(
+                                                    //     MaterialPageRoute(
+                                                    //         builder: (context) =>
+                                                    //         const ComplainTabList()),
+                                                    //         (Route<dynamic> route) => false);
+                                                    if(prefs.getString("utype")=="admin")
+                                                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>adminTablist(DomainType: "college")), (route) => false);
+                                                    else
+                                                    Navigator.of(context)
+                                                        .pushAndRemoveUntil(
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    ComplainTabList(
+                                                                      complaintPending:
+                                                                          complaintPending,
+                                                                      DomainType:
+                                                                          "college",
+                                                                      complaintResolved:
+                                                                          complaintResolved,
+                                                                    )),
+                                                            (Route<dynamic>
+                                                                    route) =>
+                                                                false);
+                                                  } else {
+                                                    validation = false;
+                                                  }
+                                                  // Navigator.push(
+                                                  //     context,
+                                                  //     MaterialPageRoute(
+                                                  //         builder: (context) =>
+                                                  //             ComplainTabList()));
+                                                  final snackBar = SnackBar(
+                                                    content: const Text(
+                                                        'Login Successful!'),
+                                                    action: SnackBarAction(
+                                                      label: 'Undo',
+                                                      onPressed: () {
+                                                        // Some code to undo the change.
+                                                      },
+                                                    ),
+                                                  );
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(snackBar);
+                                                },
+                                              )),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : SignUPScreen()
+                        ],
+                      ),
+                    )
+                  : SignUPScreen(),
+            )),
       ),
     );
   }
 
-  static Future<bool> postSignIn(String email, String password,String utype) async {
+  static Future<bool> postSignIn(String email, String password) async {
     Map body = {"email": email, "password": password};
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
@@ -374,7 +384,6 @@ class _LoginScreenState extends State<LoginScreen> {
     Response r = await session.post(bodyJson, "/login");
     var responseBody = r.body;
     final bodyJson1 = json.decode(responseBody);
-    utype = bodyJson1["utype"]!;
     prefs.setString("utype", bodyJson1['utype']!);
     prefs.setString("subtype", bodyJson1['subtype']!);
     prefs.setString("email", email);

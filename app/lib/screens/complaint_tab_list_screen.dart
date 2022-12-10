@@ -178,7 +178,7 @@ class _ComplainTabListState extends State<ComplainTabList> {
                                 DomainType: widget.DomainType,
                               )));
                 },
-                backgroundColor: Colors.grey[800],
+                backgroundColor: Color(0xff30475E),
                 child: Icon(Icons.add),
               ),
             )));

@@ -23,7 +23,7 @@ mysql = MySQL(app)
 
 print(mysql)
 #for getting notifictaion
-@app.route('/getnotification',methods=['POST'])
+@app.route('/getNotification',methods=['POST'])
 def getnotification():
     email = session['email']
     usertype=session['utype']
@@ -45,7 +45,7 @@ def getnotification():
                     rooms.append(com[4])
                     complaint.append(com[5])
                     status.append(com[7])
-            returner["satus"]=True
+            returner["status"]=True
             returner["complaint"]={
             "block":blocks,
             "floor":floors,
@@ -78,32 +78,61 @@ def getnotification():
     return returner
     
             
-@app.route("/getcomplaintype",methods=['Post'])
+@app.route("/getcomplainttype",methods=['Post'])
 def getcomplaint():
+    domaintype = request.json['Domaintype']
     returner = {}
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("Select Distinct complaintype from complainttype")
-    complainttype = cursor.fetchall()
-    returner["complainttype"] = complainttype
-    cursor.execute("Select Distinct block from roomdata")
-    complainttype = cursor.fetchall()
-    returner["block"] = complainttype
+    if(domaintype == 'college'):
+        cursor.execute("Select Distinct complainttype from complaintslist")
+        complainttype = cursor.fetchall()
+        returner["complainttype"] = complainttype
+        cursor.execute("Select Distinct block from roomdata")
+        complainttype = cursor.fetchall()
+        returner["block"] = complainttype
+    else:
+        cursor.execute("Select Distinct complainttype from hcomplaintslist")
+        complainttype = cursor.fetchall()
+        returner["complainttype"] = complainttype
+        cursor.execute("Select Distinct block from hroomdata")
+        complainttype = cursor.fetchall()
+        returner["block"] = complainttype
     return returner
-@app.route("/admin_viewcomplaint",methods = ['POST'])
+@app.route("/admin_college_viewcomplaint",methods = ['POST'])
 def viewComp():
     returner = {}
     complaintType = request.json["complaintType"]
     Time = request.json["Time"]
     Block = request.json["Block"]
-    queryComplaint = (complaintType=="All") if " " else f"AND complainttype={complaintType} "
-    queryTime = (Time=="All") if " " else  f" AND cts={Time}"
-    queryBlock = (Block == 'All') if " " else f" AND block={Block}"
-    query ="SELECT * FROM complaints WHERE complaintid is not null"
+    queryComplaint =  " "if(complaintType=="All")  else f"AND complainttype='{complaintType}' "
+    queryTime = " "if (Time=="All") else  f" AND cts='{Time}'"
+    queryBlock = " "if(Block == 'All')  else f" AND block='{Block}'"
+    query ="SELECT * FROM complaints WHERE complaintid is not null "
     query = query + queryComplaint + queryTime + queryBlock
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute(query)
     complaint = cursor.fetchall()
-
+    returner["complaint"] = complaint
+    return returner
+    # if():
+        
+    # complaint = cursor.fetchall()
+@app.route("/admin_hostel_viewcomplaint",methods = ['POST'])
+def viewhComp():
+    returner = {}
+    complaintType = request.json["complaintType"]
+    Time = request.json["Time"]
+    Block = request.json["Block"]
+    queryComplaint =  " "if(complaintType=="All")  else f"AND complainttype={complaintType} "
+    queryTime = " "if (Time=="All") else  f" AND cts={Time}"
+    queryBlock = " "if(Block == 'All')  else f" AND block={Block}"
+    query ="SELECT * FROM hcomplaints WHERE complaintid is not null"
+    query = query + queryComplaint  + queryTime + queryBlock
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute(query)
+    complaint = cursor.fetchall()
+    returner["complaint"] = complaint
+    return returner
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -471,7 +500,7 @@ def hviewcomplaint():
             cmpl = list(cmpl)
             returner['complaint'] = cmpl
             return returner
-        elif (session['subtype'] == 'Hosteler' or session['subtype']=='RC'):
+        elif (session['subtype'] == 'Hosteller' or session['subtype']=='RC'):
                 cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                 cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, cts,uts from hcomplaints where email=%s and status = 'Registered' or status = 'Resolved'", (session['email'],))
                 cmpl = cursor.fetchall()
@@ -494,7 +523,7 @@ def hviewcomplaint():
             return returner
         else:
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute("select complaintid, hcomplaints.block, floor, roomno, complaint, complainttype, status,cts, uts from hcomplaints, where utype= %s ",("Warden",))
+            cursor.execute("select complaintid, hcomplaints.block, floor, roomno, complaint, complainttype, status,cts, uts from hcomplaints")
             cmpl = cursor.fetchall()
             cmpl = list(cmpl)
             returner['complaint'] = cmpl
@@ -510,7 +539,7 @@ def hchange_complaint_status():
         num = request.json.get('complaintid')
         Status = request.json.get('Status')
         print(session['subtype'])
-        if (session['subtype']=='Hosteler' or session['subtype']=='RC'): 
+        if (session['subtype']=='Hosteller' or session['subtype']=='RC'): 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, uts from hcomplaints where complaintid=%s and email=%s",(int(num),session['email'],))
             data1 = cursor.fetchone()

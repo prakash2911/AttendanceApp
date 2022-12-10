@@ -27,7 +27,16 @@ void showNotification( v, flp) async {
       priority: Priority.high, importance: Importance.max);
   var iOS = IOSNotificationDetails();
   var platform = NotificationDetails(android: android,iOS: iOS);
-  await flp.show(0, 'Temp notification', '$v', platform,
+  var block = v["block"];
+  var floor = v["floor"];
+  var room = v["rooms"];
+  var complaint = v["complaint"];
+  var status = v["status"];
+  String? notificationString="";
+  for(int i=0;i<block.length;i++){
+    notificationString = block[i]+ " - " +floor[i]+" - "+"-"+room[i]+complaint[i]+" : "+status[i]+"\n";
+  }
+  await flp.show(0, "Complaints" ,notificationString, platform,
       payload: 'VIS \n $v');
 }
 
@@ -37,52 +46,57 @@ Future<void> main() async {
   bool isLoggedIn = ((prefs.getBool('isSignedIn') == null)
       ? false
       : prefs.getBool('isSignedIn'))!;
+  String utype = "";
+
   if(isLoggedIn){
-    await Workmanager().initialize(callbackDispatcher,isInDebugMode: true); //to true if still in testing lev turn it to false whenever you are launching the app
+    await Workmanager().initialize(callbackDispatcher); //to true if still in testing lev turn it to false whenever you are launching the app
     await Workmanager().registerPeriodicTask("5", simplePeriodicTask,
       existingWorkPolicy: ExistingWorkPolicy.replace,
       frequency: Duration(minutes: 15),//when should it check the link
       initialDelay: Duration(seconds: 5),//duration before showing the notification
     );
+    utype = prefs.getString("utype")!;
   }
   runApp(MyApp(
-    isLoggedIn: isLoggedIn,
+    isLoggedIn: isLoggedIn,utype: utype
   ));
 }
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     FlutterLocalNotificationsPlugin flp = FlutterLocalNotificationsPlugin();
-    var android = AndroidInitializationSettings("assests/icon/icon.png");
+    var android = AndroidInitializationSettings("");
     var iOS = IOSInitializationSettings();
     var initSettings = InitializationSettings(android: android,iOS: iOS);
     flp.initialize(initSettings);
     Session session = new Session();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String utype = (prefs.getString("utype")=="Student") ? "Student" : prefs.getString("subtype")! ;
-
-
     Map body = {"email":prefs.getString("email"),"utype":utype};
     var sendData = jsonEncode(body);
     Response post = await session.post(sendData,"/getNotification");
     print(post.body);
+    var body1 = jsonDecode(post.body);
+    if(body1["status"]){
+      showNotification(body1["complaint"], flp);
+    }
   
-    showNotification("hi", flp);
     print(post);
     return Future.value(true);
   });
 }
-Future<String> getutype(bool log) async{
-if(log){
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString("utype")!;
-}
-return "";
-}
+// Future<String> getutype(bool log) async{
+// if(log){
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   return prefs.getString("utype")!;
+// }
+// return "";
+// }
 
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
-  const MyApp({Key? key, required this.isLoggedIn}) : super(key: key);
+  final String utype;
+  const MyApp({Key? key, required this.isLoggedIn,required this.utype}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -119,7 +133,7 @@ class MyApp extends StatelessWidget {
         splashIconSize: 250,
         centered: true,
         curve: Curves.fastOutSlowIn,
-        nextScreen: MyHomePage(isLoggedIn: isLoggedIn),
+        nextScreen: MyHomePage(isLoggedIn: isLoggedIn,utype:utype ),
         splashTransition: SplashTransition.sizeTransition,
         animationDuration: Duration(milliseconds: 2000),
       ),
@@ -130,7 +144,8 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   final bool isLoggedIn;
-  const MyHomePage({Key? key, required this.isLoggedIn}) : super(key: key);
+  final String utype;
+  const MyHomePage({Key? key, required this.isLoggedIn,required this.utype}) : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -149,15 +164,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    String utype = getutype(widget.isLoggedIn) as String;
     if(widget.isLoggedIn){
-        if(utype!="admin") return ComplainTabList(
+        if(widget.utype=="admin") return adminTablist(DomainType: "college",);
+
+        return ComplainTabList(
             complaintPending: complaintPending,
             complaintResolved: complaintResolved,
             DomainType: "college",
           );
-        else
-          return adminTablist();
     }
     else return LoginScreen();
   }

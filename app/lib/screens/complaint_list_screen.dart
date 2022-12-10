@@ -123,77 +123,82 @@ class _ComplaintListState extends State<ComplaintList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff181D31),
+      // backgroundColor: Color(0xff181D31),
+
       body: RefreshIndicator(
+
         onRefresh: () {
           return Future.delayed(Duration(seconds: 1), () async {
             await getComplaints();
           });
         },
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: GestureDetector(
-                onTap: () {
-                  String topic = complaints[index].block ?? "error";
-                  String description = complaints[index].complaint ?? "error";
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DetailPage(
-                                topic: topic,
-                                description: description,
-                                complaint: complaints[index],
-                                DomainType: widget.DomainType,
-                              )));
-                },
-                child: Card(
-                  color: Color(0xff30475E),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Padding(
-                          // padding: const EdgeInsets.all(8.0),
-                          padding: EdgeInsets.fromLTRB(8, 8, 10, 8),
-                          child: Image.asset(
-                            "assests/" + widget.Status + ".gif",
-                            height: 50,
-                            fit: BoxFit.contain,
-                            width: 50,
+        child: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assests/bg/admin-bg.jpg"),
+                  fit: BoxFit.cover
+              )
+          ),
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GestureDetector(
+                  onTap: () {
+                    String topic = complaints[index].block ?? "error";
+                    String description = complaints[index].complaint ?? "error";
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DetailPage(
+                                  topic: topic,
+                                  description: description,
+                                  complaint: complaints[index],
+                                  DomainType: widget.DomainType,
+                                )));
+                  },
+                  child: Card(
+                    color: Color(0xff30475E),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Padding(
+                            // padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.fromLTRB(8, 8, 15, 8),
+                            child: Icon(Icons.assignment_turned_in_rounded,color: Colors.white,size: 30,)
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                complaints[index].block,
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                              Text(
-                                complaints[index].complaint,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    overflow: TextOverflow.ellipsis),
-                              )
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  complaints[index].block,
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                                Text(
+                                  complaints[index].complaint,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      overflow: TextOverflow.ellipsis),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-          itemCount: complaints.length,
-          physics: const AlwaysScrollableScrollPhysics(),
+              );
+            },
+            itemCount: complaints.length,
+            physics: const AlwaysScrollableScrollPhysics(),
+          ),
         ),
       ),
     );

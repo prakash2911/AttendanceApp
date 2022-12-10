@@ -12,6 +12,6 @@ const kTextFiledInputDecoration = InputDecoration(
   labelStyle:
       TextStyle(color: Colors.grey, fontSize: 14, fontWeight: FontWeight.w400),
 );
-const URL = "http://192.168.243.77:2002";
+const URL = "http://192.168.79.77:2002";
 // const URL = "http://192.168.178.202:2002";
 // const URL = "https://3645-42-106-184-128.ngrok.io";

@@ -79,7 +79,7 @@ class _DetailPageState extends State<DetailPage> {
         SizedBox(height: height * 0.06),
         Text(
           widget.topic,
-          style: TextStyle(color: Colors.white, fontSize: 30.0),
+          style: TextStyle(color: Colors.white, fontSize: 20.0),
         ),
         SizedBox(height: height * 0.01),
         Row(
@@ -124,7 +124,7 @@ class _DetailPageState extends State<DetailPage> {
                   style: TextStyle(color: Colors.white, fontSize: 15.0),
                 ),
               ),
-            )
+            ),
           ],
         ),
         SizedBox(height: height * 0.01),
@@ -132,9 +132,9 @@ class _DetailPageState extends State<DetailPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-              flex: 1,
+              flex: 3,
               child: Text(
-                "Time: ",
+                "Registered Time: ",
                 style: TextStyle(color: Colors.white, fontSize: 15.0),
               ),
             ),
@@ -150,13 +150,36 @@ class _DetailPageState extends State<DetailPage> {
             )
           ],
         ),
+        SizedBox(height: height * 0.01),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Text(
+                "Updated Time: ",
+                style: TextStyle(color: Colors.white, fontSize: 15.0),
+              ),
+            ),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(
+                  widget.complaint.updateStamp,
+                  style: TextStyle(color: Colors.white, fontSize: 15.0),
+                ),
+              ),
+            )
+          ],
+        ),
       ],
     );
 
     final topContent = Stack(
       children: <Widget>[
         Container(
-          height: MediaQuery.of(context).size.height * 0.3,
+          height: MediaQuery.of(context).size.height * 0.4,
           padding: EdgeInsets.all(40.0),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(color: Color(0xff30475E)),
@@ -356,7 +379,7 @@ class _DetailPageState extends State<DetailPage> {
     } else if (widget.complaint.status == "verified") {
       return const Text("Verified", style: TextStyle(color: Colors.white));
     } else {
-      return Container();
+      return Text(widget.complaint.status,style:TextStyle(color: Colors.white) ,);
     }
   }
 }

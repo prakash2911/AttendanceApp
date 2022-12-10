@@ -17,7 +17,8 @@ void main() async {
     bool isLoggedIn = ((prefs.getBool('isSignedIn') == null)
         ? false
         : prefs.getBool('isSignedIn'))!;
-    await tester.pumpWidget(MyApp(isLoggedIn: isLoggedIn));
+    String utype = (prefs.getString("utype"))!;
+    await tester.pumpWidget(MyApp(isLoggedIn: isLoggedIn,utype: utype,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
