@@ -56,8 +56,10 @@ class _ComplainTabListState extends State<ComplainTabList> {
   Future<void> getComplaints(String DomainType) async {
     Session session = Session();
     Map body = {};
-    complaintResolved1.removeRange(0, complaintResolved1.length);
-    complaintPending1.removeRange(0, complaintResolved1.length);
+    // complaintResolved1.removeRange(0, complaintResolved1.length);
+    // complaintPending1.removeRange(0, complaintResolved1.length);
+    complaintPending1.clear();
+    complaintResolved1.clear();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var bodyJson = jsonEncode(body);
     Response r =

@@ -21,7 +21,6 @@ app.config['MYSQL_PORT'] = 3306
 
 mysql = MySQL(app)
 
-print(mysql)
 #for getting notifictaion
 @app.route('/getNotification',methods=['POST'])
 def getnotification():
@@ -162,7 +161,7 @@ def login():
         
 @app.route('/logout', methods=['POST'])
 def logout():
-    
+
    returner = {}
    session.pop('loggedin', None)
    session.pop('email', None)
@@ -346,8 +345,7 @@ def change_complaint_status():
     else:
         num = request.json.get('complaintid')
         Status = request.json.get('Status')
-        print(num)
-        print(Status)
+       
         if (session['utype']=='Student' or session['subtype']=='Teacher' or session['subtype']=='RC') : 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, uts from complaints where complaintid=%s and email=%s",(int(num),session['email'],))
@@ -372,7 +370,6 @@ def change_complaint_status():
                     cursor.execute("update complaints set status=%s, uts=%s,check_flag=0 WHERE complaintid=%s ",(Status, uts, num,))
                     mysql.connection.commit()
                     returner['status']=  'You have successfully changed the status.'
-                    print("hi")
                     return returner
             else:
                 returner['status']=  'The complaintid doesnot exist.'
@@ -538,7 +535,6 @@ def hchange_complaint_status():
     else:
         num = request.json.get('complaintid')
         Status = request.json.get('Status')
-        print(session['subtype'])
         if (session['subtype']=='Hosteller' or session['subtype']=='RC'): 
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute("select complaintid, block, floor, roomno, complaint, complainttype, status, uts from hcomplaints where complaintid=%s and email=%s",(int(num),session['email'],))
@@ -587,6 +583,7 @@ def hchange_complaint_status():
             data = cursor.fetchone()
             if data:
                 if (Status =="Resolved"):
+
                     timenow = datetime.now()
                     uts = timenow.strftime("%d/%m/%y %H:%M:%S")
                     cursor.execute("update hcomplaints set status=%s, uts=%s WHERE complaintid=%s ",(Status, uts, num,))
@@ -598,7 +595,47 @@ def hchange_complaint_status():
                 return returner
         returner['status']=  'The complainttype doesnt exist.'
         return returner
-        
+
+#get number of resolved,registered,verified for profile info
+@app.route('/getprofileinfo', methods=['POST'])
+def getprofileinfo():
+    # print('Hi')
+    types=['verified','resolved','registered']
+    email = request.json.get('email')
+    returner = {}
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT count(status) as count FROM complaints WHERE email = %s group by status' , (email,))
+    i=0
+    for row in cursor:
+        # print(type(row))
+        returner[types[i]]=row.get('count')
+        i+=1
+    # op=cursor.fetchall()
+    # print(op)
+    return returner
+    # password = request.json.get('password')
+    # hash_object = hashlib.sha256(password.encode('ascii'))
+    # hash_password = hash_object.hexdigest()
+    # returner = {}
+    # cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    # cursor.execute('SELECT * FROM accounts WHERE email = %s AND hash = %s', (email, hash_password,))
+    # account = cursor.fetchone()
+    # if account:
+    #     session['loggedin'] = True
+    #     session['id'] = account['id']
+    #     session['email'] = account['email']
+    #     session['username'] = account['username']
+    #     session['utype']=account['utype']
+    #     session['subtype']=account['subtype']
+    #     returner['status']="login success"
+    #     returner['username'] = account['username']
+    #     returner['utype']=account['utype']
+    #     returner['subtype'] = account['subtype']
+    # else:
+    #     returner['status']="login failure"
+    #     returner['utype']="None"
+    # return returner
+  
 if __name__ == "__main__":
     #   app.run()
     app.run(host="0.0.0.0",port=(2002),debug=True)

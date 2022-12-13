@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:complaint_app/screens/admin_tab_list.dart';
+import 'package:complaint_app/screens/profilepage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,15 +18,28 @@ class _NavBarState extends State<NavBar> {
 
   List<Complaint> complaintResolved = [];
 
-  String? name, email, utype, subtype;
+  String name="", email="", utype="", subtype="";
   bool? hostelVisibility, collegeVisibility, attendanceVisibility;
+  List<ProfileInfoItem> _items = [];
   @override
   void initState() {
     // TODO: implement initStates
     getDetails();
     getComplaints();
   }
-
+  Future<void> getProfile() async{
+    Map body={"email" : email};
+    var body1 = jsonEncode(body);
+    Session session = new Session();
+    Response r = await session.post(body1, '/getprofileinfo');
+    var response = r.body;
+    var bodyjson = jsonDecode(response);
+    _items =  [
+      ProfileInfoItem("Registered", bodyjson['registered']),
+      ProfileInfoItem("Resolved", bodyjson['resolved']),
+      ProfileInfoItem("Verified", bodyjson['verified']),
+    ];
+  }
   Future<void> getComplaints() async {
     Session session = Session();
     Map body = {};
@@ -57,7 +71,7 @@ class _NavBarState extends State<NavBar> {
   Future<void> getDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      name = (prefs.getString("name") !=null ) ? prefs.getString("name") : "tsf";
+      name = prefs.getString("name")!;
       email = (prefs.getString("email"))!;
       utype = (prefs.getString("utype"))!;
       subtype = (prefs.getString("subtype"))!;
@@ -69,6 +83,7 @@ class _NavBarState extends State<NavBar> {
           (utype == "Student" || utype == "Employee" || utype=="admin") ? true : false;
       attendanceVisibility =
           (utype == "Student" || subtype == "Teacher") ? true : false;
+      getProfile();
     });
   }
 
@@ -98,8 +113,26 @@ class _NavBarState extends State<NavBar> {
                   fit: BoxFit.fill, image: AssetImage("assests/sp.jpg")),
             ),
           ),
+          ListTile(
+            leading: Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+            title: Text(
+              'Profile',
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            onTap: () => {
+            Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>  ProfilePage1(name: name, email: email, utype: utype, subtype: subtype,items: _items,)),
+            ),
+            },
+          ),
           Visibility(
-            visible: attendanceVisibility!,
+            visible: attendanceVisibility ?? false,
             child: ListTile(
               leading: Icon(
                 Icons.calendar_month,

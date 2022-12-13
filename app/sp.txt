@@ -1,16 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:complaint_app/screens/admin_tab_list.dart';
 import 'package:complaint_app/screens/complaint_tab_list_screen.dart';
 import 'package:complaint_app/screens/login_screen.dart';
-// import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:complaint_app/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-// import 'package:flutter_background_service/flutter_background_service.dart';
-// import 'package:flutter_background_service_android/flutter_background_service_android.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,76 +26,64 @@ void showNotification( v, flp) async {
       priority: Priority.high, importance: Importance.max);
   var iOS = IOSNotificationDetails();
   var platform = NotificationDetails(android: android,iOS: iOS);
-  var block = v["block"];
-  var floor = v["floor"];
-  var room = v["rooms"];
-  var complaint = v["complaint"];
-  var status = v["status"];
-  String? notificationString="";
-  for(int i=0;i<block.length;i++){
-    notificationString = block[i]+ " - " +floor[i]+" - "+"-"+room[i]+complaint[i]+" : "+status[i]+"\n";
-  }
-  await flp.show(0, "Complaints" ,notificationString, platform,
+  await flp.show(0, 'Virtual intelligent solution', '$v', platform,
       payload: 'VIS \n $v');
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final service = FlutterBackgroundService();
+  service.startService();
+  IO.Socket socket = IO.io('http://localhost:3000');
+  socket.onConnect((_) {
+    print('connect');
+    socket.emit('msg', 'test');
+  });
+  socket.on('event', (data) => print(data));
+  await initializeService();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: AndroidInitializationSettings('@mipmap/ic_launcher'));
+
   bool isLoggedIn = ((prefs.getBool('isSignedIn') == null)
       ? false
       : prefs.getBool('isSignedIn'))!;
-  String utype = "";
-
   if(isLoggedIn){
-    await Workmanager().initialize(callbackDispatcher); //to true if still in testing lev turn it to false whenever you are launching the app
+    await Workmanager().initialize(callbackDispatcher, isInDebugMode: true); //to true if still in testing lev turn it to false whenever you are launching the app
     await Workmanager().registerPeriodicTask("5", simplePeriodicTask,
       existingWorkPolicy: ExistingWorkPolicy.replace,
       frequency: Duration(minutes: 15),//when should it check the link
       initialDelay: Duration(seconds: 5),//duration before showing the notification
     );
-    utype = prefs.getString("utype")!;
   }
   runApp(MyApp(
-    isLoggedIn: isLoggedIn,utype: utype
+    isLoggedIn: isLoggedIn,
   ));
 }
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     FlutterLocalNotificationsPlugin flp = FlutterLocalNotificationsPlugin();
-    var android = AndroidInitializationSettings("");
+    var android = AndroidInitializationSettings('@mipmap/ic_launcher');
     var iOS = IOSInitializationSettings();
     var initSettings = InitializationSettings(android: android,iOS: iOS);
     flp.initialize(initSettings);
     Session session = new Session();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String utype = (prefs.getString("utype")=="Student") ? "Student" : prefs.getString("subtype")! ;
-    Map body = {"email":prefs.getString("email"),"utype":utype};
+    Map body = {"email":prefs.getString("email")};
     var sendData = jsonEncode(body);
     Response post = await session.post(sendData,"/getNotification");
-    print(post.body);
-    var body1 = jsonDecode(post.body);
-    if(body1["status"]){
-      showNotification(body1["complaint"], flp);
-    }
-  
     print(post);
     return Future.value(true);
   });
 }
-// Future<String> getutype(bool log) async{
-// if(log){
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   return prefs.getString("utype")!;
-// }
-// return "";
-// }
+
+
 
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
-  final String utype;
-  const MyApp({Key? key, required this.isLoggedIn,required this.utype}) : super(key: key);
+  const MyApp({Key? key, required this.isLoggedIn}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -134,20 +120,18 @@ class MyApp extends StatelessWidget {
         splashIconSize: 250,
         centered: true,
         curve: Curves.fastOutSlowIn,
-        nextScreen: MyHomePage(isLoggedIn: isLoggedIn,utype:utype ),
+        nextScreen: MyHomePage(isLoggedIn: isLoggedIn),
         splashTransition: SplashTransition.sizeTransition,
         animationDuration: Duration(milliseconds: 2000),
       ),
       debugShowCheckedModeBanner: false,
-      builder: EasyLoading.init(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   final bool isLoggedIn;
-  final String utype;
-  const MyHomePage({Key? key, required this.isLoggedIn,required this.utype}) : super(key: key);
+  const MyHomePage({Key? key, required this.isLoggedIn}) : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -155,8 +139,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Complaint> complaintPending = [];
   List<Complaint> complaintResolved = [];
-
-
   @override
   void initState() {
     // TODO: implement initState
@@ -166,16 +148,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.isLoggedIn){
-        if(widget.utype=="admin") return adminTablist(DomainType: "college",);
-
-        return ComplainTabList(
+    return widget.isLoggedIn
+        ? ComplainTabList(
             complaintPending: complaintPending,
             complaintResolved: complaintResolved,
             DomainType: "college",
-          );
-    }
-    else return LoginScreen();
+          )
+        : LoginScreen();
   }
 
   Future<void> getComplaints() async {
@@ -212,99 +191,99 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 
-// Future<void> initializeService() async {
-//   final service = FlutterBackgroundService();
-//   await service.configure(
-//     androidConfiguration: AndroidConfiguration(
-//       // this will executed when app is in foreground or background in separated isolate
-//       onStart: onStart,
-//
-//       // auto start service
-//       autoStart: true,
-//       isForegroundMode: false,
-//     ),
-//     iosConfiguration: IosConfiguration(
-//       // auto start service
-//       autoStart: true,
-//
-//       // this will executed when app is in foreground in separated isolate
-//       onForeground: onStart,
-//
-//       // you have to enable background fetch capability on xcode project
-//       onBackground: onIosBackground,
-//     ),
-//   );
-//   service.startService();
-// }
+Future<void> initializeService() async {
+  final service = FlutterBackgroundService();
+  await service.configure(
+    androidConfiguration: AndroidConfiguration(
+      // this will executed when app is in foreground or background in separated isolate
+      onStart: onStart,
 
-// bool onIosBackground(ServiceInstance service) {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   print('FLUTTER BACKGROUND FETCH');
-//
-//   return true;
-// }
-//
-// void onStart(ServiceInstance service) {
-//   if (service is AndroidServiceInstance) {
-//     service.on('setAsForeground').listen((event) {
-//       service.setAsForegroundService();
-//     });
-//
-//     service.on('setAsBackground').listen((event) {
-//       service.setAsBackgroundService();
-//     });
-//   }
-//
-//   service.on('stopService').listen((event) {
-//     service.stopSelf();
-//   });
+      // auto start service
+      autoStart: true,
+      isForegroundMode: true,
+    ),
+    iosConfiguration: IosConfiguration(
+      // auto start service
+      autoStart: true,
+
+      // this will executed when app is in foreground in separated isolate
+      onForeground: onStart,
+
+      // you have to enable background fetch capability on xcode project
+      onBackground: onIosBackground,
+    ),
+  );
+  service.startService();
+}
+
+bool onIosBackground(ServiceInstance service) {
+  WidgetsFlutterBinding.ensureInitialized();
+  print('FLUTTER BACKGROUND FETCH');
+
+  return true;
+}
+
+void onStart(ServiceInstance service) {
+  if (service is AndroidServiceInstance) {
+    service.on('setAsForeground').listen((event) {
+      service.setAsForegroundService();
+    });
+
+    service.on('setAsBackground').listen((event) {
+      service.setAsBackgroundService();
+    });
+  }
+
+  service.on('stopService').listen((event) {
+    service.stopSelf();
+  });
 
   // bring to foreground
-//   Timer.periodic(const Duration(seconds: 30), (timer) async {
-//     if (service is AndroidServiceInstance) {
-//       service.setForegroundNotificationInfo(
-//         title: "My App Service",
-//         content: "Updated at ${DateTime.now()}",
-//       );
-//       final SharedPreferences prefs = await SharedPreferences.getInstance();
-//       String? utype = prefs.getString("utype");
-//       bool? isSignedIn = prefs.getBool("isSignedIn");
-//       if (utype != null && isSignedIn == true) {
-//         await getComplaints();
-//       }
-//     }
-//
-//     /// you can see this log in logcat
-//     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
-//
-//     service.invoke(
-//       'update',
-//       {
-//         "current_date": DateTime.now().toIso8601String(),
-//       },
-//     );
-//   });
-// }
+  // Timer.periodic(const Duration(seconds: 30), (timer) async {
+  //   if (service is AndroidServiceInstance) {
+  //     service.setForegroundNotificationInfo(
+  //       title: "My App Service",
+  //       content: "Updated at ${DateTime.now()}",
+  //     );
+  //     final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     String? utype = prefs.getString("utype");
+  //     bool? isSignedIn = prefs.getBool("isSignedIn");
+  //     if (utype != null && isSignedIn == true) {
+  //       await getComplaints();
+  //     }
+  //   }
+  //
+  //   /// you can see this log in logcat
+  //   print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
+  //
+  //   service.invoke(
+  //     'update',
+  //     {
+  //       "current_date": DateTime.now().toIso8601String(),
+  //     },
+  //   );
+  // });
+}
 
 // Future<void> getComplaints() async {
-//   var db = await openDatabase('mit_users.db');
-//   var c1 = await db.rawQuery("SELECT * FROM complaints_pending");
-//   await db.execute("""
-//     CREATE TABLE IF NOT EXISTS complaints_pending (
-//   complaintid int(11) NOT NULL,
-//   email varchar(50) NOT NULL,
-//   block varchar(45) NOT NULL,
-//   floor int(11) NOT NULL,
-//   roomno varchar(25) NOT NULL,
-//   complaint varchar(300) NOT NULL,
-//   complainttype varchar(25) NOT NULL,
-//   status varchar(20) NOT NULL,
-//   ts timestamp NOT NULL,
-//   PRIMARY KEY (complaintid)
-// );
-//     """);
-//
-//   List<String> temp = [];
+// //   var db = await openDatabase('mit_users.db');
+// //   var c1 = await db.rawQuery("SELECT * FROM complaints_pending");
+// //   await db.execute("""
+// //     CREATE TABLE IF NOT EXISTS complaints_pending (
+// //   complaintid int(11) NOT NULL,
+// //   email varchar(50) NOT NULL,
+// //   block varchar(45) NOT NULL,
+// //   floor int(11) NOT NULL,
+// //   roomno varchar(25) NOT NULL,
+// //   complaint varchar(300) NOT NULL,
+// //   complainttype varchar(25) NOT NULL,
+// //   status varchar(20) NOT NULL,
+// //   ts timestamp NOT NULL,
+// //   PRIMARY KEY (complaintid)
+// // );
+// //     """);
+// //
+// //   List<String> temp = [];
 //
 //   Session session = Session();
 //   Map body = {};

@@ -1,54 +1,73 @@
-// DropDownField(
-// isExpanded: true,
-// hint: const Text(
-// 'Select category',
-// style: TextStyle(
-// fontSize: 14,
-// fontWeight: FontWeight.bold,
-// color: Colors.white,
-// ),
-// overflow: TextOverflow.ellipsis,
-// ),
-// items: complaints
-//     .map((item) => DropdownMenuItem<String>(
-// value: item,
-// child: Text(
-// item,
-// style: const TextStyle(
-// fontSize: 14,
-// fontWeight: FontWeight.bold,
-// color: Colors.white,
-// ),
-// overflow: TextOverflow.ellipsis,
-// ),
-// ))
-// .toList(),
-// value: complaint,
-// onChanged: (value) {
-// setState(() {
-// complaint = value as String;
-// });
-// },
-// icon: const Icon(
-// Icons.arrow_forward_ios_outlined,
-// ),
-// iconSize: 14,
-// iconEnabledColor: Colors.white,
-// buttonPadding: const EdgeInsets.only(left: 20, right: 20),
-// buttonDecoration: BoxDecoration(
-// borderRadius: BorderRadius.circular(14),
-// border: Border.all(
-// color: Colors.black26,
-// ),
-// color: Colors.grey[800],
-// ),
-// buttonElevation: 2,
-// dropdownDecoration: BoxDecoration(
-// borderRadius: BorderRadius.circular(14),
-// color: Colors.grey[800],
-// ),
-// dropdownElevation: 8,
-// scrollbarRadius: const Radius.circular(40),
-// scrollbarThickness: 6,
-// scrollbarAlwaysShow: true,
-// // )
+// import 'package:complaint_app/complaint.dart';
+// import 'package:flutter/material.dart';
+//
+// class SortablePage extends StatefulWidget {
+//   @override
+//   _SortablePageState createState() => _SortablePageState();
+// }
+//
+// class _SortablePageState extends State<SortablePage> {
+//   late List<Complaint> users;
+//   int? sortColumnIndex;
+//   bool isAscending = false;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//     this.users = List.of(allUsers);
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) => Scaffold(
+//     body: ScrollableWidget(child: buildDataTable()),
+//   );
+//
+//   Widget buildDataTable() {
+//     final columns = ['First Name', 'Last Name', 'Age'];
+//
+//     return DataTable(
+//       sortAscending: isAscending,
+//       sortColumnIndex: sortColumnIndex,
+//       columns: getColumns(columns),
+//       rows: getRows(users),
+//     );
+//   }
+//
+//   List<DataColumn> getColumns(List<String> columns) => columns
+//       .map((String column) => DataColumn(
+//     label: Text(column),
+//     onSort: onSort,
+//   ))
+//       .toList();
+//
+//   List<DataRow> getRows(List<User> users) => users.map((User user) {
+//     final cells = [user.firstName, user.lastName, user.age];
+//
+//     return DataRow(cells: getCells(cells));
+//   }).toList();
+//
+//   List<DataCell> getCells(List<dynamic> cells) =>
+//       cells.map((data) => DataCell(Text('$data'))).toList();
+//
+//   void onSort(int columnIndex, bool ascending) {
+//     if (columnIndex == 0) {
+//       users.sort((user1, user2) =>
+//           compareString(ascending, user1.firstName, user2.firstName));
+//     } else if (columnIndex == 1) {
+//       users.sort((user1, user2) =>
+//           compareString(ascending, user1.lastName, user2.lastName));
+//     } else if (columnIndex == 2) {
+//       users.sort((user1, user2) =>
+//           compareString(ascending, '${user1.age}', '${user2.age}'));
+//     }
+//
+//     setState(() {
+//       this.sortColumnIndex = columnIndex;
+//       this.isAscending = ascending;
+//     });
+//   }
+//
+//   int compareString(bool ascending, String value1, String value2) =>
+//       ascending ? value1.compareTo(value2) : value2.compareTo(value1);
+// }

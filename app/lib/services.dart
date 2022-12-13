@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:complaint_app/constant.dart' as constants;
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +17,8 @@ class Session {
 
   Future<http.Response> post(var data, String endPoint) async {
     var url = Uri.parse(constants.URL + endPoint);
+    if(endPoint != "/getNotification")
+      EasyLoading.show(status: 'Loading...',maskType: EasyLoadingMaskType.black);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? cookie = prefs.getString("cookie");
     if (cookie != null && cookie != "") {
@@ -22,13 +26,22 @@ class Session {
       // print(cookie);
       // print("session session");
     }
+    Timer(Duration(seconds: 6), () {
+      EasyLoading.dismiss();
+      EasyLoading.showToast("Failure",duration: Duration(seconds: 3),toastPosition: EasyLoadingToastPosition.bottom);
+    });
     http.Response response = await http.post(url, body: data, headers: headers);
+    if(response.statusCode==200)
+      EasyLoading.dismiss();
     if (endPoint == "/logout") {
       headers = {"Content-Type": "application/json"};
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("cookie", "");
     } else {
       updateCookie(response);
+    }
+    if(response.statusCode==503) {
+
     }
     return response;
   }
