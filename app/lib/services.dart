@@ -26,10 +26,6 @@ class Session {
       // print(cookie);
       // print("session session");
     }
-    Timer(Duration(seconds: 6), () {
-      EasyLoading.dismiss();
-      EasyLoading.showToast("Failure",duration: Duration(seconds: 3),toastPosition: EasyLoadingToastPosition.bottom);
-    });
     http.Response response = await http.post(url, body: data, headers: headers);
     if(response.statusCode==200)
       EasyLoading.dismiss();

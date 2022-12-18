@@ -12,9 +12,9 @@ app = Flask(__name__)
 app.secret_key = 'Tahve bqltuyej tbrjereq qobfd MvIaTq cmanmvpcuxsz iesh tihkel CnTu dretpyauritompeanstd '
 
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'admin'
+app.config['MYSQL_HOST'] = 'brooklyn-db.mysql.database.azure.com'
+app.config['MYSQL_USER'] = 'brooklyn'
+app.config['MYSQL_PASSWORD'] = 'root@123'
 app.config['MYSQL_DB'] = 'mit_users'
 app.config['MYSQL_PORT'] = 3306
 
@@ -113,9 +113,7 @@ def viewComp():
     complaint = cursor.fetchall()
     returner["complaint"] = complaint
     return returner
-    # if():
-        
-    # complaint = cursor.fetchall()
+
 @app.route("/admin_hostel_viewcomplaint",methods = ['POST'])
 def viewhComp():
     returner = {}

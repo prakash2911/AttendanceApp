@@ -19,27 +19,26 @@ class _NavBarState extends State<NavBar> {
   List<Complaint> complaintResolved = [];
 
   String name="", email="", utype="", subtype="";
-  bool? hostelVisibility, collegeVisibility, attendanceVisibility;
+  bool hostelVisibility=false, collegeVisibility=false, attendanceVisibility=false;
   List<ProfileInfoItem> _items = [];
   @override
-  void initState() {
-    // TODO: implement initStates
-    getDetails();
-    getComplaints();
+  void initState()  {
+     getDetails();
+     getComplaints();
   }
-  Future<void> getProfile() async{
-    Map body={"email" : email};
-    var body1 = jsonEncode(body);
-    Session session = new Session();
-    Response r = await session.post(body1, '/getprofileinfo');
-    var response = r.body;
-    var bodyjson = jsonDecode(response);
-    _items =  [
-      ProfileInfoItem("Registered", bodyjson['registered']),
-      ProfileInfoItem("Resolved", bodyjson['resolved']),
-      ProfileInfoItem("Verified", bodyjson['verified']),
-    ];
-  }
+  // Future<void> getProfile() async{
+  //   Map body={"email" : email};
+  //   var body1 = jsonEncode(body);
+  //   Session session = new Session();
+  //   Response r = await session.post(body1, '/getprofileinfo');
+  //   var response = r.body;
+  //   var bodyjson = jsonDecode(response);
+  //   _items =  [
+  //     ProfileInfoItem("Registered", bodyjson['registered']),
+  //     ProfileInfoItem("Resolved", bodyjson['resolved']),
+  //     ProfileInfoItem("Verified", bodyjson['verified']),
+  //   ];
+  // }
   Future<void> getComplaints() async {
     Session session = Session();
     Map body = {};
@@ -70,7 +69,6 @@ class _NavBarState extends State<NavBar> {
 
   Future<void> getDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
       name = prefs.getString("name")!;
       email = (prefs.getString("email"))!;
       utype = (prefs.getString("utype"))!;
@@ -83,8 +81,6 @@ class _NavBarState extends State<NavBar> {
           (utype == "Student" || utype == "Employee" || utype=="admin") ? true : false;
       attendanceVisibility =
           (utype == "Student" || subtype == "Teacher") ? true : false;
-      getProfile();
-    });
   }
 
   @override
@@ -113,24 +109,24 @@ class _NavBarState extends State<NavBar> {
                   fit: BoxFit.fill, image: AssetImage("assests/sp.jpg")),
             ),
           ),
-          ListTile(
-            leading: Icon(
-              Icons.person,
-              color: Colors.white,
-            ),
-            title: Text(
-              'Profile',
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            onTap: () => {
-            Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) =>  ProfilePage1(name: name, email: email, utype: utype, subtype: subtype,items: _items,)),
-            ),
-            },
-          ),
+          // ListTile(
+          //   leading: Icon(
+          //     Icons.person,
+          //     color: Colors.white,
+          //   ),
+          //   title: Text(
+          //     'Profile',
+          //     style: const TextStyle(
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          //   onTap: () => {
+          //   Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) =>  ProfilePage1(name: name, email: email, utype: utype, subtype: subtype,items: _items,)),
+          //   ),
+          //   },
+          // ),
           Visibility(
             visible: attendanceVisibility ?? false,
             child: ListTile(
