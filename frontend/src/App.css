@@ -1,0 +1,95 @@
+.App {
+  width: 100%;
+  height: 100vh;
+  flex: 1;
+}
+
+.menu-bar {
+  height: 7vh;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.1s ease-in;
+}
+
+.right-items {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.right-items > * {
+  padding-right: 1rem;
+}
+
+.logo {
+  cursor: pointer;
+  padding-left: 20px;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.menu-bar-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: all 0.1s ease-in;
+  cursor: pointer;
+}
+
+.menu-bar-button:hover {
+  font-size: 18px;
+}
+
+.profile {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 1.5rem;
+  padding-left: 0.5rem;
+}
+
+.profile-logout-text {
+  transition: all 0.2s ease-in;
+  background-color: var(--lightBlue);
+  z-index: 2;
+  cursor: pointer;
+  border-radius: 15%;
+  font-size: 12px;
+  padding: 5px;
+  color: #161d32;
+  position: absolute;
+  top: 0;
+  left: -12px;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.profile:hover > .profile-logout-text {
+  visibility: visible;
+  top: 30px;
+  opacity: 1;
+}
+
+.filter-title {
+  padding-right: 3px;
+}
+
+.page-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
