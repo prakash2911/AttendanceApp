@@ -1,65 +1,104 @@
 .table-wrapper {
-    overflow-y: auto;
+  overflow-y: auto;
 }
 
 table {
-    width: 100%;
-    min-width: 400px;
-    border-spacing: 0;
+  width: 100%;
+  min-width: 400px;
+  border-spacing: 0;
+  font-size: 14px;
 }
 
 thead {
-    background-color: var(--lightGrey);
+  background-color: var(--lightGrey);
 }
 
 tr {
-    text-align: center;
-    transition: all 0.08s ease-in;
-    cursor: pointer;
+  text-align: center;
+  transition: all 0.08s ease-in;
+  /* cursor: pointer; */
 }
 
 th,
 td {
-    text-transform: capitalize;
-    padding: 15px 10px;
+  text-transform: capitalize;
+  padding: 15px 10px;
+  cursor: pointer;
 }
 
 tbody > tr:hover {
-    background-color: var(--primary-color);
-    color: #fff;
+  background-color: var(--lighterGrey);
+  /* color: #fff; */
 }
 
 .table__pagination {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.table__pagination-wrapper {
     display: flex;
-    width: 100%;
-    justify-content: flex-end;
-    align-items: center;
-    margin-top: 20px;
+    background-color: var(--lighterGrey);
+    padding: 10px;
+    border-radius: 25px;
+    margin-right: 15px;
 }
 
 .table__pagination-item ~ .table__pagination-item {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 .table__pagination-item {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.08s ease-in;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.08s ease-in;
 }
 
 .table__pagination-item.active,
 .table__pagination-item.active:hover {
-    background-color: var(--primary-color);
-    color: #fff;
-    font-weight: 600;
+  background-color: var(--primary-color);
+  color: #fff;
+  font-weight: 600;
 }
 
 .table__pagination-item:hover {
-    color: #fff;
-    background-color: var(--lightBlue);
+  color: black;
+  background-color: var(--lightGrey);
+}
+
+.table-tag {
+  background-color: var(--lightGrey);
+  text-transform: uppercase;
+  font-weight: 700;
+  color: white;
+  border-radius: 15px;
+  width: fit-content;
+  padding: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.table-tag.green {
+  background-color: var(--green);
+}
+
+.table-tag.blue {
+  background-color: var(--lightBlue);
+}
+
+.table-tag.red {
+  background-color: var(--red);
+}
+
+.table-tag.yellow {
+  background-color: var(--yellow);
+  color: black;
 }

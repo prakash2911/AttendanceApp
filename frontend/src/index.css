@@ -8,9 +8,13 @@
   box-sizing: border-box;
   --primary-color: #161d32;
   --lightGrey: #eeeeee;
-  --lightBlue: #b1ebff;
+  --lighterGrey: #f6f6f6;
   --select-border: #777;
-  --select-focus: blue;
+  --lightBlue: #0d6efd;
+  --green: #198754;
+  --red: #dc3545;
+  --yellow: #ffc107;
+  --select-focus: var(--lightBlue);
   --select-arrow: var(--select-border);
 }
 

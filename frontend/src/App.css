@@ -2,6 +2,8 @@
   width: 100%;
   height: 100vh;
   flex: 1;
+  background-color: var(--primary-color);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .menu-bar {
@@ -11,11 +13,17 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--primary-color);
   color: white;
   font-weight: 700;
   text-transform: uppercase;
   transition: all 0.1s ease-in;
+}
+
+.main-app-wrapper {
+  height: 93vh;
+  background-color: white;
+  border-top-left-radius: 35px;
+  border-top-right-radius: 35px;
 }
 
 .right-items {
@@ -83,6 +91,14 @@
 
 .filter-title {
   padding-right: 3px;
+  text-transform: capitalize;
+}
+
+.filter-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .page-title {
@@ -90,6 +106,146 @@
   justify-content: center;
   align-items: center;
   font-weight: 700;
-  margin-top: 2vh;
+  padding-top: 2vh;
   margin-bottom: 2vh;
+}
+
+.modal-container {
+  transition: all 0.2s ease-in;
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.73);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 3;
+  overflow-y: hidden;
+}
+
+.modal-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5vh;
+}
+
+.modal-header > .title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.modal-close-button {
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.modal {
+  position: relative;
+  width: 80%;
+  max-width: 500px;
+  transition: all 0.2s ease-in;
+  opacity: 1;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 3vh;
+  border-radius: 40px;
+  z-index: 4;
+}
+
+.modal-item {
+  /* text-align: center; */
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.modal-item ~ .modal-item {
+  margin-top: 10px;
+}
+
+.modal-item-title {
+  font-weight: 500;
+}
+
+.modal-item-desc {
+  text-align: right;
+  /* width: 40%; */
+}
+
+.modal-container.hidden {
+  opacity: 0;
+  overflow-y: scroll;
+  visibility: hidden;
+}
+
+.modal.hidden {
+  opacity: 0;
+  transform: translate(0, -5%);
+  visibility: hidden;
+}
+
+.add-complaint-plus-container {
+  transition: all 0.2s linear;
+  cursor: pointer;
+  background-color: var(--lightGrey);
+  padding: 10px;
+  border-radius: 50px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin-bottom: 1vh;
+  margin-left: 1vh;
+}
+
+.add-complaint-plus {
+  transition: all 0.2s linear;
+  background-color: var(--primary-color);
+  border-radius: 50px;
+  padding: 8px;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.add-complaint-plus-container:hover {
+  border-radius: 15px;
+  rotate: -90deg;
+}
+
+.add-complaint-plus-container:hover > .add-complaint-plus {
+  /* border-radius: 15px; */
+  rotate: 90deg;
+}
+
+.add-complaint-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem;
+  border-radius: 25%;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.button.invert {
+  background-color: white;
+  color: var(--primary-color);
+  border: 1.5px solid var(--primary-color);
 }

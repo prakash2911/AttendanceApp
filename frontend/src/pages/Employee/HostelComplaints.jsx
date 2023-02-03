@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import Table from "../../components/Table/Table";
 import Filter from "../../components/Filter";
 import Modal from "../../components/Modal";
-import AddComplaint from "../../components/AddComplaint";
-
-import dummyComplaints from "../../assets/data/dummyData.json";
 import APIService from "../../api/Service";
 
-export default function InstitutionComplaints() {
+import dummyComplaints from "../../assets/data/dummyData.json";
+
+export default function HostelComplaints() {
   const [complaints, setComplaints] = useState();
   const [currentComplaints, setCurrentComplaints] = useState();
   const [limit, setLimit] = useState(8);
@@ -28,23 +27,20 @@ export default function InstitutionComplaints() {
   const [filters, setFilters] = useState({
     block: ["All", "Abdul Kalam Lecture Hall Complex", "RLHC", "CB"],
     floor: ["All", 1, 2, 3, 4],
-    type: ["All", "Electrician", "Civil and Maintenance", "Education Aid"],
     status: ["All", "Resolved", "Pending", "Verified"],
   });
 
   const [currentFilters, setCurrentFilters] = useState({
     block: "All",
     floor: "All",
-    type: "All",
     status: "All",
   });
 
   const complaintTableHead = [
-    "no.",
+    "id",
     "block",
     "floor",
     "room",
-    "type",
     "complaint",
     "registeredTime",
     "updatedTime",
@@ -58,8 +54,6 @@ export default function InstitutionComplaints() {
           currentFilters.block === complaint.block) &&
         (currentFilters.floor === "All" ||
           currentFilters.floor === complaint.floor) &&
-        (currentFilters.type === "All" ||
-          currentFilters.type === complaint.type) &&
         (currentFilters.status === "All" ||
           currentFilters.status === complaint.status)
     );
@@ -67,7 +61,7 @@ export default function InstitutionComplaints() {
   };
 
   const renderHead = (item, index) => {
-    let filteredItems = ["block", "floor", "type", "status"];
+    let filteredItems = ["block", "floor", "status"];
     if (filteredItems.includes(item))
       return (
         <th key={index}>
@@ -106,7 +100,6 @@ export default function InstitutionComplaints() {
         <td>{item.block}</td>
         <td>{item.floor}</td>
         <td>{item.room}</td>
-        <td>{item.type}</td>
         <td>{item.complaint}</td>
         <td>{item.registeredTime}</td>
         <td>{item.updatedTime}</td>
@@ -124,8 +117,12 @@ export default function InstitutionComplaints() {
 
     const getData = async () => {
       await APIService.PostData(
-        { category: "institution" },
-        "getComplaints/student"
+        {
+          category: "hostel",
+          subtype: "electrician",
+          email: "electrician@gmail.com",
+        },
+        "getComplaints/workers"
       ).then((response) => {
         console.log(response);
         let data = response.complaint.map(function (item) {
@@ -157,7 +154,7 @@ export default function InstitutionComplaints() {
         modalContents={modalContents}
         title="Complaint Details"
       />
-      <div className="page-title">Institution Complaints</div>
+      <div className="page-title">Hostel Complaints</div>
       {currentComplaints && (
         <Table
           limit={limit}
@@ -167,7 +164,6 @@ export default function InstitutionComplaints() {
           renderBody={(item, index) => renderBody(item, index)}
         />
       )}
-      <AddComplaint setComplaints={setComplaints} category="institution" />
     </>
   );
 }

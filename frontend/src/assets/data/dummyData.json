@@ -5,6 +5,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -15,9 +16,10 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Fan Regulators Not Working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Pending"
   },
   {
     "id": 3,
@@ -25,9 +27,10 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Resolved"
   },
   {
     "id": 4,
@@ -35,9 +38,10 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Reported"
   },
   {
     "id": 5,
@@ -45,6 +49,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -55,6 +60,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -65,6 +71,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -75,6 +82,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -85,6 +93,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -95,6 +104,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -105,6 +115,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -115,6 +126,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -125,6 +137,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -135,6 +148,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -145,6 +159,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -155,6 +170,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -165,6 +181,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -175,6 +192,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"
@@ -185,6 +203,7 @@
     "floor": 1,
     "room": 102,
     "type": "Electrician",
+    "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
     "status": "Verified"

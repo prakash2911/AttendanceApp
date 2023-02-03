@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from "react";
 import Table from "../../components/Table/Table";
 import Filter from "../../components/Filter";
+import Modal from "../../components/Modal";
+import APIService from "../../api/Service";
 
 import dummyComplaints from "../../assets/data/dummyData.json";
 
 export default function InstitutionComplaints() {
-  const [complaints, setComplaints] = useState(dummyComplaints);
-  const [currentComplaints, setCurrentComplaints] = useState(dummyComplaints);
+  const [complaints, setComplaints] = useState();
+  const [currentComplaints, setCurrentComplaints] = useState();
+  const [limit, setLimit] = useState(8);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalContents, setModalContents] = useState({
+    id: 1,
+    block: "Block Name",
+    floor: 1,
+    room: 1,
+    type: "Type Name",
+    complaint: "Complaint Name",
+    registeredTime: "1/1/1 01:00 AM",
+    updatedTime: "1/1/1 01:00 AM",
+    status: "Undefined",
+  });
 
   const [filters, setFilters] = useState({
     block: ["All", "Abdul Kalam Lecture Hall Complex", "RLHC", "CB"],
@@ -28,6 +44,7 @@ export default function InstitutionComplaints() {
     "floor",
     "room",
     "type",
+    "complaint",
     "registeredTime",
     "updatedTime",
     "status",
@@ -69,29 +86,86 @@ export default function InstitutionComplaints() {
     else return <th key={index}>{item}</th>;
   };
 
-  const renderBody = (item, index) => (
-    <tr key={index}>
-      <td>{item.id}</td>
-      <td>{item.block}</td>
-      <td>{item.floor}</td>
-      <td>{item.room}</td>
-      <td>{item.type}</td>
-      <td>{item.registeredTime}</td>
-      <td>{item.updatedTime}</td>
-      <td>{item.status}</td>
-    </tr>
-  );
+  const renderBody = (item, index) => {
+    let labelType;
+    if (item.status.toLowerCase() === "resolved") labelType = "green";
+    else if (item.status.toLowerCase() === "reported") labelType = "red";
+    else if (item.status.toLowerCase() === "verified") labelType = "blue";
+    else if (item.status.toLowerCase() === "pending") labelType = "yellow";
+
+    return (
+      <tr
+        key={index}
+        onClick={() => {
+          setModalContents(item);
+          setModalOpen(true);
+        }}
+      >
+        <td>{item.id}</td>
+        <td>{item.block}</td>
+        <td>{item.floor}</td>
+        <td>{item.room}</td>
+        <td>{item.type}</td>
+        <td>{item.complaint}</td>
+        <td>{item.registeredTime}</td>
+        <td>{item.updatedTime}</td>
+        <td align="center">
+          <div className={`table-tag ${labelType}`}>{item.status}</div>
+        </td>
+      </tr>
+    );
+  };
+
+  useEffect(() => {
+    window.innerWidth - window.innerHeight < 357
+      ? setLimit(window.innerHeight / 100 - 1)
+      : null;
+
+    const getData = async () => {
+      await APIService.PostData(
+        { category: "institution" },
+        "getComplaints/admin"
+      ).then((response) => {
+        console.log(response);
+        let data = response.complaint.map(function (item) {
+          return {
+            block: item.block,
+            complaint: item.complaint,
+            id: item.complaintid,
+            type: item.complainttype,
+            registeredTime: item.cts,
+            floor: 1,
+            room: item.roomno,
+            status: item.status,
+            updatedTime: item.uts,
+          };
+        });
+        setComplaints(data);
+        setCurrentComplaints(data);
+      });
+    };
+
+    getData();
+  }, []);
 
   return (
     <>
-      <div className="page-title">Institution Complaints</div>
-      <Table
-        limit="9"
-        headData={complaintTableHead}
-        renderHead={(item, index) => renderHead(item, index)}
-        bodyData={currentComplaints}
-        renderBody={(item, index) => renderBody(item, index)}
+      <Modal
+        isOpen={modalOpen}
+        setIsOpen={setModalOpen}
+        modalContents={modalContents}
+        title="Complaint Details"
       />
+      <div className="page-title">Institution Complaints</div>
+      {currentComplaints && (
+        <Table
+          limit={limit}
+          headData={complaintTableHead}
+          renderHead={(item, index) => renderHead(item, index)}
+          bodyData={currentComplaints}
+          renderBody={(item, index) => renderBody(item, index)}
+        />
+      )}
     </>
   );
 }

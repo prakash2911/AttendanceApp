@@ -39,7 +39,8 @@ const Table = (props) => {
 
   useEffect(() => {
     initTable();
-  }, [props.bodyData]);
+    setCurrPage(0);
+  }, [props.bodyData, props.limit]);
 
   return (
     <div>
@@ -63,17 +64,19 @@ const Table = (props) => {
       </div>
       {pages > 1 ? (
         <div className="table__pagination">
-          {range?.map((item, index) => (
-            <div
-              key={index}
-              className={`table__pagination-item ${
-                currPage === index ? "active" : ""
-              }`}
-              onClick={() => selectPage(index)}
-            >
-              {item + 1}
-            </div>
-          ))}
+          <div className="table__pagination-wrapper">
+            {range?.map((item, index) => (
+              <div
+                key={index}
+                className={`table__pagination-item ${
+                  currPage === index ? "active" : ""
+                }`}
+                onClick={() => selectPage(index)}
+              >
+                {item + 1}
+              </div>
+            ))}
+          </div>
         </div>
       ) : null}
     </div>

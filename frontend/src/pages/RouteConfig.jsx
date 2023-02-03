@@ -4,6 +4,7 @@ import Login from "./Login";
 import SignUp from "./SignUp";
 import StudentApp from "./Student/StudentApp";
 import AdminApp from "./Admin/AdminApp";
+import EmployeeApp from "./Employee/EmployeeApp";
 
 export default function RouteConfig() {
   return (
@@ -13,6 +14,7 @@ export default function RouteConfig() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/student" element={<StudentApp />} />
         <Route path="/admin" element={<AdminApp />} />
+        <Route path="/employee" element={<EmployeeApp />} />
       </Routes>
     </BrowserRouter>
   );

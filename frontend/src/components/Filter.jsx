@@ -1,16 +1,18 @@
 import React from "react";
 
-export default function Filter({ title, values, onChange }) {
+export default function Filter({
+  title,
+  values,
+  onChange,
+  containerStyle,
+  titleStyle,
+}) {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div className="filter-title">{title}</div>
-      <div class="select">
+    <div className="filter-wrapper" style={containerStyle}>
+      <div className="filter-title" style={titleStyle}>
+        {title}
+      </div>
+      <div className="select">
         <select id="standard-select" onChange={(e) => onChange(e.target.value)}>
           {values.map((item, index) => (
             <option key={index} value={item}>
