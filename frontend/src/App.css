@@ -101,15 +101,6 @@
   flex-direction: column;
 }
 
-.page-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 700;
-  padding-top: 2vh;
-  margin-bottom: 2vh;
-}
-
 .modal-container {
   transition: all 0.2s ease-in;
   position: absolute;
@@ -178,7 +169,7 @@
 
 .modal-item-desc {
   text-align: right;
-  /* width: 40%; */
+  width: 40%;
 }
 
 .modal-container.hidden {
@@ -197,21 +188,21 @@
   transition: all 0.2s linear;
   cursor: pointer;
   background-color: var(--lightGrey);
-  padding: 10px;
+  padding: 12px;
   border-radius: 50px;
   position: fixed;
   bottom: 0;
-  left: 0;
+  right: 0;
   margin-bottom: 1vh;
-  margin-left: 1vh;
+  margin-right: 1vh;
 }
 
 .add-complaint-plus {
-  transition: all 0.2s linear;
+  transition: all 0.2s ease-out;
   background-color: var(--primary-color);
   border-radius: 50px;
-  padding: 8px;
-  font-size: 1.5rem;
+  padding: 10px;
+  font-size: 1.75rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -220,11 +211,15 @@
 
 .add-complaint-plus-container:hover {
   border-radius: 15px;
-  rotate: -90deg;
+  /* rotate: -90deg; */
 }
 
 .add-complaint-plus-container:hover > .add-complaint-plus {
   /* border-radius: 15px; */
+  rotate: 90deg;
+}
+
+.add-complaint-plus:hover {
   rotate: 90deg;
 }
 

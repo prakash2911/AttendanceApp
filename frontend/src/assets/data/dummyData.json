@@ -8,18 +8,18 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 2,
     "block": "RLHC",
-    "floor": 1,
+    "floor": 2,
     "room": 102,
     "type": "Electrician",
     "complaint": "Fan Regulators Not Working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Pending"
+    "status": "Verified"
   },
   {
     "id": 3,
@@ -41,7 +41,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Reported"
+    "status": "Resolved"
   },
   {
     "id": 5,
@@ -52,7 +52,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Unable to resolve"
   },
   {
     "id": 6,
@@ -63,7 +63,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 7,
@@ -74,7 +74,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 8,
@@ -85,7 +85,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 9,
@@ -96,7 +96,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 10,
@@ -107,7 +107,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 11,
@@ -118,7 +118,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 12,
@@ -129,7 +129,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 13,
@@ -140,7 +140,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 14,
@@ -151,7 +151,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 15,
@@ -162,7 +162,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 16,
@@ -173,7 +173,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 17,
@@ -184,7 +184,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 18,
@@ -195,7 +195,7 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   },
   {
     "id": 19,
@@ -206,6 +206,6 @@
     "complaint": "Lights not working",
     "registeredTime": "6/9/22 07:00 PM",
     "updatedTime": "6/9/22 07:00 PM",
-    "status": "Verified"
+    "status": "Registered"
   }
 ]

@@ -4,6 +4,8 @@ import Modal from "./Modal";
 import Filter from "./Filter";
 import Button from "./Button";
 
+import APIService from "../api/Service";
+
 const headers = ["block", "floor", "room", "type", "category"];
 
 const dropdownValues = {
@@ -82,6 +84,25 @@ export default function AddComplaint(props) {
                   },
                 ]);
                 setIsOpen(false);
+                const sendComplaint = async () => {
+                  await APIService.PostData(
+                    {
+                      utype: "Student",
+                      email: "vinay@gmail.com",
+                      Block: complaint.block,
+                      Floor: complaint.floor,
+                      RoomNo: complaint.room,
+                      complainttype: complaint.type,
+                      Complaint: complaint.category,
+                    },
+                    props.cateogry === "institution"
+                      ? "college_registercomplaint"
+                      : "hostel_registercomplaint"
+                  ).then((response) => {
+                    console.log(response);
+                  });
+                };
+                sendComplaint();
                 props.updateComplaints();
               }}
             />
@@ -90,6 +111,7 @@ export default function AddComplaint(props) {
       </Modal>
       <div
         className="add-complaint-plus-container"
+        // className="table__pagination-item active"
         onClick={() => setIsOpen(true)}
       >
         <div className="add-complaint-plus">

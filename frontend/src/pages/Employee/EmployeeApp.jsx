@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import InstitutionComplaints from "./InstitutionComplaints";
-import HostelComplaints from "./HostelComplaints";
+import Complaints from "./Complaints";
 import Menubar from "../../components/Menubar";
 
 export default function EmployeeApp() {
   const [complaintMode, setComplaintMode] = useState("hostel");
-  const navigate = useNavigate();
 
   return (
     <>
@@ -16,11 +13,10 @@ export default function EmployeeApp() {
         pages={["hostel", "institution"]}
       />
       <div className="main-app-wrapper">
-        {complaintMode === "hostel" ? (
-          <HostelComplaints />
-        ) : (
-          <InstitutionComplaints />
-        )}
+        <Complaints
+          complaintMode={complaintMode}
+          setComplaintMode={setComplaintMode}
+        />
       </div>
     </>
   );

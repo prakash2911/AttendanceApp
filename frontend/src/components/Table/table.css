@@ -1,7 +1,3 @@
-.table-wrapper {
-  overflow-y: auto;
-}
-
 table {
   width: 100%;
   min-width: 400px;
@@ -26,25 +22,52 @@ td {
   cursor: pointer;
 }
 
+.long-table-item {
+  min-width: 150px;
+}
+
 tbody > tr:hover {
   background-color: var(--lighterGrey);
   /* color: #fff; */
 }
 
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.table-header > .table-title {
+  background-color: var(--lighterGrey);
+  padding: 10px;
+  border-radius: 25px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.table-wrapper {
+  overflow-y: auto;
+  margin-left: 15px;
+  margin-right: 15px;
+  border-radius: 25px;
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 20px -10px;
+}
+
 .table__pagination {
   display: flex;
-  width: 100%;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   align-items: center;
-  margin-top: 20px;
 }
 
 .table__pagination-wrapper {
-    display: flex;
-    background-color: var(--lighterGrey);
-    padding: 10px;
-    border-radius: 25px;
-    margin-right: 15px;
+  display: flex;
+  background-color: var(--lighterGrey);
+  padding: 10px;
+  border-radius: 25px;
 }
 
 .table__pagination-item ~ .table__pagination-item {
