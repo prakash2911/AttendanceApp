@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { TbLock, TbMail } from "react-icons/tb";
 import Button from "../components/Button";
@@ -6,8 +7,10 @@ import Dropdown from "../components/Dropdown/Dropdown";
 
 import APIService from "../api/Service";
 import TextInput from "../components/TextInput";
+import { equalsIgnoreCase } from "../utils";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [userCredentials, setUserCredentials] = useState({
     email: "",
     password: "",
@@ -50,7 +53,21 @@ export default function Login() {
           <div className="forgot-password">Forgot Password?</div>
           <div
             className="login-button"
-            onClick={() => console.log(userCredentials)}
+            onClick={async () => {
+              await APIService.PostData(
+                {
+                  email: userCredentials.email,
+                  password: userCredentials.password,
+                },
+                "/login"
+              ).then((response) => {
+                if (equalsIgnoreCase(response.status, "login failure"))
+                  alert("Invalid Credentials, please try again!");
+                else if (equalsIgnoreCase(response.status, "login success")) {
+                  navigate("/" + response.utype.toLowerCase());
+                }
+              });
+            }}
           >
             Login
           </div>

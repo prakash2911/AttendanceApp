@@ -14,7 +14,7 @@ import {
 } from "../../utils";
 
 export default function Complaints({ complaintMode, setComplaintMode }) {
-  const [complaints, setComplaints] = useState(dummyComplaints);
+  const [complaints, setComplaints] = useState();
   const [limit, setLimit] = useState(8);
 
   const [modalOpen, setModalOpen] = useState(false);

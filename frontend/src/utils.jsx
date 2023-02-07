@@ -3,7 +3,9 @@ export const equalsIgnoreCase = (str1, str2) => {
 };
 
 export function isObject(objValue) {
-  return objValue && typeof objValue === 'object' && objValue.constructor === Object;
+  return (
+    objValue && typeof objValue === "object" && objValue.constructor === Object
+  );
 }
 
 export const initialModalContents = {
@@ -36,8 +38,6 @@ export const initialFilters = {
   status: ["All", "Resolved", "Registered", "Verified", "Unable to Resolve"],
 };
 
-export const filterTypes = ["block", "floor", "type", "status"];
-
 export const defaultFilters = {
   block: "All",
   floor: "All",
@@ -50,8 +50,6 @@ export const initialEmployeeFilters = {
   floor: ["All", 1, 2, 3, 4],
   status: ["All", "Resolved", "Registered", "Verified", "Unable to Resolve"],
 };
-
-export const employeeFilterTypes = ["block", "floor", "status"];
 
 export const employeeDefaultFilters = {
   block: "All",

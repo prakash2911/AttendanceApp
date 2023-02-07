@@ -14,7 +14,7 @@ import {
 } from "../../utils";
 
 export default function Complaints({ complaintMode, setComplaintMode }) {
-  const [complaints, setComplaints] = useState(dummyComplaints);
+  const [complaints, setComplaints] = useState();
   const [limit, setLimit] = useState(8);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -73,6 +73,14 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
     });
   };
 
+  const getFilters = async () => {
+    await APIService.PostData({ category: complaintMode }, "getFilters").then(
+      (response) => {
+        console.log(response);
+      }
+    );
+  };
+
   useEffect(() => {
     window.innerWidth - window.innerHeight < 357
       ? setLimit(window.innerHeight / 100)
@@ -83,6 +91,7 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
 
   useEffect(() => {
     getData();
+    getFilters();
   }, [complaintMode]);
 
   return (

@@ -1,4 +1,5 @@
-let url = "http://192.168.82.77:2002/";
+// let url = "http://192.168.82.77:2002/";
+let url = "http://127.0.0.1:2002/";
 
 export default class APIService {
   static async PostData(body, route) {
