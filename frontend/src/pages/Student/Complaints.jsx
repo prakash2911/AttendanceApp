@@ -1,101 +1,30 @@
 import React, { useState, useEffect } from "react";
 import Table from "../../components/Table/Table";
-import Filter from "../../components/Filter";
 import Modal from "../../components/Modal";
 import AddComplaint from "../../components/AddComplaint";
 
 import dummyComplaints from "../../assets/data/dummyData.json";
 import APIService from "../../api/Service";
-import { equalsIgnoreCase } from "../../utils";
+import {
+  initialModalContents,
+  initialFilters,
+  defaultFilters,
+  complaintTableHead,
+  getLabelType,
+} from "../../utils";
 
 export default function Complaints({ complaintMode, setComplaintMode }) {
-  const [complaints, setComplaints] = useState();
-  const [currentComplaints, setCurrentComplaints] = useState();
+  const [complaints, setComplaints] = useState(dummyComplaints);
   const [limit, setLimit] = useState(8);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalContents, setModalContents] = useState({
-    id: 1,
-    block: "Block Name",
-    floor: 1,
-    room: 1,
-    type: "Type Name",
-    complaint: "Complaint Name",
-    registeredTime: "1/1/1 01:00 AM",
-    updatedTime: "1/1/1 01:00 AM",
-    status: "Undefined",
-  });
-
-  const [filters, setFilters] = useState({
-    block: ["All", "Abdul Kalam Lecture Hall Complex", "RLHC", "CB"],
-    floor: ["All", 1, 2, 3, 4],
-    type: ["All", "Electrician", "Civil and Maintenance", "Education Aid"],
-    status: ["All", "Resolved", "Registered", "Verified", "Unable to Resolve"],
-  });
-
-  const [currentFilters, setCurrentFilters] = useState({
-    block: "All",
-    floor: "All",
-    type: "All",
-    status: "All",
-  });
-
-  const complaintTableHead = [
-    "id",
-    "block",
-    "floor",
-    "room",
-    "type",
-    "complaint",
-    "registeredTime",
-    "updatedTime",
-    "status",
-  ];
-
-  const updateComplaints = () => {
-    let temp = complaints.filter(
-      (complaint) =>
-        (equalsIgnoreCase(currentFilters.block, complaint.block) ||
-          equalsIgnoreCase(currentFilters.block, "All")) &&
-        (equalsIgnoreCase(currentFilters.floor, complaint.floor + "") ||
-          equalsIgnoreCase(currentFilters.floor, "All")) &&
-        (equalsIgnoreCase(currentFilters.type, complaint.type) ||
-          equalsIgnoreCase(currentFilters.type, "All")) &&
-        (equalsIgnoreCase(currentFilters.status, complaint.status) ||
-          equalsIgnoreCase(currentFilters.status, "All"))
-    );
-    setCurrentComplaints(temp);
-  };
+  const [modalContents, setModalContents] = useState(initialModalContents);
 
   const renderHead = (item, index) => {
-    let filteredItems = ["block", "floor", "type", "status"];
-    if (filteredItems.includes(item))
-      return (
-        <th key={index}>
-          <Filter
-            title={item}
-            values={filters[item]}
-            onChange={(newFilterValue) => {
-              setCurrentFilters((oldFilters) => {
-                oldFilters[item] = newFilterValue;
-                return oldFilters;
-              });
-              updateComplaints();
-            }}
-          />
-        </th>
-      );
-    else return <th key={index}>{item}</th>;
+    return <th key={index}>{item}</th>;
   };
 
   const renderBody = (item, index) => {
-    let labelType;
-    if (item.status.toLowerCase() === "resolved") labelType = "green";
-    else if (item.status.toLowerCase() === "unable to resolve")
-      labelType = "red";
-    else if (item.status.toLowerCase() === "verified") labelType = "blue";
-    else if (item.status.toLowerCase() === "registered") labelType = "yellow";
-
     return (
       <tr
         key={index}
@@ -113,7 +42,9 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
         <td>{item.registeredTime}</td>
         <td>{item.updatedTime}</td>
         <td align="center">
-          <div className={`table-tag ${labelType}`}>{item.status}</div>
+          <div className={`table-tag ${getLabelType(item.status)}`}>
+            {item.status}
+          </div>
         </td>
       </tr>
     );
@@ -139,7 +70,6 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
         };
       });
       setComplaints(data);
-      setCurrentComplaints(data);
     });
   };
 
@@ -163,20 +93,18 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
         modalContents={modalContents}
         title="Complaint Details"
       />
-      {currentComplaints && (
+      {complaints && (
         <Table
           limit={limit}
           title={complaintMode + " Complaints"}
           headData={complaintTableHead}
           renderHead={(item, index) => renderHead(item, index)}
-          bodyData={currentComplaints}
+          bodyData={complaints}
           renderBody={(item, index) => renderBody(item, index)}
+          filters={initialFilters}
+          defaultFilters={defaultFilters}
           addElement={
-            <AddComplaint
-              setComplaints={setComplaints}
-              updateComplaints={updateComplaints}
-              category="hostel"
-            />
+            <AddComplaint setComplaints={setComplaints} category="hostel" />
           }
         />
       )}

@@ -1,0 +1,121 @@
+.dropdown {
+  --border: 1px solid var(--lightGrey);
+  --border-radius: 25px;
+  --speed: 250ms;
+  --nav-size: 60px;
+  position: absolute;
+  top: 50px;
+  right: 0px;
+  width: 250px;
+  background-color: var(--lighterGrey);
+  /* border: var(--border); */
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  overflow: hidden;
+  transition: height var(--speed) ease;
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+    rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+/* Icon Button */
+.icon-button {
+  --button-size: calc(var(--nav-size) * 0.5);
+  min-width: var(--button-size);
+  max-width: var(--button-size);
+  height: var(--button-size);
+  background-color: var(--lightGrey);
+  border-radius: 50%;
+  padding: 5px;
+  margin: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 300ms;
+}
+
+.icon-button:hover {
+  filter: brightness(1.2);
+}
+
+.icon-button svg {
+  fill: var(--primaryColor);
+  width: 20px;
+  height: 20px;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--primaryColor);
+  text-decoration: none;
+  text-transform: capitalize;
+}
+
+.menu {
+  width: 100%;
+}
+
+.menu-item {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--border-radius);
+  transition: background var(--speed);
+  padding: 0.5rem;
+}
+
+.menu-item .icon-button {
+  margin-right: 0.5rem;
+}
+
+.menu-item .icon-button:hover {
+  filter: none;
+}
+
+.menu-item:hover {
+  background-color: var(--lightGrey);
+}
+
+.menu-item:hover > .icon-button {
+  /* background-color: var(--lighterGrey); */
+}
+
+.icon-right {
+  margin-left: auto;
+}
+
+/* CSSTransition classes  */
+.menu-primary-enter {
+  position: absolute;
+  transform: translateX(-110%);
+}
+.menu-primary-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+}
+.menu-primary-exit {
+  position: absolute;
+}
+.menu-primary-exit-active {
+  transform: translateX(-110%);
+  transition: all var(--speed) ease;
+}
+
+.menu-secondary-enter {
+  transform: translateX(110%);
+}
+.menu-secondary-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+}
+.menu-secondary-exit {
+}
+.menu-secondary-exit-active {
+  transform: translateX(110%);
+  transition: all var(--speed) ease;
+}

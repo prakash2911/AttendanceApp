@@ -2,6 +2,10 @@ export const equalsIgnoreCase = (str1, str2) => {
   return str1.toString().toUpperCase() === str2.toString().toUpperCase();
 };
 
+export function isObject(objValue) {
+  return objValue && typeof objValue === 'object' && objValue.constructor === Object;
+}
+
 export const initialModalContents = {
   id: 1,
   block: "Block Name",

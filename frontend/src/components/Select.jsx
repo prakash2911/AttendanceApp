@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function Filter({
+export default function Select({
   title,
   values,
   onChange,

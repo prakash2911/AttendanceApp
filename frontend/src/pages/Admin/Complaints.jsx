@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Table from "../../components/Table/Table";
-import Filter from "../../components/Filter";
 import Modal from "../../components/Modal";
 import AddComplaint from "../../components/AddComplaint";
 
 import dummyComplaints from "../../assets/data/dummyData.json";
 import APIService from "../../api/Service";
 import {
-  equalsIgnoreCase,
   initialModalContents,
   initialFilters,
-  filterTypes,
   defaultFilters,
   complaintTableHead,
   getLabelType,
@@ -23,43 +20,7 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContents, setModalContents] = useState(initialModalContents);
 
-  // const [filters, setFilters] = useState(initialFilters);
-
-  // const [currentFilters, setCurrentFilters] = useState(defaultFilters);
-
-  // const updateComplaints = () => {
-  //   let temp = complaints.filter(
-  //     (complaint) =>
-  //       (equalsIgnoreCase(currentFilters.block, complaint.block) ||
-  //         equalsIgnoreCase(currentFilters.block, "All")) &&
-  //       (equalsIgnoreCase(currentFilters.floor, complaint.floor + "") ||
-  //         equalsIgnoreCase(currentFilters.floor, "All")) &&
-  //       (equalsIgnoreCase(currentFilters.type, complaint.type) ||
-  //         equalsIgnoreCase(currentFilters.type, "All")) &&
-  //       (equalsIgnoreCase(currentFilters.status, complaint.status) ||
-  //         equalsIgnoreCase(currentFilters.status, "All"))
-  //   );
-  //   // setCurrentComplaints(temp);
-  // };
-
   const renderHead = (item, index) => {
-    // if (filterTypes.includes(item))
-    //   return (
-    //     <th key={index}>
-    //       <Filter
-    //         title={item}
-    //         values={filters[item]}
-    //         onChange={(newFilterValue) => {
-    //           setCurrentFilters((oldFilters) => {
-    //             oldFilters[item] = newFilterValue;
-    //             return oldFilters;
-    //           });
-    //           updateComplaints();
-    //         }}
-    //       />
-    //     </th>
-    //   );
-    // else return <th key={index}>{item}</th>;
     return <th key={index}>{item}</th>;
   };
 
@@ -109,8 +70,6 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
         };
       });
       setComplaints(data);
-      // setCurrentComplaints(data);
-      // setCurrentFilters(defaultFilters);
     });
   };
 
@@ -144,14 +103,6 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
           renderBody={(item, index) => renderBody(item, index)}
           filters={initialFilters}
           defaultFilters={defaultFilters}
-          filterTypes={filterTypes}
-          addElement={
-            <AddComplaint
-              setComplaints={setComplaints}
-              // updateComplaints={updateComplaints}
-              category="hostel"
-            />
-          }
         />
       )}
     </>

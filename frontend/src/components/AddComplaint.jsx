@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { BsPlusLg } from "react-icons/bs";
 import Modal from "./Modal";
-import Filter from "./Filter";
+import Select from "./Select";
 import Button from "./Button";
 
 import APIService from "../api/Service";
 
-const headers = ["block", "floor", "room", "type", "category"];
+const headers = ["block", "floor", "room", "type", "complaint"];
 
 const dropdownValues = {
   block: ["Abdul Kalam Lecture Hall Complex", "RLHC", "CB"],
   floor: [1, 2, 3, 4],
   room: [101, 102, 103, 104, 105, 106],
   type: ["Electrician", "Civil and Maintenance", "Education Aid"],
-  category: [
+  complaint: [
     "Benches Broken",
     "Benches Nail Came Out",
     "Board Broken",
@@ -24,14 +24,14 @@ const dropdownValues = {
 export default function AddComplaint(props) {
   const [isOpen, setIsOpen] = useState(false);
 
-  //props.category is hostel/institution
+  //props.complaint is hostel/institution
 
   const [complaint, setComplaint] = useState({
     block: "Abdul Kalam Lecture Hall Complex",
     floor: 1,
     room: 101,
     type: "Electrician",
-    category: "Benches Broken",
+    complaint: "Benches Broken",
   });
 
   return (
@@ -45,7 +45,7 @@ export default function AddComplaint(props) {
         <div className="add-complaint-input-wrapper">
           {headers.map((item, index) => (
             <div key={index}>
-              <Filter
+              <Select
                 title={item}
                 values={dropdownValues[item]}
                 onChange={(value) =>
@@ -93,7 +93,7 @@ export default function AddComplaint(props) {
                       Floor: complaint.floor,
                       RoomNo: complaint.room,
                       complainttype: complaint.type,
-                      Complaint: complaint.category,
+                      Complaint: complaint.complaint,
                     },
                     props.cateogry === "institution"
                       ? "college_registercomplaint"
