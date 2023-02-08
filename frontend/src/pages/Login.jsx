@@ -61,6 +61,7 @@ export default function Login() {
                 },
                 "/login"
               ).then((response) => {
+                console.log(response);
                 if (equalsIgnoreCase(response.status, "login failure"))
                   alert("Invalid Credentials, please try again!");
                 else if (equalsIgnoreCase(response.status, "login success")) {

@@ -3,7 +3,7 @@ import { FaFilter } from "react-icons/fa";
 import Dropdown from "../Dropdown/Dropdown";
 
 export default function Filter({ filters, onChange }) {
-  const [isOpen, setIsOpen] = useState();
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="filter-icon-wrapper">
       <div className="filter-icon" onClick={() => setIsOpen(!isOpen)}>

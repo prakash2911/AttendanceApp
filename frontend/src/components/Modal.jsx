@@ -8,6 +8,8 @@ export default function Modal({
   customContent,
   children,
   title,
+  type,
+  onStatusChange,
 }) {
   return (
     <div className={`modal-container ${isOpen ? "open" : "hidden"}`}>
@@ -61,6 +63,43 @@ export default function Modal({
               <div className="modal-item-desc">{modalContents.status}</div>
             </div>
           </>
+        )}
+        {type && (
+          <div className="modal-buttons-container">
+            {type === "employee" && (
+              <>
+                <div
+                  className="button red"
+                  onClick={() => {
+                    onStatusChange(modalContents.id, "unable to resolve");
+                    setIsOpen(false);
+                  }}
+                >
+                  Report
+                </div>
+                <div
+                  className="button"
+                  onClick={() => {
+                    onStatusChange(modalContents.id, "resolved");
+                    setIsOpen(false);
+                  }}
+                >
+                  Resolve
+                </div>
+              </>
+            )}
+            {type === "student" && (
+              <div
+                className="button"
+                onClick={() => {
+                  onStatusChange(modalContents.id, "verified");
+                  setIsOpen(false);
+                }}
+              >
+                Verify
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

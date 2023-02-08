@@ -81,14 +81,14 @@ const Table = ({
       <div className="table-header">
         <div className="title-pagination-wrapper">
           <div className="table-title">{title}</div>
-          {pages > 1 ? (
-            <div className="table__pagination">
-              <Filter
-                filters={filters}
-                onChange={({ key, value }) => {
-                  setCurrentFilters((old) => ({ ...old, [key]: value }));
-                }}
-              />
+          <div className="table__pagination">
+            <Filter
+              filters={filters}
+              onChange={({ key, value }) => {
+                setCurrentFilters((old) => ({ ...old, [key]: value }));
+              }}
+            />
+            {pages > 1 ? (
               <div className="table__pagination-wrapper">
                 {range?.map((item, index) => (
                   <div
@@ -102,8 +102,8 @@ const Table = ({
                   </div>
                 ))}
               </div>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
         <div className="filter-tag-wrapper">
           {filterTypes.map((item, index) => {

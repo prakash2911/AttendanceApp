@@ -156,7 +156,7 @@ tbody > tr:hover {
   text-transform: uppercase;
   font-weight: 700;
   color: white;
-  border-radius: 15px;
+  border-radius: var(--lowBorderRadius);
   width: fit-content;
   padding: 4px;
   padding-left: 8px;
@@ -192,6 +192,10 @@ tbody > tr:hover {
   .dropdown {
     top: 20vh;
     right: 25px;
+  }
+  .dropdown.near {
+    top: 35px;
+    right: 0px;
   }
 }
 

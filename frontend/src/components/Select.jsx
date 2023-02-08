@@ -21,12 +21,26 @@ export default function Select({
       <div className="select">
         <select id="standard-select" onChange={(e) => onChange(e.target.value)}>
           {values.map((item, index) => (
-            <option key={index} value={item}>
+            <option className="option" key={index} value={item}>
               {item}
             </option>
           ))}
         </select>
       </div>
+      {/* <div className="select">
+        <div className="select-text" onClick={() => setIsOpen(!isOpen)}>{value}</div>
+        {isOpen && (
+          <Dropdown
+            values={values}
+            setIsOpen={setIsOpen}
+            onChange={({ key }) => {
+              onChange(key);
+              setValue(key);
+            }}
+            disposition="near"
+          />
+        )}
+      </div> */}
     </div>
   );
 }

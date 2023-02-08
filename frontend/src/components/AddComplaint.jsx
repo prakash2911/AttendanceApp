@@ -11,7 +11,7 @@ const headers = ["block", "floor", "room", "type", "complaint"];
 const dropdownValues = {
   block: ["Abdul Kalam Lecture Hall Complex", "RLHC", "CB"],
   floor: [1, 2, 3, 4],
-  room: [101, 102, 103, 104, 105, 106],
+  room: [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120],
   type: ["Electrician", "Civil and Maintenance", "Education Aid"],
   complaint: [
     "Benches Broken",
@@ -103,7 +103,6 @@ export default function AddComplaint(props) {
                   });
                 };
                 sendComplaint();
-                props.updateComplaints();
               }}
             />
           </div>

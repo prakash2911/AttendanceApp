@@ -97,6 +97,18 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
         setIsOpen={setModalOpen}
         modalContents={modalContents}
         title="Complaint Details"
+        type="employee"
+        onStatusChange={async (id, status) => {
+          await APIService.PostData(
+            {
+              complaintid: id,
+              status: status,
+            },
+            "college_change_complaint_status"
+          ).then((response) => {
+            console.log(response);
+          });
+        }}
       />
       {complaints && (
         <Table

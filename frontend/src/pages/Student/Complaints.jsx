@@ -51,11 +51,11 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
   };
 
   const getData = async () => {
+    await getFilters();
     await APIService.PostData(
       { category: complaintMode },
       "getComplaints/student"
     ).then((response) => {
-      console.log(response);
       let data = response.complaint.map(function (item) {
         return {
           block: item.block,
@@ -79,19 +79,22 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
         console.log(response);
       }
     );
+    await APIService.PostData(
+      { category: complaintMode },
+      "getcomplaintTy"
+    ).then((response) => {
+      console.log(response);
+    });
   };
 
   useEffect(() => {
     window.innerWidth - window.innerHeight < 357
       ? setLimit(window.innerHeight / 100)
       : null;
-
-    getData();
   }, []);
 
   useEffect(() => {
     getData();
-    getFilters();
   }, [complaintMode]);
 
   return (
@@ -101,6 +104,18 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
         setIsOpen={setModalOpen}
         modalContents={modalContents}
         title="Complaint Details"
+        type="student"
+        onStatusChange={async (id, status) => {
+          await APIService.PostData(
+            {
+              complaintid: id,
+              status: status,
+            },
+            "college_change_complaint_status"
+          ).then((response) => {
+            console.log(response);
+          });
+        }}
       />
       {complaints && (
         <Table

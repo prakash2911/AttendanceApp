@@ -20,6 +20,9 @@
   --yellow: #ffc107;
   --select-focus: var(--lightBlue);
   --select-arrow: var(--select-border);
+  --highBorderRadius: 20px;
+  --mediumBorderRadius: 15px;
+  --lowBorderRadius: 10px;
 }
 
 body {
@@ -60,7 +63,6 @@ select {
   cursor: pointer;
   line-height: 1;
   background-color: #fff;
-  background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
 }
 
 select,
