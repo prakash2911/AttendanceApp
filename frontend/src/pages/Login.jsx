@@ -65,6 +65,16 @@ export default function Login() {
                 if (equalsIgnoreCase(response.status, "login failure"))
                   alert("Invalid Credentials, please try again!");
                 else if (equalsIgnoreCase(response.status, "login success")) {
+                  sessionStorage.setItem(
+                    "ck",
+                    JSON.stringify({
+                      loggedin: true,
+                      email: userCredentials.email,
+                      username: userCredentials.username,
+                      utype: response.utype,
+                      subtype: response.subtype,
+                    })
+                  );
                   navigate("/" + response.utype.toLowerCase());
                 }
               });

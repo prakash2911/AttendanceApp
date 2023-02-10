@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-import Filter from "./Filter";
-import { equalsIgnoreCase } from "../../utils";
-
+import React, { useState, useEffect } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
+import { FaFilter } from "react-icons/fa";
+
+import Dropdown from "../Dropdown/Dropdown";
+import { equalsIgnoreCase } from "../../utils";
 
 import "./table.css";
 
@@ -26,6 +26,7 @@ const Table = ({
   const [currentFilters, setCurrentFilters] = useState(defaultFilters);
 
   const filterTypes = Object.keys(defaultFilters);
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
 
   const filterData = (data) => {
     if (!filters) return data;
@@ -76,18 +77,40 @@ const Table = ({
     initTable();
   }, [bodyData, limit, currentFilters]);
 
+  useEffect(() => {
+    setCurrentFilters(defaultFilters);
+  }, [filters]);
+
   return (
     <>
       <div className="table-header">
         <div className="title-pagination-wrapper">
           <div className="table-title">{title}</div>
           <div className="table__pagination">
-            <Filter
-              filters={filters}
-              onChange={({ key, value }) => {
-                setCurrentFilters((old) => ({ ...old, [key]: value }));
-              }}
-            />
+            <div className="filter-icon-wrapper">
+              <div
+                className="filter-icon"
+                onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
+              >
+                <FaFilter size={22} />
+              </div>
+              {isFilterDropdownOpen && (
+                <Dropdown
+                  values={filters}
+                  onChange={({ key, value }) => {
+                    if (key === "block")
+                      setCurrentFilters((old) => ({
+                        ...old,
+                        [key]: value,
+                        floor: "All",
+                      }));
+                    else setCurrentFilters((old) => ({ ...old, [key]: value }));
+                  }}
+                  currentValues={currentFilters}
+                  setIsOpen={setIsFilterDropdownOpen}
+                />
+              )}
+            </div>
             {pages > 1 ? (
               <div className="table__pagination-wrapper">
                 {range?.map((item, index) => (
@@ -114,9 +137,16 @@ const Table = ({
                   {currentFilters[item]}
                   <div
                     className="filter-tag-close-icon"
-                    onClick={() =>
-                      setCurrentFilters((old) => ({ ...old, [item]: "All" }))
-                    }
+                    onClick={() => {
+                      if (item === "block")
+                        setCurrentFilters((old) => ({
+                          ...old,
+                          [item]: "All",
+                          floor: "All",
+                        }));
+                      else
+                        setCurrentFilters((old) => ({ ...old, [item]: "All" }));
+                    }}
                   >
                     <IoIosCloseCircle size={16} />
                   </div>

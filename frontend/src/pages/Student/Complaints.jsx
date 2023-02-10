@@ -3,11 +3,9 @@ import Table from "../../components/Table/Table";
 import Modal from "../../components/Modal";
 import AddComplaint from "../../components/AddComplaint";
 
-import dummyComplaints from "../../assets/data/dummyData.json";
 import APIService from "../../api/Service";
 import {
   initialModalContents,
-  initialFilters,
   defaultFilters,
   complaintTableHead,
   getLabelType,
@@ -19,6 +17,15 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContents, setModalContents] = useState(initialModalContents);
+  const [blockDetails, setBlockDetails] = useState();
+  const [complaintDetails, setComplaintDetails] = useState();
+
+  const [filters, setFilters] = useState({
+    block: [],
+    floor: [],
+    type: [],
+    status: ["Resolved", "Registered", "Verified", "Unable to resolve"],
+  });
 
   const renderHead = (item, index) => {
     return <th key={index}>{item}</th>;
@@ -51,7 +58,6 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
   };
 
   const getData = async () => {
-    await getFilters();
     await APIService.PostData(
       { category: complaintMode },
       "getComplaints/student"
@@ -73,18 +79,39 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
     });
   };
 
-  const getFilters = async () => {
-    await APIService.PostData({ category: complaintMode }, "getFilters").then(
-      (response) => {
-        console.log(response);
-      }
-    );
+  const getDropdownValues = async () => {
+    let newFilters = {
+      block: ["All"],
+      floor: [],
+      type: ["All"],
+      status: [
+        "All",
+        "Resolved",
+        "Registered",
+        "Verified",
+        "Unable to resolve",
+      ],
+    };
+    await APIService.PostData(
+      { category: complaintMode },
+      "getBlocksData"
+    ).then((response) => {
+      console.log(response);
+      setBlockDetails(response);
+      newFilters.block = ["All", ...Object.keys(response)];
+      for (let block_name of Object.keys(response))
+        newFilters.floor.push(["All", ...response[block_name].floors]);
+    });
     await APIService.PostData(
       { category: complaintMode },
       "getcomplaintTy"
     ).then((response) => {
       console.log(response);
+      setComplaintDetails(response);
+      newFilters.type = ["All", ...Object.keys(response)];
     });
+    console.log(newFilters);
+    setFilters(newFilters);
   };
 
   useEffect(() => {
@@ -95,6 +122,7 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
 
   useEffect(() => {
     getData();
+    getDropdownValues();
   }, [complaintMode]);
 
   return (
@@ -125,10 +153,16 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
           renderHead={(item, index) => renderHead(item, index)}
           bodyData={complaints}
           renderBody={(item, index) => renderBody(item, index)}
-          filters={initialFilters}
+          filters={filters}
           defaultFilters={defaultFilters}
           addElement={
-            <AddComplaint setComplaints={setComplaints} category="hostel" />
+            <AddComplaint
+              setComplaints={setComplaints}
+              category="hostel"
+              complaintMode={complaintMode}
+              blockDetails={blockDetails}
+              complaintDetails={complaintDetails}
+            />
           }
         />
       )}

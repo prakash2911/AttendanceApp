@@ -3,11 +3,16 @@ import { CSSTransition } from "react-transition-group";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { IoFilter } from "react-icons/io5";
 
-import { isObject } from "../../utils";
+import { equalsIgnoreCase, isObject } from "../../utils";
 
 import "./dropdown.css";
 
-export default function Dropdown({ values, onChange, setIsOpen, disposition }) {
+export default function Dropdown({
+  values,
+  onChange,
+  currentValues,
+  setIsOpen,
+}) {
   const [activeMenu, setActiveMenu] = useState("main");
   const [menuHeight, setMenuHeight] = useState(null);
   const dropdownRef = useRef(null);
@@ -28,9 +33,10 @@ export default function Dropdown({ values, onChange, setIsOpen, disposition }) {
       <a
         href="#"
         className="menu-item"
-        onClick={
-          props.goToMenu ? () => setActiveMenu(props.goToMenu) : props.onClick
-        }
+        onClick={() => {
+          props.goToMenu ? setActiveMenu(props.goToMenu) : null;
+          props.onClick ? props.onClick() : null;
+        }}
         key={props.index}
       >
         <span className="icon-button">{props.leftIcon}</span>
@@ -41,7 +47,7 @@ export default function Dropdown({ values, onChange, setIsOpen, disposition }) {
   }
 
   return (
-    <div className={`dropdown ${disposition}`} style={{ height: menuHeight }} ref={dropdownRef}>
+    <div className="dropdown" style={{ height: menuHeight }} ref={dropdownRef}>
       <CSSTransition
         in={activeMenu === "main"}
         timeout={500}
@@ -53,20 +59,27 @@ export default function Dropdown({ values, onChange, setIsOpen, disposition }) {
           {keys &&
             keys.map((item, index) => {
               if (Array.isArray(values[item]))
-                return (
-                  <DropdownItem
-                    leftIcon={<IoFilter />}
-                    rightIcon={<FaChevronRight />}
-                    goToMenu={item}
-                    index={index}
-                  >
-                    {item}
-                  </DropdownItem>
-                );
+                if (
+                  equalsIgnoreCase(item, "floor") &&
+                  equalsIgnoreCase(currentValues.block, "all")
+                )
+                  return null;
+                else
+                  return (
+                    <DropdownItem
+                      leftIcon={<IoFilter />}
+                      rightIcon={<FaChevronRight />}
+                      goToMenu={item}
+                      index={index}
+                    >
+                      {item}
+                    </DropdownItem>
+                  );
               else
                 return (
                   <DropdownItem
                     index={index}
+                    goToMenu="main"
                     onClick={() => {
                       onChange({ key: item, value: null });
                       setIsOpen(false);
@@ -94,11 +107,33 @@ export default function Dropdown({ values, onChange, setIsOpen, disposition }) {
                   <h2>{item}</h2>
                 </DropdownItem>
                 {Array.isArray(values[item]) &&
+                  !equalsIgnoreCase(item, "floor") &&
                   values[item].map((innerItem, innerIndex) => {
                     return (
                       <DropdownItem
                         index={innerIndex}
                         leftIcon={<IoFilter />}
+                        goToMenu="main"
+                        onClick={() => {
+                          onChange({ key: item, value: innerItem });
+                          setIsOpen(false);
+                        }}
+                      >
+                        {innerItem}
+                      </DropdownItem>
+                    );
+                  })}
+                {Array.isArray(values[item]) &&
+                  equalsIgnoreCase(item, "floor") &&
+                  !equalsIgnoreCase(currentValues.block, "All") &&
+                  values[item][
+                    values.block.indexOf(currentValues.block) - 1
+                  ].map((innerItem, innerIndex) => {
+                    return (
+                      <DropdownItem
+                        index={innerIndex}
+                        leftIcon={<IoFilter />}
+                        goToMenu="main"
                         onClick={() => {
                           onChange({ key: item, value: innerItem });
                           setIsOpen(false);

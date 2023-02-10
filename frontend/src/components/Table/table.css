@@ -3,6 +3,7 @@ table {
   min-width: 400px;
   border-spacing: 0;
   font-size: 14px;
+  overflow-y: scroll;
 }
 
 thead {
@@ -88,7 +89,8 @@ tbody > tr:hover {
   justify-content: center;
   align-items: center;
   cursor: default;
-  white-space: nowrap
+  white-space: nowrap;
+  text-transform: capitalize;
 }
 
 .filter-tag-close-icon {

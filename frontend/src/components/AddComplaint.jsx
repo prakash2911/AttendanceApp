@@ -5,34 +5,127 @@ import Select from "./Select";
 import Button from "./Button";
 
 import APIService from "../api/Service";
-
-const headers = ["block", "floor", "room", "type", "complaint"];
-
-const dropdownValues = {
-  block: ["Abdul Kalam Lecture Hall Complex", "RLHC", "CB"],
-  floor: [1, 2, 3, 4],
-  room: [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120],
-  type: ["Electrician", "Civil and Maintenance", "Education Aid"],
-  complaint: [
-    "Benches Broken",
-    "Benches Nail Came Out",
-    "Board Broken",
-    "Projector Broken",
-  ],
-};
+import { isObject } from "../utils";
 
 export default function AddComplaint(props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [blockDetails, setBlockDetails] = useState();
+  const [complaintDetails, setComplaintDetails] = useState();
 
-  //props.complaint is hostel/institution
+  const [blockNames, setBlockNames] = useState();
+  const [complaintTypes, setComplaintTypes] = useState();
 
   const [complaint, setComplaint] = useState({
-    block: "Abdul Kalam Lecture Hall Complex",
+    block: "Abdul Kalam Lecture Hall",
     floor: 1,
     room: 101,
     type: "Electrician",
     complaint: "Benches Broken",
   });
+
+  const asd = async () => {
+    await APIService.PostData(
+      { category: props.complaintMode },
+      "getBlocksData"
+    ).then((response) => {
+      console.log(response);
+      setBlockDetails(response);
+      if (isObject(response)) {
+        let block_names = Object.keys(response);
+        setBlockNames(block_names);
+        setComplaint((old) => ({
+          ...old,
+          block: block_names[0],
+          floor: response[block_names[0]].floors[0],
+          room: response[block_names[0]].rooms[0][0],
+        }));
+      }
+    });
+    await APIService.PostData(
+      { category: props.complaintMode },
+      "getcomplaintTy"
+    ).then((response) => {
+      console.log(response);
+      setComplaintDetails(response);
+      if (isObject(response)) {
+        let complaint_types = Object.keys(response);
+        setComplaintTypes(complaint_types);
+        setComplaint((old) => ({
+          ...old,
+          type: complaint_types[0],
+          complaint: response[complaint_types[0]][0],
+        }));
+      }
+    });
+  };
+
+  const initDropdownValues = () => {
+    setBlockDetails(props.blockDetails);
+    if (isObject(props.blockDetails)) {
+      let block_names = Object.keys(props.blockDetails);
+      setBlockNames(block_names);
+      setComplaint((old) => ({
+        ...old,
+        block: block_names[0],
+        floor: props.blockDetails[block_names[0]].floors[0],
+        room: props.blockDetails[block_names[0]].rooms[0][0],
+      }));
+    }
+    setComplaintDetails(props.complaintDetails);
+    if (isObject(props.complaintDetails)) {
+      let complaint_types = Object.keys(props.complaintDetails);
+      setComplaintTypes(complaint_types);
+      setComplaint((old) => ({
+        ...old,
+        type: complaint_types[0],
+        complaint: props.complaintDetails[complaint_types[0]][0],
+      }));
+    }
+  };
+
+  const logshit = async () => {
+    console.log(blockNames);
+    console.log(complaintTypes);
+  };
+
+  useEffect(() => {
+    initDropdownValues();
+  }, [props.blockDetails, props.complaintDetails]);
+
+  const resetBlockInfo = (value) => {
+    setComplaint((old) => {
+      let temp = {
+        ...old,
+        floor: blockDetails[value].floors[0],
+        room: blockDetails[value].rooms[0][0],
+      };
+      // console.log(temp);
+      return temp;
+    });
+  };
+
+  const resetRoomInfo = (value) => {
+    setComplaint((old) => {
+      let temp = {
+        ...old,
+        room: blockDetails[complaint.block].rooms[value - 1][0],
+      };
+      // console.log(temp);
+      return temp;
+    });
+    // console.log(complaint);
+  };
+
+  const resetComplaintTypeInfo = (value) => {
+    setComplaint((old) => {
+      let temp = {
+        ...old,
+        complaint: complaintDetails[value][0],
+      };
+      // console.log(temp);
+      return temp;
+    });
+  };
 
   return (
     <>
@@ -43,26 +136,67 @@ export default function AddComplaint(props) {
         title="Add Complaints"
       >
         <div className="add-complaint-input-wrapper">
-          {headers.map((item, index) => (
-            <div key={index}>
+          {blockDetails && complaintDetails && (
+            <>
               <Select
-                title={item}
-                values={dropdownValues[item]}
-                onChange={(value) =>
-                  setComplaint((old) => {
-                    old[item] = value;
-                    return old;
-                  })
-                }
-                containerStyle={{
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  marginBottom: "2vh",
+                title="Block"
+                value={complaint.block}
+                values={blockNames}
+                onChange={(value) => {
+                  setComplaint((old) => ({ ...old, block: value }));
+                  resetBlockInfo(value);
                 }}
-                titleStyle={{ fontWeight: 500 }}
               />
-            </div>
-          ))}
+              <Select
+                title="Floor"
+                value={complaint.floor}
+                values={blockDetails[complaint.block].floors}
+                onChange={(value) => {
+                  setComplaint((old) => ({ ...old, floor: value }));
+                  resetRoomInfo(value);
+                }}
+              />
+              <Select
+                title="Room"
+                value={complaint.room}
+                values={
+                  blockDetails[complaint.block].rooms[complaint.floor - 1]
+                }
+                onChange={(value) => {
+                  setComplaint((old) => {
+                    let temp = { ...old, room: value };
+                    // console.log(temp);
+                    return temp;
+                  });
+                }}
+              />
+              <Select
+                title="Type"
+                value={complaint.type}
+                values={complaintTypes}
+                onChange={(value) => {
+                  setComplaint((old) => {
+                    let temp = { ...old, type: value };
+                    // console.log(temp);
+                    return temp;
+                  });
+                  resetComplaintTypeInfo(value);
+                }}
+              />
+              <Select
+                title="Complaint"
+                value={complaint.complaint}
+                values={complaintDetails[complaint.type]}
+                onChange={(value) => {
+                  setComplaint((old) => {
+                    let temp = { ...old, complaint: value };
+                    // console.log(temp);
+                    return temp;
+                  });
+                }}
+              />
+            </>
+          )}
           <div
             style={{
               display: "flex",
@@ -87,8 +221,8 @@ export default function AddComplaint(props) {
                 const sendComplaint = async () => {
                   await APIService.PostData(
                     {
-                      utype: "Student",
-                      email: "vinay@gmail.com",
+                      utype: sessionStorage.getItem("cookie").utype,
+                      email: sessionStorage.getItem("cookie").email,
                       Block: complaint.block,
                       Floor: complaint.floor,
                       RoomNo: complaint.room,

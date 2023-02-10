@@ -3,11 +3,9 @@ import Table from "../../components/Table/Table";
 import Modal from "../../components/Modal";
 import AddComplaint from "../../components/AddComplaint";
 
-import dummyComplaints from "../../assets/data/dummyData.json";
 import APIService from "../../api/Service";
 import {
   initialModalContents,
-  initialEmployeeFilters,
   employeeDefaultFilters,
   complaintTableHead,
   getLabelType,
@@ -20,6 +18,13 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContents, setModalContents] = useState(initialModalContents);
+  const [blockDetails, setBlockDetails] = useState();
+
+  const [filters, setFilters] = useState({
+    block: [],
+    floor: [],
+    status: ["Resolved", "Registered", "Verified", "Unable to resolve"],
+  });
 
   const renderHead = (item, index) => {
     if (equalsIgnoreCase(item, "type")) return null;
@@ -54,9 +59,7 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
   const getData = async () => {
     await APIService.PostData(
       {
-        category: "institution",
-        subtype: "electrician",
-        email: "electrician@gmail.com",
+        category: complaintMode,
       },
       "getComplaints/workers"
     ).then((response) => {
@@ -78,16 +81,41 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
     });
   };
 
+  const getDropdownValues = async () => {
+    let newFilters = {
+      block: ["All"],
+      floor: [],
+      status: [
+        "All",
+        "Resolved",
+        "Registered",
+        "Verified",
+        "Unable to resolve",
+      ],
+    };
+    await APIService.PostData(
+      { category: complaintMode },
+      "getBlocksData"
+    ).then((response) => {
+      console.log(response);
+      setBlockDetails(response);
+      newFilters.block = ["All", ...Object.keys(response)];
+      for (let block_name of Object.keys(response))
+        newFilters.floor.push(["All", ...response[block_name].floors]);
+    });
+    console.log(newFilters);
+    setFilters(newFilters);
+  };
+
   useEffect(() => {
     window.innerWidth - window.innerHeight < 357
       ? setLimit(window.innerHeight / 100)
       : null;
-
-    getData();
   }, []);
 
   useEffect(() => {
     getData();
+    getDropdownValues();
   }, [complaintMode]);
 
   return (
@@ -118,7 +146,7 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
           renderHead={(item, index) => renderHead(item, index)}
           bodyData={complaints}
           renderBody={(item, index) => renderBody(item, index)}
-          filters={initialEmployeeFilters}
+          filters={filters}
           defaultFilters={employeeDefaultFilters}
         />
       )}

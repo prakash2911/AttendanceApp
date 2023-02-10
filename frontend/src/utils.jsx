@@ -32,7 +32,7 @@ export const initialEmployeeModalContents = {
 };
 
 export const initialFilters = {
-  block: ["All", "Abdul Kalam Lecture Hall Complex", "RLHC", "CB"],
+  block: ["All", "Abdul Kalam Lecture Hall", "RLHC", "CB"],
   floor: ["All", 1, 2, 3, 4],
   type: ["All", "Electrician", "Civil and Maintenance", "Education Aid"],
   status: ["All", "Resolved", "Registered", "Verified", "Unable to Resolve"],
@@ -46,7 +46,7 @@ export const defaultFilters = {
 };
 
 export const initialEmployeeFilters = {
-  block: ["All", "Abdul Kalam Lecture Hall Complex", "RLHC", "CB"],
+  block: ["All", "Abdul Kalam Lecture Hall", "RLHC", "CB"],
   floor: ["All", 1, 2, 3, 4],
   status: ["All", "Resolved", "Registered", "Verified", "Unable to Resolve"],
 };
