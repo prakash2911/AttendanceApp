@@ -75,6 +75,7 @@ export default function Complaints({ complaintMode, setComplaintMode }) {
           updatedTime: item.uts,
         };
       });
+      console.log(data);
       setComplaints(data);
     });
   };

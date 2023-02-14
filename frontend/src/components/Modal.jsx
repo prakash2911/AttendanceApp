@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { equalsIgnoreCase } from "../utils";
 
 export default function Modal({
   isOpen,
@@ -68,37 +69,45 @@ export default function Modal({
           <div className="modal-buttons-container">
             {type === "employee" && (
               <>
-                <div
-                  className="button red"
-                  onClick={() => {
-                    onStatusChange(modalContents.id, "unable to resolve");
-                    setIsOpen(false);
-                  }}
-                >
-                  Report
-                </div>
+                {!equalsIgnoreCase(
+                  modalContents.status,
+                  "unable to resolve"
+                ) && (
+                  <div
+                    className="button red"
+                    onClick={() => {
+                      onStatusChange(modalContents.id, "unable to resolve");
+                      setIsOpen(false);
+                    }}
+                  >
+                    Report
+                  </div>
+                )}
+                {!equalsIgnoreCase(modalContents.status, "resolved") && (
+                  <div
+                    className="button"
+                    onClick={() => {
+                      onStatusChange(modalContents.id, "resolved");
+                      setIsOpen(false);
+                    }}
+                  >
+                    Resolve
+                  </div>
+                )}
+              </>
+            )}
+            {type === "student" &&
+              equalsIgnoreCase(modalContents.status, "resolved") && (
                 <div
                   className="button"
                   onClick={() => {
-                    onStatusChange(modalContents.id, "resolved");
+                    onStatusChange(modalContents.id, "verified");
                     setIsOpen(false);
                   }}
                 >
-                  Resolve
+                  Verify
                 </div>
-              </>
-            )}
-            {type === "student" && (
-              <div
-                className="button"
-                onClick={() => {
-                  onStatusChange(modalContents.id, "verified");
-                  setIsOpen(false);
-                }}
-              >
-                Verify
-              </div>
-            )}
+              )}
           </div>
         )}
       </div>

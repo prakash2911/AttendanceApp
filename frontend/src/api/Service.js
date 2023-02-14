@@ -1,16 +1,4 @@
-// let url = "http://192.168.82.77:2002/";
-let url = "https://192.168.1.9:2002/";
-// let url = "http://192.168.118.6:2002/";
-// let url = "http://192.168.69.249:2002/";
-
-let header = {
-  "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "*",
-  // Authorization: sessionStorage,
-  // Cookie: sessionStorage.getItem("cookie"),
-  credentials: "include",
-};
-
+let url = "https://192.168.169.249:2002/";
 export default class APIService {
   static async PostData(body, route) {
     try {
@@ -21,11 +9,11 @@ export default class APIService {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
           // Authorization: sessionStorage,
-          Cookie: JSON.parse(sessionStorage.getItem("ck")),
+          // Cookie: JSON.parse(sessionStorage.getItem("ck")),
         },
         body: JSON.stringify(body),
       }).then(async (res) => {
-        console.log(...res.headers);
+        // console.log(...res.headers);
         return res;
       });
       return await Response.json();

@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
@@ -223,7 +222,7 @@ def errorfetch():
 
 @app.route('/college_registercomplaint', methods=['POST'])
 def regcomplaint():
-    print('Hi')
+    # print('Hi')
     returner = {}
     data1 = {}
     # if ( session['loggedin'] == False ):
@@ -234,8 +233,8 @@ def regcomplaint():
     #     return returner
     # else:
     if(1):
-         email=request.json.get('email')
-         utype=request.json.get('utype')
+         email=session['email']
+         utype=session['utype']
          Block = request.json.get('Block')
          Floor = request.json.get('Floor')
          RoomNo = request.json.get('RoomNo')
@@ -288,9 +287,10 @@ def regcomplaint():
          timenow = datetime.now()
          cts = timenow.strftime("%d/%m/%y %H:%M:%S")
         #  cursor.execute('INSERT INTO complaints VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)', (session['email'], Block, int(Floor), RoomNo, Complaint, complainttype, "Registered", cts, cts, session['utype'],0))
-         cursor.execute('INSERT INTO complaints VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)', (email, Block, int(Floor), RoomNo, Complaint, complainttype, "Registered", cts, cts, utype,0))
-        
+         cursor.execute('INSERT INTO complaints VALUES (NULL,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)', (email, Block, int(Floor), RoomNo, Complaint, complainttype, "Registered", cts, cts, utype,0))
+         
          mysql.connection.commit()
+         returner['cts']=cts
          returner['status']=  'You have successfully registered a Complaint.'
          return returner
 
@@ -451,8 +451,8 @@ def hostel_regcomplaint():
     #         returner['status']=='Only RCs can file Complaint'
     # else:
     if(1):
-         email=request.json.get('email')
-         utype=request.json.get('utype')
+         email=session['email']
+         utype=session['utype']
          Block = request.json.get('Block')
          Floor = request.json.get('Floor')
          RoomNo = request.json.get('RoomNo')
@@ -502,6 +502,7 @@ def hostel_regcomplaint():
          cursor.execute('INSERT INTO hcomplaints VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (email, Block, int(Floor), RoomNo, Complaint, complainttype, "Registered", cts, cts, utype,))
          mysql.connection.commit()
          returner['status']=  'You have successfully registered a Complaint.'
+         returner['cts']=cts
          return returner
 
 # /view_complaint

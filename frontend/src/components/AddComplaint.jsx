@@ -5,7 +5,7 @@ import Select from "./Select";
 import Button from "./Button";
 
 import APIService from "../api/Service";
-import { isObject } from "../utils";
+import { equalsIgnoreCase, isObject } from "../utils";
 
 export default function AddComplaint(props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -207,22 +207,10 @@ export default function AddComplaint(props) {
             <Button
               title="Add"
               onClick={() => {
-                props.setComplaints((old) => [
-                  ...old,
-                  {
-                    ...complaint,
-                    id: old.length + 1,
-                    registeredTime: "1/1/1 01:00 AM",
-                    updatedTime: "1/1/1 01:00 AM",
-                    status: "Pending",
-                  },
-                ]);
                 setIsOpen(false);
                 const sendComplaint = async () => {
                   await APIService.PostData(
                     {
-                      utype: sessionStorage.getItem("cookie").utype,
-                      email: sessionStorage.getItem("cookie").email,
                       Block: complaint.block,
                       Floor: complaint.floor,
                       RoomNo: complaint.room,
@@ -234,6 +222,21 @@ export default function AddComplaint(props) {
                       : "hostel_registercomplaint"
                   ).then((response) => {
                     console.log(response);
+                    alert(response.status.toUpperCase());
+                    !equalsIgnoreCase(
+                      response.status,
+                      "complaint already exists!"
+                    ) &&
+                      props.setComplaints((old) => [
+                        ...old,
+                        {
+                          ...complaint,
+                          id: old.length + 1,
+                          registeredTime: response.cts,
+                          updatedTime: response.cts,
+                          status: "registered",
+                        },
+                      ]);
                   });
                 };
                 sendComplaint();
