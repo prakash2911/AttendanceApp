@@ -5,6 +5,7 @@ import re
 import hashlib
 from datetime import datetime
 import json
+from waitress import serve
 # from flask_ngrok import run_with_ngrok
 from matplotlib.font_manager import json_dump
 app = Flask(__name__)
@@ -637,5 +638,6 @@ def getprofileinfo():
 if __name__ == "__main__":
     #   app.run()
     app.run(host="0.0.0.0",port=(2002),debug=True)
+    #  serve(app, host='0.0.0.0', port=5000)
 
     

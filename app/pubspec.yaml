@@ -57,7 +57,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   icon: true
-  image_path: "assests/icon/icon.png"
+  image_path: "asset/icon/icon.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -79,9 +79,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assests/
-    - assests/icon/
-    - assests/bg/
+    - asset/
+    - asset/icon/
+    - asset/background/
 #     - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
